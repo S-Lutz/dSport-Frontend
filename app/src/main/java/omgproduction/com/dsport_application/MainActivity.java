@@ -1,14 +1,19 @@
 package omgproduction.com.dsport_application;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity {
+import omgproduction.com.dsport_application.activities.LoginActivity;
 
+
+public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Das ist von Sebastian !
+
+        startActivity(new Intent(this, LoginActivity.class));
+
     }
 }

@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">dSport-Application</string>
+    <string name="app_name">dSport</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_username_email">Username/Email</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_sign_up">Sign in</string>
+    <string name="hint_password_confirm">Confirm Password</string>
+    <string name="hint_firstname">First Name</string>
+    <string name="hint_lastname">Last Name</string>
+    <string name="signup_link">Already a Member? SignUp here!</string>
+    <string name="btn_register">Register</string>
 </resources>
