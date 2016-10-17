@@ -3,12 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="omgproduction.com.dsport_application.MainActivity">
+    tools:context=".activities.MainActivity">
 
-    <include layout="@layout/app_bar" android:id="@+id/app_bar"/>
 
     <TextView
-        android:layout_below="@id/app_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!" />

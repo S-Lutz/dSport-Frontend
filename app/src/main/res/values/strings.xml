@@ -1,13 +1,24 @@
 <resources>
     <string name="app_name">dSport</string>
+    
+    
+    <!-- Login and Register-->
     <string name="hint_username">Username</string>
     <string name="hint_username_email">Username/Email</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
-    <string name="btn_sign_up">Sign in</string>
+    <string name="btn_sign_up">Login</string>
     <string name="hint_password_confirm">Confirm Password</string>
     <string name="hint_firstname">First Name</string>
     <string name="hint_lastname">Last Name</string>
-    <string name="signup_link">Already a Member? SignUp here!</string>
-    <string name="btn_register">Register</string>
+    <string name="signup_link">Already a Member? Login here!</string>
+    <string name="btn_register">Sign In</string>
+    <string name="agb_link">Click here to read the AGB</string>
+    <string name="agb_accept">Accept the AGB</string>
+    <string name="registration_header">Registration</string>
+    <string name="login_header">Login</string>
+
+    <!--Universal-Strings-->
+    <string name="retry">Retry</string>
+
 </resources>

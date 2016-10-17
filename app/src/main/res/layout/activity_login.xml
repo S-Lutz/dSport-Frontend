@@ -1,69 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
+<!--CoordinatorLayout to make special things like SnackBars possible-->
 <android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:id="@+id/login_layout"
     android:layout_height="match_parent"
-    android:background="@drawable/login_bg">
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.LinearLayoutCompat
-        android:layout_width="fill_parent"
+
+    <!--Scrollable Main View with all Input or Output Fields-->
+    <android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:paddingTop="60dp">
+        android:background="@drawable/login_bg">
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:src="@drawable/logo" />
+        <!--Layout to Controll Input and Outputfield-Positions-->
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingTop="50dp">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/login_layout_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <!--dSport-Logo-->
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:src="@drawable/logo" />
 
-            <EditText
-                android:id="@+id/login_username"
+            <!--Hided Progress-Bar to show on loading Data-->
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="@style/Base.Widget.AppCompat.ProgressBar"
                 android:layout_width="match_parent"
+                android:id="@+id/progress_bar"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_username_email"
-                android:singleLine="true" />
-        </android.support.design.widget.TextInputLayout>
+                android:indeterminate="true"
+                android:visibility="gone" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/login_layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/login_password"
+            <!--Container to make all Input-Fields Visible or Gone-->
+            <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hint_password"
-                android:inputType="textPassword" />
-        </android.support.design.widget.TextInputLayout>
+                android:orientation="vertical"
+                android:id="@+id/login_input_container"
+                android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btn_signup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/primary"
-            android:text="@string/btn_sign_up"
-            android:textColor="@android:color/white" />
+                <!--Header Login-->
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_header"
+                    android:textSize="@dimen/headline"/>
 
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:id="@+id/registration_link"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/accentColor"
-            android:text="Not a Member? Create your own Account!"/>
+                <!--Support Material-Design Text-Input-Layout with Error-Field and much more-->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/login_layout_username"
+                    android:layout_width="match_parent"
+                    android:paddingTop="20dp"
+                    android:layout_height="wrap_content">
 
-    </android.support.v7.widget.LinearLayoutCompat>
+                    <!--Input for Username-->
+                    <EditText
+                        android:id="@+id/login_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_username_email"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
+
+                <!--Support Material-Design Text-Input-Layout with Error-Field and much more-->
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/login_layout_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!--Input for Password-->
+                    <EditText
+                        android:id="@+id/login_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_password"
+                        android:inputType="textPassword" />
+                </android.support.design.widget.TextInputLayout>
+
+                <!--Button to Start Login-->
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/primary"
+                    android:text="@string/btn_sign_up"
+                    android:textColor="@android:color/white" />
+
+                <!--Link to Registration-->
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:id="@+id/registration_link"
+                    android:layout_margin="20dp"
+                    android:textColor="@color/accentColor"
+                    android:text="Not a Member? Create your own Account!"/>
+            </android.support.v7.widget.LinearLayoutCompat>
+
+        </android.support.v7.widget.LinearLayoutCompat>
+
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
