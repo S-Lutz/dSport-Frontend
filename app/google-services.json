@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "889678864719",
+    "firebase_url": "https://dsport-1341.firebaseio.com",
+    "project_id": "dsport-1341",
+    "storage_bucket": "dsport-1341.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:889678864719:android:1a3db282ffe525f1",
+        "android_client_info": {
+          "package_name": "omgproduction.com.dsport_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "889678864719-qvrdasohe25cpfpuceeq8958j7j8sr6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu7RUazd1PqDu4o8g9aCEpjzIspir7tO0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

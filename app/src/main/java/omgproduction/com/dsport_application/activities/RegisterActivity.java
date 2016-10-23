@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -19,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import omgproduction.com.dsport_application.R;
-import omgproduction.com.dsport_application.controller.BackendController;
 import omgproduction.com.dsport_application.controller.SessionController;
 
 /**
@@ -36,7 +32,7 @@ import omgproduction.com.dsport_application.controller.SessionController;
  * Password_confirm
  * Accept AGB
  */
-public class RegisterActivity extends Activity implements View.OnClickListener{
+public class RegisterActivity extends BasicActivity{
 
     //Activity Context
     private Context context;
@@ -118,7 +114,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
         }
         //Check if AGB is Accepted. Show Error in Snackbar
         if(!accepted){
-            printError("e4");
+            printError(R.id.register_layout,"e4");
             return;
         }
         //Check if Email is valid. Show Error below the Input-Field
@@ -128,44 +124,44 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
         }
 
         //Show Progressbar
-        showProgressBar();
+        showProgressBar(R.id.register_input_container,R.id.progress_bar);
 
         //Process Registration with Backend-Server
-        BackendController.getInstance().registerUser(username, firstname, lastname, email, password_1, new Response.Listener<JSONObject>() {
+        SessionController.getInstance().registerUser(username, firstname, lastname, email, password_1, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 try {
                     //Check if Backend send some Errors
                     if(jsonObject.getString("error").equals("OK")){
                         //If no Backend Errors hide Progressbar and Logout user to comeback to Login Activity and delete Session-Data
-                        hideProgressBar();
+                        hideProgressBar(R.id.register_input_container,R.id.progress_bar);
                         removeAllErrors();
-                        new SessionController(context).logoutUser();
+                        SessionController.getInstance().logoutUser(context);
                     }else{
                         //If some Backend Error hide Progressbar and handle Error
-                        hideProgressBar();
+                        hideProgressBar(R.id.register_input_container,R.id.progress_bar);
                         String errorCode = jsonObject.getString("value");
                         //Check Error-Code (See in error_codes.xml
                         switch (errorCode){
                             case "e301": printInputError(R.id.register_layout_username,errorCode); break;
                             case "e302": printInputError(R.id.register_layout_email,errorCode); break;
                             //On any other Error print Universal-Error e0
-                            default: printError("e0");
+                            default: printError(R.id.register_layout,"e0");
                         }
                     }
                 } catch (JSONException e) {
                     //If some JSON_Error hide Progressbar print Universal-Error e0
                     e.printStackTrace();
-                    hideProgressBar();
-                    printError("e0");
+                    hideProgressBar(R.id.register_input_container,R.id.progress_bar);
+                    printError(R.id.register_layout,"e0");
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 //If some Connection Error hide Progressbar and print Connection-Failed-Error e100 in Snackbar with Retry-Button
-                hideProgressBar();
-                printError("e100", R.string.retry, new View.OnClickListener() {
+                hideProgressBar(R.id.register_input_container,R.id.progress_bar);
+                printError(R.id.register_layout,"e100", R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //On Click Retry, retry Register
@@ -176,78 +172,7 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
             }
         });
     }
-
-    /**
-     * Hide all Input-Fields and show Progress-bar instead
-     */
-    private void showProgressBar(){
-        findViewById(R.id.register_input_container).setVisibility(ProgressBar.GONE);
-        findViewById(R.id.progress_bar).setVisibility(ProgressBar.VISIBLE);
-    }
-
-    /**
-     * Hide Progressbar and show all Input-Fields instead
-     */
-    private void hideProgressBar(){
-        findViewById(R.id.register_input_container).setVisibility(ProgressBar.VISIBLE);
-        findViewById(R.id.progress_bar).setVisibility(ProgressBar.GONE);
-    }
-
-    /**
-     * Print some Error with Snackbar but Without any Control-Element
-     * @param errorCode ErrorCode (See in error_codes)
-     */
-    private void printError(String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
-        Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.register_layout), getString(resId), Snackbar.LENGTH_LONG);
-
-        snackbar.show();
-    }
-
-    /**
-     * Print some Error with Snackbar with Button
-     * @param errorCode ErrorCode (See in error_codes)
-     * @param buttonLabelId StringID for Button Label
-     * @param listener OnClickListener for Button-Click
-     */
-    private void printError(String errorCode, int buttonLabelId, View.OnClickListener listener){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
-        Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.register_layout), getString(resId), Snackbar.LENGTH_LONG)
-                .setAction(getString(buttonLabelId), listener);
-
-        snackbar.show();
-    }
-
-    /**
-     * Print some Error in Helper-Field from android.support.design.widget.TextInputLayout
-     * @param id Ressource id from Layout-Element in xml-Layout
-     * @param errorCode Errorcode to print Error-Messsage (See in error_code)
-     */
-    private void printInputError(int id, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
-        TextInputLayout til = (TextInputLayout) findViewById(id);
-        til.setErrorEnabled(true);
-        til.setError(getString(resId));
-    }
-
-    /**
-     * Remove some Error from Helper-Field from android.support.design.widget.TextInputLayout
-     * @param id Ressource id from Layout-Element in xml-Layout which has the Error
-     */
-    private void removeInputError(int id){
-        TextInputLayout til = (TextInputLayout) findViewById(id);
-        til.setErrorEnabled(false);
-    }
-
-    /**
-     * Remove all Error from View
-     */
-    private void removeAllErrors(){
+    protected void removeAllErrors(){
         removeInputError(R.id.register_layout_firstname);
         removeInputError(R.id.register_layout_lastname);
         removeInputError(R.id.register_layout_password);
@@ -264,4 +189,9 @@ public class RegisterActivity extends Activity implements View.OnClickListener{
     public final static boolean isValidEmail(CharSequence email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+
+
+
+
+
 }

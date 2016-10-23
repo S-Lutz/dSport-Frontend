@@ -1,24 +1,19 @@
 package omgproduction.com.dsport_application.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import omgproduction.com.dsport_application.R;
-import omgproduction.com.dsport_application.controller.BackendController;
 import omgproduction.com.dsport_application.controller.SessionController;
+import omgproduction.com.dsport_application.utils.ConnectionUtils;
 
 /**
  * Created by Florian on 17.10.2016.
@@ -26,7 +21,7 @@ import omgproduction.com.dsport_application.controller.SessionController;
  * Activity to Login the User
  * Login with username and Password
  */
-public class LoginActivity extends Activity implements View.OnClickListener{
+public class LoginActivity extends BasicActivity {
 
     //Activity-Context
     private Context context;
@@ -77,57 +72,36 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         }
 
         //Start showing the Progressbar
-        showProgressBar();
+        showProgressBar(R.id.login_input_container,R.id.progress_bar);
 
         //Process login with Backend
         //Send request to Backend and wait for response
-        BackendController.getInstance().loginUser(username, password, new Response.Listener<JSONObject>() {
+        SessionController.getInstance().loginUser(this,username, password, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject jsonObject) {
 
-                try {
+                //hide Progressbar
+                hideProgressBar(R.id.login_input_container,R.id.progress_bar);
+                //Check if Backend send any Errors
+                if(ConnectionUtils.Success(jsonObject)){
+                }else{
+                    //Errorhandling for Internal Errors
+                    String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
 
-                    //Check if Backend send any Errors
-                    if(jsonObject.getString("error").equals("OK")){
-                        //If no Errors hide Progress-Bar
-                        hideProgressBar();
-                        //Save userlogin in SQLite
-                        JSONObject user = jsonObject.getJSONObject("value");
-                        new SessionController(context).createLoginSession(
-                                user.getString("user_id"),
-                                user.getString("email"),
-                                user.getString("username"),
-                                user.getString("firstname"),
-                                user.getString("lastname"),
-                                user.getString("created"),
-                                user.getString("agbversion"),
-                                user.getString("picture"));
-                    }else{
-                        //If some internal Errors hide Progressbar
-                        hideProgressBar();
-
-                        //Errorhandling for Internal Errors
-                        String errorCode = jsonObject.getString("value");
-
-                        //Check Errorcode (See it in error_codes.xml
-                        switch (errorCode){
-                            case "e303": printInputError(R.id.login_layout_password,errorCode); break;
-                            default: printError("e0");
-                        }
+                    //Check Errorcode (See it in error_codes.xml
+                    switch (errorCode){
+                        case "e303": printInputError(R.id.login_layout_password,errorCode); break;
+                        default: printError(R.id.login_layout,"e0");
                     }
-                } catch (JSONException e) {
-                    //If some JSON Error print e0 (Universal Error)
-                    e.printStackTrace();
-                    hideProgressBar();
-                    printError("e0");
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 //If some Connection error print e100 Connection failed
-                hideProgressBar();
-                printError("e100", R.string.retry, new View.OnClickListener() {
+                hideProgressBar(R.id.login_input_container,R.id.progress_bar);
+                printError(R.id.login_layout,"e100", R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         loginUser();
@@ -139,76 +113,9 @@ public class LoginActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     * Hide all Input-Fields and show Progress-bar instead
-     */
-    private void showProgressBar(){
-        findViewById(R.id.login_input_container).setVisibility(ProgressBar.GONE);
-        findViewById(R.id.progress_bar).setVisibility(ProgressBar.VISIBLE);
-    }
-
-    /**
-     * Hide Progressbar and show all Input-Fields instead
-     */
-    private void hideProgressBar(){
-        findViewById(R.id.login_input_container).setVisibility(ProgressBar.VISIBLE);
-        findViewById(R.id.progress_bar).setVisibility(ProgressBar.GONE);
-    }
-
-    /**
-     * Print some Error with Snackbar but Without any Control-Element
-     * @param errorCode ErrorCode (See in error_codes)
-     */
-    private void printError(String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
-        Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.login_layout), getString(resId), Snackbar.LENGTH_LONG);
-
-        snackbar.show();
-    }
-
-    /**
-     * Print some Error with Snackbar with Button
-     * @param errorCode ErrorCode (See in error_codes)
-     * @param buttonLabelId StringID for Button Label
-     * @param listener OnClickListener for Button-Click
-     */
-    private void printError(String errorCode, int buttonLabelId, View.OnClickListener listener){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
-        Snackbar snackbar = Snackbar
-                .make(findViewById(R.id.login_layout), getString(resId), Snackbar.LENGTH_LONG)
-                .setAction(getString(buttonLabelId), listener);
-
-        snackbar.show();
-    }
-
-    /**
-     * Print some Error in Helper-Field from android.support.design.widget.TextInputLayout
-     * @param id Ressource id from Layout-Element in xml-Layout
-     * @param errorCode Errorcode to print Error-Messsage (See in error_code)
-     */
-    private void printInputError(int id, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
-        TextInputLayout til = (TextInputLayout) findViewById(id);
-        til.setErrorEnabled(true);
-        til.setError(getString(resId));
-    }
-
-    /**
-     * Remove some Error from Helper-Field from android.support.design.widget.TextInputLayout
-     * @param id Ressource id from Layout-Element in xml-Layout which has the Error
-     */
-    private void removeInputError(int id){
-        TextInputLayout til = (TextInputLayout) findViewById(id);
-        til.setErrorEnabled(false);
-    }
-
-    /**
      * Remove all Error from View
      */
-    private void removeAllErrors(){
+    protected void removeAllErrors(){
         removeInputError(R.id.login_layout_username);
         removeInputError(R.id.login_layout_password);
     }

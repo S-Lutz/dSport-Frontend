@@ -161,7 +161,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:background="@color/half_transparent_white"
                     android:text="@string/agb_link"
                     android:padding="5dp"
                     android:gravity="center"/>

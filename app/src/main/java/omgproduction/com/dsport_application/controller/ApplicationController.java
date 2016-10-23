@@ -15,13 +15,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-public class AppController extends Application {
+public class ApplicationController extends Application {
     //Activity-Tag for Log
-    public static final String TAG = AppController.class.getSimpleName();
+    public static final String TAG = ApplicationController.class.getSimpleName();
     //Requestqueue to handle HTTP-Connections
     private RequestQueue mRequestQueue;
-    //AppController instance to instanciate form other classes
-    private static AppController mInstance;
+    //ApplicationController instance to instanciate form other classes
+    private static ApplicationController mInstance;
 
     @Override
     public void onCreate() {
@@ -30,10 +30,10 @@ public class AppController extends Application {
     }
 
     /**
-     * Get an instance from this AppController class to interact with it
+     * Get an instance from this ApplicationController class to interact with it
      * @return
      */
-    public static synchronized AppController getInstance() {
+    public static synchronized ApplicationController getInstance() {
         return mInstance;
     }
 

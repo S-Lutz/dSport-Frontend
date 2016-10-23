@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">dSport</string>
-    
-    
+
+
     <!-- Login and Register-->
     <string name="hint_username">Username</string>
     <string name="hint_username_email">Username/Email</string>
@@ -20,5 +20,8 @@
 
     <!--Universal-Strings-->
     <string name="retry">Retry</string>
+    <string name="agb">AGB</string>
+    <string name="btn_goon">Go on</string>
+    <string name="version">Version:</string>
 
 </resources>

@@ -1,0 +1,27 @@
+@startuml
+
+package "Server" {
+    [Backend] as B
+    [Database] as D
+    B-->D
+    B<--D
+}
+
+package "Client" {
+    [Application] as A
+}
+
+package "Google" {
+    [FirebaseCloud] as FB
+}
+A-->FB
+FB-->A
+
+A-->B
+
+B-->FB
+
+
+
+
+@enduml
