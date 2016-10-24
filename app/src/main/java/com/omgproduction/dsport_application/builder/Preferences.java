@@ -1,4 +1,4 @@
-package omgproduction.com.dsport_application.controller;
+package com.omgproduction.dsport_application.builder;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Created by Florian on 21.10.2016.
  */
-public class SharedPreferencesController {
+public class Preferences {
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -22,37 +22,43 @@ public class SharedPreferencesController {
     public static final String KEY_AGBVERSION = "agbversion";
     public static final String KEY_PICTURE = "picture";
 
-    public SharedPreferencesController(Context context) {
+    private Preferences(){};
+
+    private Preferences(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = sharedPreferences.edit();
     }
 
-    public SharedPreferencesController putString(String key, String value){
+    public static Preferences getInstance(Context context){
+        return new Preferences(context);
+    }
+
+    public Preferences putString(String key, String value){
         editor.putString(key,value);
         return this;
     }
 
-    public SharedPreferencesController putBoolean(String key, Boolean value){
+    public Preferences putBoolean(String key, Boolean value){
         editor.putBoolean(key,value);
         return this;
     }
 
-    public SharedPreferencesController putInt(String key, int value){
+    public Preferences putInt(String key, int value){
         editor.putInt(key,value);
         return this;
     }
 
-    public SharedPreferencesController putFloat(String key, float value){
+    public Preferences putFloat(String key, float value){
         editor.putFloat(key,value);
         return this;
     }
 
-    public SharedPreferencesController putLong(String key, long value){
+    public Preferences putLong(String key, long value){
         editor.putLong(key,value);
         return this;
     }
 
-    public SharedPreferencesController clear(){
+    public Preferences clear(){
         editor.clear();
         return this;
     }
