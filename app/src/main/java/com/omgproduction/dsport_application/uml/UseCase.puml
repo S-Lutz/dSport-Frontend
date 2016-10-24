@@ -1,0 +1,37 @@
+@startuml
+:Application User: as U
+
+left to right direction
+
+U ----> (Post)
+(Post) <.. (Pass On) :extends
+(Post) <.. (Comment Post) :extends
+(Post) <.. (Like Post) :extends
+(Post)<..(Post to anyones Pinboard):extends
+
+U ----> (View Events)
+(View Events)<..(Create Event):extends
+(View Events)<..(Invite Friends to Event):extends
+(View Events)<..(Pass On):extends
+(View Events)<..(Participate):extends
+(View Events)<..(Delete Event):extends
+
+U ----> (View Friends)
+(View Friends)<..(Enter Textchat):extends
+(View Friends)<..(Remove Friends):extends
+
+U ----> (Manage User Profile)
+(Manage User Profile)<..(Delete Account):extends
+(Manage User Profile)<..(Change Picture):extends
+(Manage User Profile)<..(Edit Profile):extends
+(Manage User Profile)<..(Login):extends
+(Manage User Profile)<..(Logout):extends
+(Manage User Profile)<..(Register):extends
+
+U ----> (Search)
+(Search)<..(Search Users):extends
+(Search)<..(Search Events):extends
+
+
+
+@enduml

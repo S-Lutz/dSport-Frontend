@@ -1,4 +1,4 @@
-package omgproduction.com.dsport_application.builder;
+package com.omgproduction.dsport_application.builder;
 
 import android.util.Log;
 
@@ -17,9 +17,9 @@ import java.util.Map;
 /**
  * Created by Florian on 21.10.2016.
  */
-public class JsonObjectRequestBuilder implements Response.Listener<JSONObject>, Response.ErrorListener{
+public class JSONRequest implements Response.Listener<JSONObject>, Response.ErrorListener{
 
-    private static String TAG = JsonObjectRequestBuilder.class.getSimpleName();
+    private static String TAG = JSONRequest.class.getSimpleName();
 
     private JsonObjectRequest request;
 
@@ -29,21 +29,21 @@ public class JsonObjectRequestBuilder implements Response.Listener<JSONObject>, 
     private Response.Listener<JSONObject> responseListener;
     private Response.ErrorListener errorListener;
 
-    public JsonObjectRequestBuilder(String url) {
+    public JSONRequest(String url) {
         this.url = url;
     }
 
-    public JsonObjectRequestBuilder method(int method) {
+    public JSONRequest method(int method) {
         this.method = method;
         return this;
     }
 
-    public JsonObjectRequestBuilder jsonObject(JSONObject jsonObject) {
+    public JSONRequest jsonObject(JSONObject jsonObject) {
         this.jsonObject = jsonObject;
         return this;
     }
 
-    public JsonObjectRequestBuilder param(String key, Object value){
+    public JSONRequest param(String key, Object value){
         try {
             jsonObject.put(key,value);
         } catch (JSONException e) {
@@ -52,12 +52,12 @@ public class JsonObjectRequestBuilder implements Response.Listener<JSONObject>, 
         return this;
     }
 
-    public JsonObjectRequestBuilder responseListener(Response.Listener<JSONObject> responseListener) {
+    public JSONRequest responseListener(Response.Listener<JSONObject> responseListener) {
         this.responseListener = responseListener;
         return this;
     }
 
-    public JsonObjectRequestBuilder errorListener(Response.ErrorListener errorListener) {
+    public JSONRequest errorListener(Response.ErrorListener errorListener) {
         this.errorListener = errorListener;
         return this;
     }

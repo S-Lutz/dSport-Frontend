@@ -1,0 +1,56 @@
+@startuml
+
+abstract class Activity
+abstract class AppCompatActivity
+
+abstract class BasicAppCombatActivity extends AppCompatActivity implements OnClickListener{
+    showProgressBar()
+    hideProgressBar()
+    showProgressBar()
+    hideProgressBar()
+    printError()
+    printError()
+    printInputError()
+    removeInputError()
+    removeAllErrors();
+}
+abstract class BasicActivity extends Activity implements OnClickListener{
+    showProgressBar()
+    hideProgressBar()
+    showProgressBar()
+    hideProgressBar()
+    printError()
+    printError()
+    printInputError()
+    removeInputError()
+    removeAllErrors();
+}
+
+class AGBActivity extends BasicAppCombatActivity {
+    onCreate()
+    onClick()
+    processButtonClick()
+    onAGBRejected()
+    onAGBAccepted()
+}
+
+class MainActivity extends BasicAppCombatActivity {
+    onCreate()
+    readAGB()
+}
+
+class LoginActivity extends BasicActivity{
+    onCreate()
+    onClick()
+    loginUser()
+    removeAllErrors()
+}
+
+class RegisterActivity extends BasicActivity{
+    onCreate()
+    registerUser()
+    removeAllErrors()
+    isValidEmail()
+}
+
+@enduml
