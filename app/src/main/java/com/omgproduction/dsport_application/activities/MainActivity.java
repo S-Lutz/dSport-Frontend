@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.controller.SessionController;
 
 
 /**
@@ -24,6 +25,10 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
         this.context = this;
 
+        if(!SessionController.getInstance().checkLogin(this)){
+            goToMainActivity(this);
+        }
+
 
         //Register Client to Firebase Cloud and Ask for Token
         //After response Token it will automatically send to Backend because of FirebaseInstanceIDService
@@ -34,6 +39,13 @@ public class MainActivity extends Activity{
 
         startActivity(new Intent(this, LoginActivity.class));
 
+    }
+
+    private void goToMainActivity(Context context){
+        Intent i = new Intent(context, MainActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
     }
 
     private void readAGB() {

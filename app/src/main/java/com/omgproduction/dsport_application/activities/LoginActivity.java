@@ -68,13 +68,10 @@ public class LoginActivity extends BasicActivity {
         String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
 
         //Check if Username is not Empty
-        if(username.trim().isEmpty()){
-            printInputError(R.id.login_layout_username,"e2");
-            return;
-        }
         //Check if Password is not Empty
-        if(password.trim().isEmpty()){
-            printInputError(R.id.login_layout_password,"e2");
+        if(username.trim().isEmpty()
+                ||password.trim().isEmpty()){
+            printInputError(R.id.login_layout_username,"e2");
             return;
         }
 
@@ -92,9 +89,7 @@ public class LoginActivity extends BasicActivity {
                 //Check if Backend send any Errors
                 if(ConnectionUtils.Success(jsonObject)){
                     boolean saved = SessionController.getInstance().startLocalSession(context,ConnectionUtils.extractJSONValue(jsonObject));
-                    if(saved){
-                        goToMainActivity(context);
-                    }
+                    if(saved){ goToMainActivity(context); }
                 }else{
                     //Errorhandling for Internal Errors
                     String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
@@ -120,7 +115,6 @@ public class LoginActivity extends BasicActivity {
                 });
             }
         });
-
     }
 
     private void goToMainActivity(Context context){

@@ -46,6 +46,7 @@ public class SessionController {
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
+
     }
 
     /**
