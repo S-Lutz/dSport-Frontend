@@ -2,7 +2,7 @@ package com.omgproduction.dsport_application.controller;
 
 import com.android.volley.Response;
 import com.omgproduction.dsport_application.builder.JSONRequest;
-import com.omgproduction.dsport_application.config.BackendURL;
+import com.omgproduction.dsport_application.config.BackendFunctions;
 
 import org.json.JSONObject;
 
@@ -26,7 +26,7 @@ public class ResourceController {
      */
     public void getLatestAGB (Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
 
-        JSONRequest requestBuilder = new JSONRequest(BackendURL.GET_LATEST_AGB)
+        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.GET_LATEST_AGB)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
@@ -41,7 +41,7 @@ public class ResourceController {
      */
     public void getLatestDataPrivacy (Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
 
-        JSONRequest requestBuilder = new JSONRequest(BackendURL.GET_LATEST_AGB)
+        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.GET_LATEST_AGB)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
@@ -57,7 +57,7 @@ public class ResourceController {
      */
     public void putAGBVersion(String user_id, String agb_version, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
 
-        JSONRequest requestBuilder = new JSONRequest(BackendURL.PUT_AGP_VERSION)
+        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.PUT_AGP_VERSION)
                 .param("user_id", user_id)
                 .param("agb_version", agb_version)
                 .responseListener(responseListener)
