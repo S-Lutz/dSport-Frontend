@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+    All ErrorCodes from Backend and Application
+
+    Connection structure:
+        Request success:
+        {
+            "error":"OK",
+            "value":someVal
+        }
+
+        Request failed:
+        {
+            "error":"ERROR",
+            "value":errorCode
+        }
+    -->
+    <!-- Errors e0 - e299 Internal-->
+    <!-- If no Error suitable choose e0-->
+    <string name="e0">Something went wrong!</string>
+    <!-- Password missmatch on Registration-->
+    <string name="e1">Passwords do not match!</string>
+    <!-- If an important Input-Field is empty-->
+    <string name="e2">Please fill all Fields!</string>
+    <!-- If the email not is a valid email with ...@....de-->
+    <string name="e3">The email address you use is not valid!</string>
+    <!-- If the user hasnt accept the User licence agreement-->
+    <string name="e4">Please read the AGB and accept it to go on!</string>
+
+    <!-- If connection to the Server failed -->
+    <string name="e100">Connection failed!</string>
+
+    <!-- Errors e300 - e599 Connection-->
+    <!-- If the Connection between Backend and Database failes -->
+    <string name="e300">Database not reachable!</string>
+    <!-- If already a user with this username exists-->
+    <string name="e301">Username already exists!</string>
+    <!-- If already a user with this email exists-->
+    <string name="e302">Email already exists!</string>
+    <!-- If Database not contain a User with this Username or Password-->
+    <string name="e303">Username or Password wrong!</string>
+</resources>

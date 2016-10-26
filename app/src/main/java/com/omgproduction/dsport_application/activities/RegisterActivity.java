@@ -30,7 +30,7 @@ import org.json.JSONObject;
  * Password_confirm
  * Accept AGB
  */
-public class RegisterActivity extends BasicActivity{
+public class RegisterActivity extends AdvancedActivity {
 
     //Activity Context
     private Context context;

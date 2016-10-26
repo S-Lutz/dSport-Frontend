@@ -1,18 +1,17 @@
 package com.omgproduction.dsport_application.activities;
 
+import android.app.Activity;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 
 
 /**
- * Created by Florian on 18.10.2016.
+ * Created by Florian on 21.10.2016.
  */
-public abstract class BasicAppCombatActivity extends AppCompatActivity implements View.OnClickListener{
-
-
+public abstract class AdvancedActivity extends Activity implements View.OnClickListener{
     /**
      * Hide all Input-Fields and show Progress-bar instead
      */
@@ -97,4 +96,5 @@ public abstract class BasicAppCombatActivity extends AppCompatActivity implement
      * Remove all Error from View
      */
     protected abstract void removeAllErrors();
+
 }

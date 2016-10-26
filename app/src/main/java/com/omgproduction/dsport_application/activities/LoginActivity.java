@@ -21,7 +21,7 @@ import org.json.JSONObject;
  * Activity to Login the User
  * Login with username and Password
  */
-public class LoginActivity extends BasicActivity {
+public class LoginActivity extends AdvancedActivity {
 
     //Activity-Context
     private Context context;

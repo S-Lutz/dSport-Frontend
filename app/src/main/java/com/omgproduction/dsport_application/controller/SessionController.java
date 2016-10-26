@@ -5,8 +5,7 @@ import android.content.Context;
 import com.android.volley.Response;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.BackendURL;
-import com.omgproduction.dsport_application.utils.StringUtils;
+import com.omgproduction.dsport_application.config.BackendFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,12 +36,12 @@ public class SessionController {
      */
     public void registerUser(String username, String firstname, String lastname, String email, String password, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
 
-        JSONRequest requestBuilder = new JSONRequest(BackendURL.REGISTER)
+        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.REGISTER)
                 .param("username", username)
                 .param("firstname", firstname)
                 .param("lastname", lastname)
                 .param("email", email)
-                .param("password", StringUtils.hash(password))
+                .param("password", password)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
@@ -58,9 +57,9 @@ public class SessionController {
      */
     public void loginUser(final Context context, String username, String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
 
-        JSONRequest requestBuilder = new JSONRequest(BackendURL.LOGIN)
+        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.LOGIN)
                 .param("username", username)
-                .param("password", StringUtils.hash(password))
+                .param("password", password)
                 .errorListener(errorListener)
                 .responseListener(responseListener);
 

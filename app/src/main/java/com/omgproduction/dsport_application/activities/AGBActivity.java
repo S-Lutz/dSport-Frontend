@@ -17,7 +17,7 @@ import com.omgproduction.dsport_application.utils.ConnectionUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AGBActivity extends BasicActivity{
+public class AGBActivity extends AdvancedActivity {
 
     private String agb_text, agb_version;
     private Context context;
