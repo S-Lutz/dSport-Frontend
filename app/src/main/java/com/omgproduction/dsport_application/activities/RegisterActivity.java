@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.controller.SessionController;
+import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -145,11 +146,12 @@ public class RegisterActivity extends AdvancedActivity {
             public void onResponse(JSONObject jsonObject) {
                 try {
                     //Check if Backend send some Errors
-                    if(jsonObject.getString("error").equals("OK")){
+                    if(ConnectionUtils.Success(jsonObject)){
                         //If no Backend Errors hide Progressbar and Logout user to comeback to Login Activity and delete Session-Data
                         hideProgressBar(R.id.register_input_container,R.id.progress_bar);
                         removeAllErrors();
                         SessionController.getInstance().logoutUser(context);
+                        startWelcomeActivity(ConnectionUtils.extractJSONValue(jsonObject));
                     }else{
                         //If some Backend Error hide Progressbar and handle Error
                         hideProgressBar(R.id.register_input_container,R.id.progress_bar);
@@ -185,6 +187,26 @@ public class RegisterActivity extends AdvancedActivity {
             }
         });
     }
+
+    private void startWelcomeActivity(JSONObject jsonObject) {
+        try {
+            String username = jsonObject.getString("username");
+            String email = jsonObject.getString("email");
+
+            Intent i = new Intent(this, WelcomeActivity.class);
+            i.putExtra("username",username);
+            i.putExtra("email",email);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(i);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     protected void removeAllErrors(){
         removeInputError(R.id.register_layout_firstname);
         removeInputError(R.id.register_layout_lastname);

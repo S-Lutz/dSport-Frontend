@@ -4,13 +4,20 @@ package com.omgproduction.dsport_application.config;
  * Created by Florian on 17.10.2016.
  */
 public class BackendFunctions {
+
+    //private static final String HOST = "http://www.herborn-software.com:9000";
+    //private static final String HOST = "http://5.189.141.187:9000";
+    private static final String HOST = "http://10.0.2.2:9000";
+    //private static final String HOST = "http://localhost:9000";
+    private static final String HOME = "/dsport";
+
     // Server user login url
-    public static String LOGIN = "http://5.189.141.187/dsport/users/login";
+    public static final String LOGIN = HOST+HOME+"/users/login/";
     // Server user register url
-    public static String REGISTER = "http://5.189.141.187/dsport/users/register";
+    public static final String REGISTER = HOST+HOME+"/users/signup/";
     // Get latest AGB
-    public static String GET_LATEST_AGB = "http://5.189.141.187/dsport/users/get_latest_agb";
+    public static final String GET_LATEST_AGB = HOST+HOME+"/users/get_latest_agb/";
     // Update AGB Version
-    public static String PUT_AGP_VERSION = "http://5.189.141.187/dsport/users/put_agb_version";
+    public static final String PUT_AGP_VERSION = HOST+HOME+"/users/put_agb_version/";
 }
 

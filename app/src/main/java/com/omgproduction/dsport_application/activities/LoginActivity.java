@@ -31,6 +31,8 @@ public class LoginActivity extends AdvancedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        checkLogin();
+
         context = this;
 
         findViewById(R.id.registration_link).setOnClickListener(this);
@@ -45,11 +47,17 @@ public class LoginActivity extends AdvancedActivity {
 
     }
 
+    private void checkLogin() {
+        if(SessionController.getInstance().checkLogin(this)){
+            startMainActivity(this);
+        }
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.registration_link :
-                goToRegisterActivity(this);
+                startRegistrationActivity(this);
                 break;
             case R.id.btn_login:
                 loginUser();
@@ -89,7 +97,7 @@ public class LoginActivity extends AdvancedActivity {
                 //Check if Backend send any Errors
                 if(ConnectionUtils.Success(jsonObject)){
                     boolean saved = SessionController.getInstance().startLocalSession(context,ConnectionUtils.extractJSONValue(jsonObject));
-                    if(saved){ goToMainActivity(context); }
+                    if(saved){ startMainActivity(context); }
                 }else{
                     //Errorhandling for Internal Errors
                     String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
@@ -117,18 +125,18 @@ public class LoginActivity extends AdvancedActivity {
         });
     }
 
-    private void goToMainActivity(Context context){
+    private void startMainActivity(Context context){
         Intent i = new Intent(context, MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);
     }
 
-    private void goToRegisterActivity(Context context){
+    private void startRegistrationActivity(Context context){
         Intent i = new Intent(context, RegisterActivity.class);
         i.putExtra("username",((EditText)findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);
     }
 

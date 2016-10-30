@@ -10,11 +10,15 @@ import org.json.JSONObject;
  */
 public class ConnectionUtils {
 
+    private static final String KEY_ERROR = "error";
+    private static final String KEY_OK = "OK";
+    private static final String KEY_VALUE = "value";
+
     private ConnectionUtils(){};
 
     public static boolean Success(JSONObject jsonObject){
         try {
-            return jsonObject.getString("error").equals("OK");
+            return jsonObject.getString(KEY_ERROR).equals(KEY_OK);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
@@ -23,7 +27,7 @@ public class ConnectionUtils {
 
     public static JSONObject extractJSONValue(JSONObject jsonObject){
         try {
-            return jsonObject.getJSONObject("value");
+            return jsonObject.getJSONObject(KEY_VALUE);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -32,7 +36,7 @@ public class ConnectionUtils {
 
     public static String extractErrorCode(JSONObject jsonObject){
         try {
-            return jsonObject.getString("value");
+            return jsonObject.getString(KEY_VALUE);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

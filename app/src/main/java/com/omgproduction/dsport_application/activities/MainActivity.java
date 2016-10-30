@@ -1,6 +1,7 @@
 package com.omgproduction.dsport_application.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -8,13 +9,19 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
+import com.omgproduction.dsport_application.builder.Preferences;
+import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.fragments.ChatFragment;
 import com.omgproduction.dsport_application.fragments.EventFragment;
 import com.omgproduction.dsport_application.fragments.ExerciseUnitFragment;
@@ -27,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -61,11 +69,19 @@ public class MainActivity extends AppCompatActivity
 
         TypedArray icons = getResources().obtainTypedArray(R.array.tab_icons);
 
+        setNavValues();
         // get resource ID by index
         for (int l = 0; l < icons.length(); l++) {
             tabLayout.getTabAt(l).setText("");
-            tabLayout.getTabAt(l).setIcon(getDrawable(icons.getResourceId(l, -1)));
+            tabLayout.getTabAt(l).setIcon(getResources().getDrawable(icons.getResourceId(l, -1)));
         }
+    }
+
+    private void setNavValues() {
+        View headerLayout =
+                navigationView.getHeaderView(0);
+        ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(Preferences.getInstance(this).getStringDetail(Preferences.KEY_USERNAME,"empty"));
+        ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(Preferences.getInstance(this).getStringDetail(Preferences.KEY_EMAIL,"empty"));
     }
 
     @Override
@@ -116,10 +132,25 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
 
+        } else if (id == R.id.nav_logout) {
+            logoutUser();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logoutUser(){
+        SessionController.getInstance().logoutUser(this);
+        startLoginActivity(this);
+    }
+
+    private void startLoginActivity(Context context){
+        Intent i = new Intent(context, LoginActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        context.startActivity(i);
     }
 }
