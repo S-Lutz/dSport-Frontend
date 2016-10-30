@@ -1,6 +1,7 @@
 package com.omgproduction.dsport_application.builder;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -63,12 +64,12 @@ public class JSONRequest implements Response.Listener<JSONObject>, Response.Erro
     }
 
     public JsonObjectRequest build(){
-        request = new JsonObjectRequest(method,url, jsonObject,responseListener, errorListener){
+        request = new JsonObjectRequest(method,url, jsonObject,this, this){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 //Creating JSON Header
-                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Content-Type", "application/json");
                 return headers;
             }
         };
@@ -78,6 +79,7 @@ public class JSONRequest implements Response.Listener<JSONObject>, Response.Erro
     @Override
     public void onErrorResponse(VolleyError volleyError) {
         volleyError.printStackTrace();
+        Log.i(TAG, "Response: "+volleyError.toString());
         if(errorListener!=null){
             errorListener.onErrorResponse(volleyError);
         }
