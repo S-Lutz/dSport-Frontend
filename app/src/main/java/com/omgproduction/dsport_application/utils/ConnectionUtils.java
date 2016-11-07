@@ -2,6 +2,8 @@ package com.omgproduction.dsport_application.utils;
 
 import android.content.Context;
 
+import com.omgproduction.dsport_application.config.Keys;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,15 +12,12 @@ import org.json.JSONObject;
  */
 public class ConnectionUtils {
 
-    private static final String KEY_ERROR = "error";
-    private static final String KEY_OK = "OK";
-    private static final String KEY_VALUE = "value";
 
     private ConnectionUtils(){};
 
     public static boolean Success(JSONObject jsonObject){
         try {
-            return jsonObject.getString(KEY_ERROR).equals(KEY_OK);
+            return jsonObject.getString(Keys.ERROR).equals(Keys.OK);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
@@ -27,7 +26,7 @@ public class ConnectionUtils {
 
     public static JSONObject extractJSONValue(JSONObject jsonObject){
         try {
-            return jsonObject.getJSONObject(KEY_VALUE);
+            return jsonObject.getJSONObject(Keys.VALUE);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -36,7 +35,7 @@ public class ConnectionUtils {
 
     public static String extractErrorCode(JSONObject jsonObject){
         try {
-            return jsonObject.getString(KEY_VALUE);
+            return jsonObject.getString(Keys.VALUE);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

@@ -1,11 +1,14 @@
 package com.omgproduction.dsport_application.controller;
 
 import android.content.Context;
+import android.content.Intent;
 
 import com.android.volley.Response;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.BackendFunctions;
+import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.exceptions.UserNotFoundException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,11 +40,11 @@ public class SessionController {
     public void registerUser(String username, String firstname, String lastname, String email, String password, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
 
         JSONRequest requestBuilder = new JSONRequest(BackendFunctions.REGISTER)
-                .param("username", username)
-                .param("firstname", firstname)
-                .param("lastname", lastname)
-                .param("email", email)
-                .param("password", password)
+                .param(Keys.USERNAME, username)
+                .param(Keys.FIRSTNAME, firstname)
+                .param(Keys.LASTNAME, lastname)
+                .param(Keys.EMAIL, email)
+                .param(Keys.PASSWORD, password)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
@@ -58,26 +61,26 @@ public class SessionController {
     public void loginUser(final Context context, String username, String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
 
         JSONRequest requestBuilder = new JSONRequest(BackendFunctions.LOGIN)
-                .param("username", username)
-                .param("password", password)
+                .param(Keys.USERNAME, username)
+                .param(Keys.PASSWORD, password)
                 .errorListener(errorListener)
                 .responseListener(responseListener);
 
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
     }
 
-    public boolean startLocalSession(Context context, JSONObject user){
+    public boolean saveLocalUser(Context context, JSONObject user){
         try {
             Preferences preferencesController = Preferences.getInstance(context)
-                    .putBoolean(Preferences.IS_LOGIN, true)
-                    .putString(Preferences.KEY_USERID, user.getString("user_id"))
-                    .putString(Preferences.KEY_USERNAME, user.getString("username"))
-                    .putString(Preferences.KEY_EMAIL, user.getString("email"))
-                    .putString(Preferences.KEY_FIRSTNAME, user.getString("firstname"))
-                    .putString(Preferences.KEY_LASTNAME,  user.getString("lastname"))
-                    .putString(Preferences.KEY_CREATED, user.getString("created"))
-                    .putString(Preferences.KEY_AGBVERSION, user.getString("agbversion"))
-                    .putString(Preferences.KEY_PICTURE, user.getString("picture"));
+                    .putBoolean(Keys.IS_LOGIN, true)
+                    .putString(Keys.USERID, user.getString(Keys.USERID))
+                    .putString(Keys.USERNAME, user.getString(Keys.USERNAME))
+                    .putString(Keys.EMAIL, user.getString(Keys.EMAIL))
+                    .putString(Keys.FIRSTNAME, user.getString(Keys.FIRSTNAME))
+                    .putString(Keys.LASTNAME,  user.getString(Keys.LASTNAME))
+                    .putString(Keys.CREATED, user.getString(Keys.CREATED))
+                    .putString(Keys.AGB_VERSION, user.getString(Keys.AGB_VERSION))
+                    .putString(Keys.PICTURE, user.getString(Keys.PICTURE));
 
             // commit changes
             preferencesController.commit();
@@ -104,7 +107,7 @@ public class SessionController {
      * Else won't do anything
      */
     public boolean checkLogin(Context context) {
-        return Preferences.getInstance(context).getBooleanDetail(Preferences.IS_LOGIN,false);
+        return Preferences.getInstance(context).getBooleanDetail(Keys.IS_LOGIN,false);
 
     }
 

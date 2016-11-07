@@ -27,6 +27,10 @@
     <string name="e3">The email address you use is not valid!</string>
     <!-- If the user hasnt accept the User licence agreement-->
     <string name="e4">Please read the AGB and accept it to go on!</string>
+    <!-- Camera cant be Opened-->
+    <string name="e5">Your device doesnt support capturing images!</string>
+    <!-- Crop cant be Opened-->
+    <string name="e6">Your device doesnt support crop action!</string>
 
     <!-- If connection to the Server failed -->
     <string name="e100">Connection failed!</string>

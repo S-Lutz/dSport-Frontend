@@ -6,8 +6,8 @@ package com.omgproduction.dsport_application.config;
 public class BackendFunctions {
 
     //private static final String HOST = "http://www.herborn-software.com:9000";
-    //private static final String HOST = "http://5.189.141.187:9000";
-    private static final String HOST = "http://10.0.2.2:9000";
+    private static final String HOST = "http://5.189.141.187:9000";
+    //private static final String HOST = "http://10.0.2.2:9000";
     //private static final String HOST = "http://localhost:9000";
     private static final String HOME = "/dsport";
 
@@ -15,6 +15,10 @@ public class BackendFunctions {
     public static final String LOGIN = HOST+HOME+"/users/login/";
     // Server user register url
     public static final String REGISTER = HOST+HOME+"/users/signup/";
+    // Server user register url
+    public static final String GET_USER = HOST+HOME+"/users/user/";
+    // Server user register url
+    public static final String EDIT_USER = HOST+HOME+"/users/edit/";
     // Get latest AGB
     public static final String GET_LATEST_AGB = HOST+HOME+"/users/get_latest_agb/";
     // Update AGB Version

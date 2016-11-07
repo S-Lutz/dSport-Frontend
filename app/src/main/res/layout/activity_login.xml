@@ -93,7 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:background="@color/primary"
+                    android:background="@color/colorPrimary"
                     android:text="@string/btn_sign_up"
                     android:textColor="@android:color/white" />
 
@@ -104,7 +104,7 @@
                     android:layout_gravity="center"
                     android:id="@+id/registration_link"
                     android:layout_margin="20dp"
-                    android:textColor="@color/accentColor"
+                    android:textColor="@color/colorAccent"
                     android:text="Not a Member? Create your own Account!"/>
             </android.support.v7.widget.LinearLayoutCompat>
 

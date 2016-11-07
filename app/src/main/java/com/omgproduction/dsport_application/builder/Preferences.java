@@ -12,15 +12,6 @@ public class Preferences {
     private SharedPreferences.Editor editor;
     private int PRIVATE_MODE = 0;
     public static final String PREF_NAME = "dsport";
-    public static final String IS_LOGIN = "IsLoggedIn";
-    public static final String KEY_USERID = "user_id";
-    public static final String KEY_USERNAME = "username";
-    public static final String KEY_EMAIL = "email";
-    public static final String KEY_FIRSTNAME = "firstname";
-    public static final String KEY_LASTNAME = "lastname";
-    public static final String KEY_CREATED = "created";
-    public static final String KEY_AGBVERSION = "agbversion";
-    public static final String KEY_PICTURE = "picture";
 
     private Preferences(){};
 

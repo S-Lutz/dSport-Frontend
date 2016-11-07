@@ -2,6 +2,7 @@ package com.omgproduction.dsport_application.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -11,7 +12,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.builder.Preferences;
+import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.ResourceController;
+import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
 import org.json.JSONException;
@@ -30,15 +33,15 @@ public class AGBActivity extends AdvancedActivity {
         this.context = this;
 
         Intent i = getIntent();
-        String agbString = i.getStringExtra("agb");
+        String agbString = i.getStringExtra(Keys.TEXT);
 
 
 
         try {
             JSONObject agb = new JSONObject(agbString);
 
-            agb_text = agb.getString("text");
-            agb_version = agb.getString("version");
+            agb_text = agb.getString(Keys.TEXT);
+            agb_version = agb.getString(Keys.AGB_VERSION);
 
             findViewById(R.id.btn_goon).setOnClickListener(this);
             ((AppCompatTextView)findViewById(R.id.agb_info)).setText(getString(R.string.version)+" "+agb_version);
@@ -77,13 +80,13 @@ public class AGBActivity extends AdvancedActivity {
 
     private void onAGBAccepted() {
         Preferences.getInstance(this)
-                .putString(Preferences.KEY_AGBVERSION,agb_version)
+                .putString(Keys.AGB_VERSION,agb_version)
                 .commit();
 
         ResourceController resourceController = ResourceController.getInstance();
         resourceController.putAGBVersion(
                 Preferences.getInstance(this)
-                        .getStringDetail(Preferences.KEY_USERID, "0"),
+                        .getStringDetail(Keys.USERID, "0"),
                 agb_version,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -108,8 +111,8 @@ public class AGBActivity extends AdvancedActivity {
 
     private void startMainActivity(){
         Intent i = new Intent(context, MainActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(i);
     }
 

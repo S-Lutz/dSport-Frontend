@@ -3,15 +3,18 @@
 
     <!--general Layout Colors-->
     <!--
-    <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
-    <color name="primary_darker">#0D47A1</color>
-    <color name="accentColor">#FE642E</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorPrimaryDarker">#0D47A1</color>
+    <color name="accent_color">#FE642E</color>
     -->
 
-    <color name="primary">#FF5722</color>
-    <color name="primary_dark">#E64A19</color>
-    <color name="primary_darker">#BF360C</color>
-    <color name="accentColor">#03A9F4</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E64A19</color>
+    <color name="colorPrimaryDarker">#BF360C</color>
+    <color name="colorAccent">#03A9F4</color>
+    <color name="colorSubFab1">#4CAF50</color>
+    <color name="colorSubFab2">#E91E63</color>
+    <color name="colorOkFab">#64DD17</color>
 
 </resources>
