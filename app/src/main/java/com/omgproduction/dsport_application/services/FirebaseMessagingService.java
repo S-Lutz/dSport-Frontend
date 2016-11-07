@@ -8,6 +8,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.RemoteMessage;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.MainActivity;
+import com.omgproduction.dsport_application.config.Keys;
 
 /**
  * Created by Florian on 19.10.2016.
@@ -17,7 +18,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        showNotification(remoteMessage.getData().get("message"));
+        showNotification(remoteMessage.getData().get(Keys.MESSAGE));
 
     }
 
@@ -29,9 +30,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setAutoCancel(true)
-                .setContentTitle("dSport")
+                .setContentTitle(getString(R.string.app_name))
                 .setContentText(message)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setSmallIcon(R.drawable.ic_mail)
                 .setContentIntent(pendingIntent);
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

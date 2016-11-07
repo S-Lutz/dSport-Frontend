@@ -11,7 +11,9 @@ import android.widget.EditText;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
+import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
 import org.json.JSONException;
@@ -48,7 +50,7 @@ public class RegisterActivity extends AdvancedActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra("username"))!=null){
+        if((username = i.getStringExtra(Keys.USERNAME))!=null){
             ((EditText)findViewById(R.id.register_username)).setText(username);
         }
     }
@@ -57,7 +59,7 @@ public class RegisterActivity extends AdvancedActivity {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.signup_link :
-                goToLoginActivity(this);
+                startLoginActivity(this);
                 break;
             case R.id.btn_register :
                 registerUser();
@@ -67,11 +69,13 @@ public class RegisterActivity extends AdvancedActivity {
     }
 
 
-    private void goToLoginActivity(Context context){
+    private void startLoginActivity(Context context){
         Intent i = new Intent(context, LoginActivity.class);
-        i.putExtra("username",((EditText)findViewById(R.id.register_username)).getText().toString());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.putExtra(Keys.USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         context.startActivity(i);
     }
 
@@ -190,15 +194,15 @@ public class RegisterActivity extends AdvancedActivity {
 
     private void startWelcomeActivity(JSONObject jsonObject) {
         try {
-            String username = jsonObject.getString("username");
-            String email = jsonObject.getString("email");
+            String username = jsonObject.getString(Keys.USERNAME);
+            String email = jsonObject.getString(Keys.EMAIL);
 
             Intent i = new Intent(this, WelcomeActivity.class);
-            i.putExtra("username",username);
-            i.putExtra("email",email);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.putExtra(Keys.USERNAME,username);
+            i.putExtra(Keys.EMAIL,email);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(i);
 
         } catch (JSONException e) {
@@ -225,8 +229,8 @@ public class RegisterActivity extends AdvancedActivity {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        startLoginActivity(this);
+    }
 }

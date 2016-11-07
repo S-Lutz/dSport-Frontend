@@ -1,22 +1,27 @@
-package com.omgproduction.dsport_application.activities;
+package com.omgproduction.dsport_application.supplements.activities;
 
-import android.app.Activity;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
 
-
 /**
- * Created by Florian on 21.10.2016.
+ * Created by Florian on 06.11.2016.
  */
-public abstract class AdvancedActivity extends Activity implements View.OnClickListener{
+
+public abstract class AdvancedAppCompatActivity extends AppCompatActivity implements View.OnClickListener{
     /**
      * Hide all Input-Fields and show Progress-bar instead
      */
     protected void showProgressBar(int containerIDToHide, int progressBarId){
-        findViewById(containerIDToHide).setVisibility(ProgressBar.GONE);
+        showProgressBar(findViewById(containerIDToHide),progressBarId);
+    }
+    /**
+     * Hide all Input-Fields and show Progress-bar instead
+     */
+    protected void showProgressBar(View containerToHide, int progressBarId){
+        containerToHide.setVisibility(ProgressBar.GONE);
         findViewById(progressBarId).setVisibility(ProgressBar.VISIBLE);
     }
 
@@ -24,7 +29,14 @@ public abstract class AdvancedActivity extends Activity implements View.OnClickL
      * Hide Progressbar and show all Input-Fields instead
      */
     protected void hideProgressBar(int containerIDToShow, int progressBarId){
-        findViewById(containerIDToShow).setVisibility(ProgressBar.VISIBLE);
+        hideProgressBar(findViewById(containerIDToShow),progressBarId);
+    }
+
+    /**
+     * Hide Progressbar and show all Input-Fields instead
+     */
+    protected void hideProgressBar(View containerToShow, int progressBarId){
+        containerToShow.setVisibility(ProgressBar.VISIBLE);
         findViewById(progressBarId).setVisibility(ProgressBar.GONE);
     }
     /**
@@ -96,5 +108,4 @@ public abstract class AdvancedActivity extends Activity implements View.OnClickL
      * Remove all Error from View
      */
     protected abstract void removeAllErrors();
-
 }

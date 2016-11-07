@@ -27,6 +27,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
+                android:id="@+id/toolbar_search"
                 android:foregroundGravity="right">
 
             </android.support.v7.widget.SearchView>

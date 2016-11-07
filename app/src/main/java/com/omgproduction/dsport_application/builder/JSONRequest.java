@@ -8,6 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.omgproduction.dsport_application.config.Keys;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ public class JSONRequest implements Response.Listener<JSONObject>, Response.Erro
     private JSONObject jsonObject = new JSONObject();
     private Response.Listener<JSONObject> responseListener;
     private Response.ErrorListener errorListener;
+    private String content_type = "application/json";
 
     public JSONRequest(String url) {
         this.url = url;
@@ -41,6 +43,11 @@ public class JSONRequest implements Response.Listener<JSONObject>, Response.Erro
 
     public JSONRequest jsonObject(JSONObject jsonObject) {
         this.jsonObject = jsonObject;
+        return this;
+    }
+
+    public JSONRequest contentType(String content_type){
+        this.content_type = content_type;
         return this;
     }
 
@@ -69,7 +76,7 @@ public class JSONRequest implements Response.Listener<JSONObject>, Response.Erro
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 //Creating JSON Header
-                headers.put("Content-Type", "application/json");
+                headers.put(Keys.CONTENT_TYPE, content_type);
                 return headers;
             }
         };

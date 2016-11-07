@@ -9,7 +9,9 @@ import android.widget.EditText;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
+import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
 import org.json.JSONObject;
@@ -41,7 +43,7 @@ public class LoginActivity extends AdvancedActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra("username"))!=null){
+        if((username = i.getStringExtra(Keys.USERNAME))!=null){
             ((EditText)findViewById(R.id.login_username)).setText(username);
         }
 
@@ -96,7 +98,7 @@ public class LoginActivity extends AdvancedActivity {
 
                 //Check if Backend send any Errors
                 if(ConnectionUtils.Success(jsonObject)){
-                    boolean saved = SessionController.getInstance().startLocalSession(context,ConnectionUtils.extractJSONValue(jsonObject));
+                    boolean saved = SessionController.getInstance().saveLocalUser(context,ConnectionUtils.extractJSONValue(jsonObject));
                     if(saved){ startMainActivity(context); }
                 }else{
                     //Errorhandling for Internal Errors
@@ -134,7 +136,7 @@ public class LoginActivity extends AdvancedActivity {
 
     private void startRegistrationActivity(Context context){
         Intent i = new Intent(context, RegisterActivity.class);
-        i.putExtra("username",((EditText)findViewById(R.id.login_username)).getText().toString());
+        i.putExtra(Keys.USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);

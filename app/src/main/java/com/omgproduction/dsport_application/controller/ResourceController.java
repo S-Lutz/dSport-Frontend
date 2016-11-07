@@ -3,6 +3,7 @@ package com.omgproduction.dsport_application.controller;
 import com.android.volley.Response;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.config.BackendFunctions;
+import com.omgproduction.dsport_application.config.Keys;
 
 import org.json.JSONObject;
 
@@ -58,8 +59,8 @@ public class ResourceController {
     public void putAGBVersion(String user_id, String agb_version, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
 
         JSONRequest requestBuilder = new JSONRequest(BackendFunctions.PUT_AGP_VERSION)
-                .param("user_id", user_id)
-                .param("agb_version", agb_version)
+                .param(Keys.USERID, user_id)
+                .param(Keys.AGB_VERSION, agb_version)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
