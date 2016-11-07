@@ -1,31 +1,24 @@
 package com.omgproduction.dsport_application.activities;
 
 import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
@@ -37,10 +30,6 @@ import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-
-import static android.R.attr.scaleWidth;
 
 
 public class ProfileActivity extends NavigationActivity {
@@ -284,27 +273,208 @@ public class ProfileActivity extends NavigationActivity {
 
     private void showPassword(boolean flag){
         isPasswordShown = flag;
-        findViewById(R.id.profile_password_input_container).setVisibility(flag ? View.VISIBLE : View.GONE);
+        if(flag){
+            fadeInOut(findViewById(R.id.profile_password_edit)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    animateOut(findViewById(R.id.profile_username_edit));
+                    animateOut(findViewById(R.id.profile_firstname_edit));
+                    animateOut(findViewById(R.id.profile_lastname_edit));
+                    animateOut(findViewById(R.id.profile_email_edit));
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    goInDown(findViewById(R.id.profile_password_input_container)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            findViewById(R.id.profile_password_input_container).setVisibility( View.VISIBLE);
+                        }
+                    });
+                }
+            });
+        }else{
+            goOutUp(findViewById(R.id.profile_password_input_container)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    findViewById(R.id.profile_password_input_container).setVisibility( View.GONE);
+                    fadeInOut(findViewById(R.id.profile_password_edit)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            animateIn(findViewById(R.id.profile_username_edit));
+                            animateIn(findViewById(R.id.profile_firstname_edit));
+                            animateIn(findViewById(R.id.profile_lastname_edit));
+                            animateIn(findViewById(R.id.profile_email_edit));
+                        }
+                    });
+                }
+            });
+        }
+
     }
 
     private void showUsername(boolean flag){
         isUsernameShown = flag;
-        findViewById(R.id.profile_username_input_container).setVisibility(flag ? View.VISIBLE : View.GONE);
+        if(flag){
+            fadeInOut(findViewById(R.id.profile_username_edit)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    animateOut(findViewById(R.id.profile_firstname_edit));
+                    animateOut(findViewById(R.id.profile_lastname_edit));
+                    animateOut(findViewById(R.id.profile_email_edit));
+                    animateOut(findViewById(R.id.profile_password_edit));
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    goInDown(findViewById(R.id.profile_username_input_container)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            findViewById(R.id.profile_username_input_container).setVisibility( View.VISIBLE);
+                        }
+                    });
+                }
+            });
+        }else{
+            goOutUp(findViewById(R.id.profile_username_input_container)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    findViewById(R.id.profile_username_input_container).setVisibility( View.GONE);
+                    fadeInOut(findViewById(R.id.profile_username_edit)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            animateIn(findViewById(R.id.profile_firstname_edit));
+                            animateIn(findViewById(R.id.profile_lastname_edit));
+                            animateIn(findViewById(R.id.profile_email_edit));
+                            animateIn(findViewById(R.id.profile_password_edit));
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private void showFirstname(boolean flag){
         isFirstnameShown = flag;
-        findViewById(R.id.profile_firstname_input_container).setVisibility(flag ? View.VISIBLE : View.GONE);
+        if(flag){
+            fadeInOut(findViewById(R.id.profile_firstname_edit)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    animateOut(findViewById(R.id.profile_username_edit));
+                    animateOut(findViewById(R.id.profile_lastname_edit));
+                    animateOut(findViewById(R.id.profile_email_edit));
+                    animateOut(findViewById(R.id.profile_password_edit));
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    goInDown(findViewById(R.id.profile_firstname_input_container)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            findViewById(R.id.profile_firstname_input_container).setVisibility( View.VISIBLE);
+                        }
+                    });
+                }
+            });
+        }else{
+            goOutUp(findViewById(R.id.profile_firstname_input_container)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    findViewById(R.id.profile_firstname_input_container).setVisibility( View.GONE);
+                    fadeInOut(findViewById(R.id.profile_firstname_edit)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            animateIn(findViewById(R.id.profile_username_edit));
+                            animateIn(findViewById(R.id.profile_lastname_edit));
+                            animateIn(findViewById(R.id.profile_email_edit));
+                            animateIn(findViewById(R.id.profile_password_edit));
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private void showLastname(boolean flag){
         isLastnameShown = flag;
-        findViewById(R.id.profile_lastname_input_container).setVisibility(flag ? View.VISIBLE : View.GONE);
+        if(flag){
+            fadeInOut(findViewById(R.id.profile_lastname_edit)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    animateOut(findViewById(R.id.profile_username_edit));
+                    animateOut(findViewById(R.id.profile_firstname_edit));
+                    animateOut(findViewById(R.id.profile_email_edit));
+                    animateOut(findViewById(R.id.profile_password_edit));
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    goInDown(findViewById(R.id.profile_lastname_input_container)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            findViewById(R.id.profile_lastname_input_container).setVisibility( View.VISIBLE);
+                        }
+                    });
+                }
+            });
+        }else{
+            goOutUp(findViewById(R.id.profile_lastname_input_container)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    findViewById(R.id.profile_lastname_input_container).setVisibility( View.GONE);
+                    fadeInOut(findViewById(R.id.profile_lastname_edit)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            animateIn(findViewById(R.id.profile_username_edit));
+                            animateIn(findViewById(R.id.profile_firstname_edit));
+                            animateIn(findViewById(R.id.profile_email_edit));
+                            animateIn(findViewById(R.id.profile_password_edit));
+                        }
+                    });
+                }
+            });
+        }
     }
 
     private void showEmail(boolean flag){
         isEmailShown = flag;
-        findViewById(R.id.profile_email_input_container).setVisibility(flag ? View.VISIBLE : View.GONE);
+        if(flag){
+            fadeInOut(findViewById(R.id.profile_email_edit)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    animateOut(findViewById(R.id.profile_username_edit));
+                    animateOut(findViewById(R.id.profile_firstname_edit));
+                    animateOut(findViewById(R.id.profile_lastname_edit));
+                    animateOut(findViewById(R.id.profile_password_edit));
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    goInDown(findViewById(R.id.profile_email_input_container)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            findViewById(R.id.profile_email_input_container).setVisibility( View.VISIBLE);
+                        }
+                    });
+                }
+            });
+        }else{
+            goOutUp(findViewById(R.id.profile_email_input_container)).setAnimationListener(new AnimationAdapter() {
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    findViewById(R.id.profile_email_input_container).setVisibility( View.GONE);
+                    fadeInOut(findViewById(R.id.profile_email_edit)).setAnimationListener(new AnimationAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            animateIn(findViewById(R.id.profile_username_edit));
+                            animateIn(findViewById(R.id.profile_firstname_edit));
+                            animateIn(findViewById(R.id.profile_lastname_edit));
+                            animateIn(findViewById(R.id.profile_password_edit));
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override
@@ -414,5 +584,62 @@ public class ProfileActivity extends NavigationActivity {
         showEmail(false);
         showFirstname(false);
         showPassword(false);
+    }
+    private void animateOut(final View view){
+        Animation goOut = AnimationUtils.loadAnimation(this,R.anim.go_out);
+        goOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.startAnimation(goOut);
+    }
+    private void animateIn(final View view){
+        Animation goIn = AnimationUtils.loadAnimation(this,R.anim.go_in);
+        goIn.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                view.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        view.startAnimation(goIn);
+    }
+
+    private Animation fadeInOut(View view){
+        Animation fade = AnimationUtils.loadAnimation(this,R.anim.fade_in_out);
+        view.startAnimation(fade);
+        return fade;
+    }
+
+    private Animation goInDown(final View view){
+        Animation anim = AnimationUtils.loadAnimation(this,R.anim.go_in_up);
+        view.startAnimation(anim);
+        return anim;
+    }
+
+    private Animation goOutUp(final View view){
+        Animation anim = AnimationUtils.loadAnimation(this,R.anim.go_out_down);
+        view.startAnimation(anim);
+        return anim;
     }
 }
