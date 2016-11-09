@@ -1,5 +1,6 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
@@ -98,24 +101,22 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        if(id!=item.getItemId()){
             id = item.getItemId();
-
-            if (id == R.id.nav_settings) {
-                // Handle the camera action
-            } else if (id == R.id.nav_friends) {
-
-            } else if (id == R.id.nav_main) {
-                startActivity(new Intent(this, MainActivity.class));
-            } else if (id == R.id.nav_profile) {
-                startActivity(new Intent(this, ProfileActivity.class));
-            } else if (id == R.id.nav_logout) {
-                logoutUser();
-            }
+        switch (id){
+            case R.id.nav_main: startActivity(new Intent(this, MainActivity.class)); break;
+            case R.id.nav_profile: performProfileClick();break;
+            case R.id.nav_friends: break;
+            case R.id.nav_logout: logoutUser(); break;
+            case R.id.nav_settings: break;
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    protected void performProfileClick(){
+        startActivity(new Intent(this, ProfileActivity.class));
     }
 
     protected void logoutUser(){
@@ -136,8 +137,7 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
+        item.setChecked(false);
         return super.onOptionsItemSelected(item);
     }
 

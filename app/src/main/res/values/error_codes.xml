@@ -44,4 +44,8 @@
     <string name="e302">Email already exists!</string>
     <!-- If Database not contain a User with this Username or Password-->
     <string name="e303">Username or Password wrong!</string>
+    <!-- If Database not contain a User with this Username or Password-->
+    <string name="e304">User not found!</string>
+    <!-- Universal Error-->
+    <string name="e599">Something went wrong!</string>
 </resources>
