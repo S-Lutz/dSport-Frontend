@@ -31,6 +31,8 @@
     <string name="e5">Your device doesnt support capturing images!</string>
     <!-- Crop cant be Opened-->
     <string name="e6">Your device doesnt support crop action!</string>
+    <!-- No changes detected!-->
+    <string name="e7">No changes detected!</string>
 
     <!-- If connection to the Server failed -->
     <string name="e100">Connection failed!</string>

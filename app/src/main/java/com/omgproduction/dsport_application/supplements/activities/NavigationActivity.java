@@ -1,8 +1,10 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
+import android.app.ActionBar;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -36,6 +41,7 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
 
     protected Context context;
     protected NavigationView navigationView;
+    protected DrawerLayout drawer;
 
     private static int id = R.id.nav_main;
 
@@ -65,25 +71,44 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = ((DrawerLayout) findViewById(R.id.drawer_layout));
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+                if (newState == DrawerLayout.STATE_SETTLING) {
+                    if (!isDrawerOpened()) {
+                        updateNavigationValues();
+                    }
+                }
+            }
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        setNavValues();
+        updateNavigationValues();
     }
 
-    protected void setNavValues() {
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if(isDrawerOpened()){
+            closeDrawer();
+        }else{
+            openDrawer();
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    public void updateNavigationValues() {
         View headerLayout =
                 navigationView.getHeaderView(0);
         ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(Preferences.getInstance(this).getStringDetail(Keys.USERNAME,getString(R.string.empty)));
         ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(Preferences.getInstance(this).getStringDetail(Keys.EMAIL,getString(R.string.empty)));
-        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(Preferences.getInstance(this).getStringDetail(Keys.PICTURE,getString(R.string.empty))));
+        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(this,Preferences.getInstance(this).getStringDetail(Keys.PICTURE,getString(R.string.empty))));
     }
 
     @Override
@@ -101,7 +126,7 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-            id = item.getItemId();
+        id = item.getItemId();
         switch (id){
             case R.id.nav_main: startActivity(new Intent(this, MainActivity.class)); break;
             case R.id.nav_profile: performProfileClick();break;
@@ -110,8 +135,7 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
             case R.id.nav_settings: break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        closeDrawer();
         return true;
     }
 
@@ -147,5 +171,9 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
 
     public void closeDrawer(){
         ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawer(GravityCompat.START);
+    }
+
+    public void openDrawer(){
+        ((DrawerLayout) findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.START);
     }
 }

@@ -75,6 +75,13 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="@style/Base.Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:id="@+id/progress_bar_username"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_username_input_container"
                 android:layout_width="match_parent"
@@ -165,6 +172,13 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="@style/Base.Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:id="@+id/progress_bar_firstname"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_firstname_input_container"
                 android:layout_width="match_parent"
@@ -255,6 +269,13 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="@style/Base.Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:id="@+id/progress_bar_lastname"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_lastname_input_container"
                 android:layout_width="match_parent"
@@ -345,6 +366,13 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="@style/Base.Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:id="@+id/progress_bar_email"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_email_input_container"
                 android:layout_width="match_parent"
@@ -436,6 +464,13 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="@style/Base.Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:id="@+id/progress_bar_password"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_password_input_container"
                 android:layout_width="match_parent"

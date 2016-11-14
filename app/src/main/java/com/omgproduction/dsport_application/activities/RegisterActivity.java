@@ -15,6 +15,7 @@ import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
+import com.omgproduction.dsport_application.utils.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,7 +137,7 @@ public class RegisterActivity extends AdvancedActivity {
             return;
         }
         //Check if Email is valid. Show Error below the Input-Field
-        if(!isValidEmail(email)){
+        if(!StringUtils.isValidEmail(email)){
             printInputError(R.id.register_layout_email,"e3");
             return;
         }
@@ -218,15 +219,6 @@ public class RegisterActivity extends AdvancedActivity {
         removeInputError(R.id.register_layout_password_confirm);
         removeInputError(R.id.register_layout_username);
         removeInputError(R.id.register_layout_email);
-    }
-
-    /**
-     * Check if Email is Valid. User Util-Patterns from Anroid
-     * @param email Email to Check
-     * @return True id Email is a Valid email and False if Email isnt a Valid Email
-     */
-    public final static boolean isValidEmail(CharSequence email) {
-        return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     @Override

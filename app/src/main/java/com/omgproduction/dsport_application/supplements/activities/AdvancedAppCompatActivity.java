@@ -1,10 +1,14 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
+import android.graphics.Bitmap;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
  * Created by Florian on 06.11.2016.
@@ -108,4 +112,37 @@ public abstract class AdvancedAppCompatActivity extends AppCompatActivity implem
      * Remove all Error from View
      */
     protected abstract void removeAllErrors();
+
+    /**
+     * Set Text to a TextView with id
+     * @param id id of the TextView
+     * @param text text to put in
+     */
+    protected void setText(int id, String text){
+        ((TextView)findViewById(id)).setText(text);
+    }
+
+    /**
+     * Set Text to a TextView with id
+     * @param id id of the TextView
+     */
+    protected String getTVText(int id){
+        return ((EditText)findViewById(id)).getText().toString();
+    }
+    /**
+     * Set Drawable to a ImageView with id
+     * @param id id of the ImageView
+     * @param drawable id of Drawable
+     */
+    protected void setPic(int id, int drawable){
+        ((ImageView)findViewById(id)).setImageDrawable(getResources().getDrawable(drawable));
+    }
+    /**
+     * Set Bitmap to a ImageView with id
+     * @param id id of the ImageView
+     * @param bitmap bitmap to put in
+     */
+    protected void setPic(int id, Bitmap bitmap){
+        ((ImageView)findViewById(id)).setImageBitmap(bitmap);
+    }
 }

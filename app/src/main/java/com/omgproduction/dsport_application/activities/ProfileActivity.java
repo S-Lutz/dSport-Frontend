@@ -10,11 +10,11 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,6 +28,7 @@ import com.omgproduction.dsport_application.exceptions.UserNotFoundException;
 import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
+import com.omgproduction.dsport_application.utils.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +76,7 @@ public class ProfileActivity extends NavigationActivity {
 
 
         loadLocalData();
-        //loadOnlineData();
+        loadOnlineData();
     }
 
     private void loadLocalData() {
@@ -84,15 +85,16 @@ public class ProfileActivity extends NavigationActivity {
 
         Preferences preferences = Preferences.getInstance(context);
 
-        ((TextView)findViewById(R.id.profile_username_text)).setText(preferences.getStringDetail(Keys.USERNAME,""));
-        ((TextView)findViewById(R.id.profile_email_text)).setText(preferences.getStringDetail(Keys.EMAIL,""));
-        ((TextView)findViewById(R.id.profile_firstname_text)).setText(preferences.getStringDetail(Keys.FIRSTNAME,""));
-        ((TextView)findViewById(R.id.profile_lastname_text)).setText(preferences.getStringDetail(Keys.LASTNAME,""));
+        setText(R.id.profile_username_text,preferences.getStringDetail(Keys.USERNAME,""));
+        setText(R.id.profile_email_text,preferences.getStringDetail(Keys.EMAIL,""));
+        setText(R.id.profile_firstname_text,preferences.getStringDetail(Keys.FIRSTNAME,""));
+        setText(R.id.profile_lastname_text,preferences.getStringDetail(Keys.LASTNAME,""));
+
         String bitmapString = preferences.getStringDetail(Keys.PICTURE,"");
         if(bitmapString.isEmpty()){
             pic.setImageDrawable(getResources().getDrawable(R.drawable.logo));
         }else{
-            pic.setImageBitmap(BitmapUtils.getBitmapFromString(preferences.getStringDetail(Keys.PICTURE,"")));
+            pic.setImageBitmap(BitmapUtils.getBitmapFromString(this,preferences.getStringDetail(Keys.PICTURE,"")));
         }
         hideProgressBar(R.id.contentPanel,R.id.progress_bar);
         hideProgressBar(pic,R.id.progress_bar_pic);
@@ -135,19 +137,19 @@ public class ProfileActivity extends NavigationActivity {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
                     if(ConnectionUtils.Success(jsonObject)){
-                        //TODO Fill Fields
                         JSONObject user = ConnectionUtils.extractJSONValue(jsonObject);
                         SessionController.getInstance().saveLocalUser(context,user);
                         try {
-                            ((TextView)findViewById(R.id.profile_username_text)).setText(user.getString(Keys.USERNAME));
-                            ((TextView)findViewById(R.id.profile_email_text)).setText(user.getString(Keys.EMAIL));
-                            ((TextView)findViewById(R.id.profile_firstname_text)).setText(user.getString(Keys.FIRSTNAME));
-                            ((TextView)findViewById(R.id.profile_lastname_text)).setText(user.getString(Keys.LASTNAME));
+                            setText(R.id.profile_username_text,user.getString(Keys.USERNAME));
+                            setText(R.id.profile_email_text,user.getString(Keys.EMAIL));
+                            setText(R.id.profile_firstname_text,user.getString(Keys.FIRSTNAME));
+                            setText(R.id.profile_lastname_text,user.getString(Keys.LASTNAME));
+
                             String bitmapString = user.getString(Keys.PICTURE);
                             if(bitmapString.isEmpty()){
                                 pic.setImageDrawable(getResources().getDrawable(R.drawable.logo));
                             }else{
-                                pic.setImageBitmap(BitmapUtils.getBitmapFromString(user.getString(Keys.PICTURE)));
+                                pic.setImageBitmap(BitmapUtils.getBitmapFromString(context,user.getString(Keys.PICTURE)));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -163,6 +165,7 @@ public class ProfileActivity extends NavigationActivity {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
                     hideProgressBar(R.id.contentPanel,R.id.progress_bar);
+                    hideProgressBar(pic,R.id.progress_bar_pic);
                     //TODO Errorhandling
                 }
             });
@@ -179,7 +182,12 @@ public class ProfileActivity extends NavigationActivity {
 
     @Override
     protected void removeAllErrors() {
-
+        removeInputError(R.id.profile_email_input_layout);
+        removeInputError(R.id.profile_password_input_layout);
+        removeInputError(R.id.profile_firstname_input_layout);
+        removeInputError(R.id.profile_lastname_input_layout);
+        removeInputError(R.id.profile_password_confirm_input_layout);
+        removeInputError(R.id.profile_username_input_layout);
     }
 
     @Override
@@ -202,23 +210,112 @@ public class ProfileActivity extends NavigationActivity {
     }
 
     private void performPasswordConfirm() {
-        //TODO confirm
+        final String password1 = getTVText(R.id.profile_password_input1);
+        final String password2 = getTVText(R.id.profile_password_input2);
+
+        if(password1.trim().isEmpty()){
+            printInputError(R.id.profile_password_input_layout,"e2");
+        }
+        if(password2.trim().isEmpty()){
+            printInputError(R.id.profile_password_confirm_input_layout,"e2");
+        }
+
+        if(password1.equals(password2)){
+            savePassword(password1);
+            removeInputError(R.id.profile_password_input_layout);
+            removeInputError(R.id.profile_password_confirm_input_layout);
+        }else{
+            printInputError(R.id.profile_password_input_layout,"e1");
+            printInputError(R.id.profile_password_confirm_input_layout,"e1");
+        }
     }
 
     private void performEmailConfirm() {
-        //TODO confirm
+        final String email = getTVText(R.id.profile_email_input);
+        final String currentEmail = Preferences.getInstance(this).getStringDetail(Keys.EMAIL,"");
+        if(!currentEmail.trim().isEmpty()){
+            if(!email.trim().isEmpty()){
+                if(!email.equals(currentEmail)){
+                    if(StringUtils.isValidEmail(email)){
+                        saveEmail(email);
+                        removeInputError(R.id.profile_email_input_layout);
+                    }else{
+                        printInputError(R.id.profile_email_input_layout,"e3");
+                    }
+                }else{
+                    printInputError(R.id.profile_email_input_layout,"e7");
+                }
+            }else{
+                printInputError(R.id.profile_email_input_layout,"e2");
+            }
+        }else{
+            //User not logged in
+            SessionController.getInstance().logoutUser(this);
+            startLoginActivity(this);
+        }
     }
 
     private void performLastnameConfirm() {
-        //TODO confirm
+        String lastname = getTVText(R.id.profile_lastname_input);
+        String currentLastname = Preferences.getInstance(this).getStringDetail(Keys.LASTNAME,"");
+        if(!currentLastname.trim().isEmpty()){
+            if(!lastname.trim().isEmpty()){
+                if(!lastname.equals(currentLastname)){
+                    saveLastname(lastname);
+                    removeInputError(R.id.profile_lastname_input_layout);
+                }else{
+                    printInputError(R.id.profile_lastname_input_layout,"e7");
+                }
+            }else{
+                printInputError(R.id.profile_lastname_input_layout,"e2");
+            }
+        }else{
+            //User not logged in
+            SessionController.getInstance().logoutUser(this);
+            startLoginActivity(this);
+        }
     }
 
     private void performFirstnameConfirm() {
-        //TODO confirm
+        final String firstname = getTVText(R.id.profile_firstname_input);
+        final String currentFirstname = Preferences.getInstance(this).getStringDetail(Keys.FIRSTNAME,"");
+        if(!currentFirstname.trim().isEmpty()){
+            if(!firstname.trim().isEmpty()){
+                if(!firstname.equals(currentFirstname)){
+                    saveFirstname(firstname);
+                    removeInputError(R.id.profile_firstname_input_layout);
+                }else{
+                    printInputError(R.id.profile_firstname_input_layout,"e7");
+                }
+            }else{
+                printInputError(R.id.profile_firstname_input_layout,"e2");
+            }
+        }else{
+            //User not logged in
+            SessionController.getInstance().logoutUser(this);
+            startLoginActivity(this);
+        }
     }
 
     private void performUsernameConfirm() {
-        //TODO confirm
+        final String username = getTVText(R.id.profile_username_input);
+        final String currentUsername = Preferences.getInstance(this).getStringDetail(Keys.USERNAME,"");
+        if(!currentUsername.trim().isEmpty()){
+            if(!username.trim().isEmpty()){
+                if(!username.equals(currentUsername)){
+                    saveUsername(username);
+                    removeInputError(R.id.profile_username_input_layout);
+                }else{
+                    printInputError(R.id.profile_username_input_layout,"e7");
+                }
+            }else{
+                printInputError(R.id.profile_username_input_layout,"e2");
+            }
+        }else{
+            //User not logged in
+            SessionController.getInstance().logoutUser(this);
+            startLoginActivity(this);
+        }
     }
 
     private void performPasswordClick() {
@@ -261,55 +358,24 @@ public class ProfileActivity extends NavigationActivity {
         }
     }
 
-    private void performFabCameraClick() {
-        performFabClick();
-        try{
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
-        }catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.profile_container,"e5");
-        }
-    }
-
     private void showPassword(boolean flag){
         isPasswordShown = flag;
         if(flag){
-            fadeInOut(findViewById(R.id.profile_password_edit)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    animateOut(findViewById(R.id.profile_username_edit));
-                    animateOut(findViewById(R.id.profile_firstname_edit));
-                    animateOut(findViewById(R.id.profile_lastname_edit));
-                    animateOut(findViewById(R.id.profile_email_edit));
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    goInDown(findViewById(R.id.profile_password_input_container)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            findViewById(R.id.profile_password_input_container).setVisibility( View.VISIBLE);
-                        }
-                    });
-                }
-            });
+            showAnimation(R.id.profile_password_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_firstname_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_password_input_container);
         }else{
-            goOutUp(findViewById(R.id.profile_password_input_container)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    findViewById(R.id.profile_password_input_container).setVisibility( View.GONE);
-                    fadeInOut(findViewById(R.id.profile_password_edit)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            animateIn(findViewById(R.id.profile_username_edit));
-                            animateIn(findViewById(R.id.profile_firstname_edit));
-                            animateIn(findViewById(R.id.profile_lastname_edit));
-                            animateIn(findViewById(R.id.profile_email_edit));
-                        }
-                    });
-                }
-            });
+            hideAnimation(R.id.profile_password_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_firstname_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_password_input_container);
         }
 
     }
@@ -317,217 +383,384 @@ public class ProfileActivity extends NavigationActivity {
     private void showUsername(boolean flag){
         isUsernameShown = flag;
         if(flag){
-            fadeInOut(findViewById(R.id.profile_username_edit)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    animateOut(findViewById(R.id.profile_firstname_edit));
-                    animateOut(findViewById(R.id.profile_lastname_edit));
-                    animateOut(findViewById(R.id.profile_email_edit));
-                    animateOut(findViewById(R.id.profile_password_edit));
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    goInDown(findViewById(R.id.profile_username_input_container)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            findViewById(R.id.profile_username_input_container).setVisibility( View.VISIBLE);
-                        }
-                    });
-                }
-            });
+            showAnimation(R.id.profile_username_edit,new int[]{
+                    R.id.profile_firstname_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_username_input_container);
         }else{
-            goOutUp(findViewById(R.id.profile_username_input_container)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    findViewById(R.id.profile_username_input_container).setVisibility( View.GONE);
-                    fadeInOut(findViewById(R.id.profile_username_edit)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            animateIn(findViewById(R.id.profile_firstname_edit));
-                            animateIn(findViewById(R.id.profile_lastname_edit));
-                            animateIn(findViewById(R.id.profile_email_edit));
-                            animateIn(findViewById(R.id.profile_password_edit));
-                        }
-                    });
-                }
-            });
+            hideAnimation(R.id.profile_username_edit,new int[]{
+                    R.id.profile_firstname_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_username_input_container);
         }
     }
 
     private void showFirstname(boolean flag){
         isFirstnameShown = flag;
         if(flag){
-            fadeInOut(findViewById(R.id.profile_firstname_edit)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    animateOut(findViewById(R.id.profile_username_edit));
-                    animateOut(findViewById(R.id.profile_lastname_edit));
-                    animateOut(findViewById(R.id.profile_email_edit));
-                    animateOut(findViewById(R.id.profile_password_edit));
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    goInDown(findViewById(R.id.profile_firstname_input_container)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            findViewById(R.id.profile_firstname_input_container).setVisibility( View.VISIBLE);
-                        }
-                    });
-                }
-            });
+            showAnimation(R.id.profile_firstname_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_firstname_input_container);
         }else{
-            goOutUp(findViewById(R.id.profile_firstname_input_container)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    findViewById(R.id.profile_firstname_input_container).setVisibility( View.GONE);
-                    fadeInOut(findViewById(R.id.profile_firstname_edit)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            animateIn(findViewById(R.id.profile_username_edit));
-                            animateIn(findViewById(R.id.profile_lastname_edit));
-                            animateIn(findViewById(R.id.profile_email_edit));
-                            animateIn(findViewById(R.id.profile_password_edit));
-                        }
-                    });
-                }
-            });
+            hideAnimation(R.id.profile_firstname_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_firstname_input_container);
         }
     }
 
     private void showLastname(boolean flag){
         isLastnameShown = flag;
         if(flag){
-            fadeInOut(findViewById(R.id.profile_lastname_edit)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    animateOut(findViewById(R.id.profile_username_edit));
-                    animateOut(findViewById(R.id.profile_firstname_edit));
-                    animateOut(findViewById(R.id.profile_email_edit));
-                    animateOut(findViewById(R.id.profile_password_edit));
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    goInDown(findViewById(R.id.profile_lastname_input_container)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            findViewById(R.id.profile_lastname_input_container).setVisibility( View.VISIBLE);
-                        }
-                    });
-                }
-            });
+            showAnimation(R.id.profile_lastname_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_firstname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_lastname_input_container);
         }else{
-            goOutUp(findViewById(R.id.profile_lastname_input_container)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    findViewById(R.id.profile_lastname_input_container).setVisibility( View.GONE);
-                    fadeInOut(findViewById(R.id.profile_lastname_edit)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            animateIn(findViewById(R.id.profile_username_edit));
-                            animateIn(findViewById(R.id.profile_firstname_edit));
-                            animateIn(findViewById(R.id.profile_email_edit));
-                            animateIn(findViewById(R.id.profile_password_edit));
-                        }
-                    });
-                }
-            });
+            hideAnimation(R.id.profile_lastname_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_firstname_edit,
+                    R.id.profile_email_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_lastname_input_container);
         }
     }
 
     private void showEmail(boolean flag){
         isEmailShown = flag;
         if(flag){
-            fadeInOut(findViewById(R.id.profile_email_edit)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-                    animateOut(findViewById(R.id.profile_username_edit));
-                    animateOut(findViewById(R.id.profile_firstname_edit));
-                    animateOut(findViewById(R.id.profile_lastname_edit));
-                    animateOut(findViewById(R.id.profile_password_edit));
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    goInDown(findViewById(R.id.profile_email_input_container)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            findViewById(R.id.profile_email_input_container).setVisibility( View.VISIBLE);
-                        }
-                    });
-                }
-            });
+            showAnimation(R.id.profile_email_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_firstname_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_email_input_container);
         }else{
-            goOutUp(findViewById(R.id.profile_email_input_container)).setAnimationListener(new AnimationAdapter() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    findViewById(R.id.profile_email_input_container).setVisibility( View.GONE);
-                    fadeInOut(findViewById(R.id.profile_email_edit)).setAnimationListener(new AnimationAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            animateIn(findViewById(R.id.profile_username_edit));
-                            animateIn(findViewById(R.id.profile_firstname_edit));
-                            animateIn(findViewById(R.id.profile_lastname_edit));
-                            animateIn(findViewById(R.id.profile_password_edit));
-                        }
-                    });
+            hideAnimation(R.id.profile_email_edit,new int[]{
+                    R.id.profile_username_edit,
+                    R.id.profile_firstname_edit,
+                    R.id.profile_lastname_edit,
+                    R.id.profile_password_edit,
+                    R.id.profile_edit_fab
+            }, R.id.profile_email_input_container);
+        }
+    }
+
+    private void showAnimation(int vMain, final int[] vOthers, final int container){
+        fadeInOut(findViewById(vMain)).setAnimationListener(new AnimationAdapter() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                for(int id :vOthers){
+                    animateOut(findViewById(id));
                 }
-            });
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
-                performCrop(data.getData());
-            }else if(requestCode == PIC_CROP){
-                Bundle extras = data.getExtras();
-                Bitmap thePic = extras.getParcelable("data");
-                savePicture(thePic);
             }
-        }
 
-
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                goInDown(findViewById(container)).setAnimationListener(new AnimationAdapter() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        findViewById(container).setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
+    }
+    private void hideAnimation(final int vMain, final int[] vOthers, final int container){
+        goOutUp(findViewById(container)).setAnimationListener(new AnimationAdapter() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                findViewById(container).setVisibility( View.GONE);
+                fadeInOut(findViewById(vMain)).setAnimationListener(new AnimationAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        for(int id : vOthers){
+                            animateIn(findViewById(id));
+                        }
+                    }
+                });
+            }
+        });
     }
 
-    private void savePicture(Bitmap thePic) {
+
+    private void savePicture(final Bitmap thePic) {
         showProgressBar(pic,R.id.progress_bar_pic);
         try{
-            UserController.getInstance().savePicture(this, BitmapUtils.getStringFromBitmap(thePic), new Response.Listener<JSONObject>(){
+            UserController.getInstance().saveUserDetail(this, Keys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject jsonObject) {
 
                     if(ConnectionUtils.Success(jsonObject)){
                         try {
-                            String picString = jsonObject.getString(Keys.PICTURE);
-                            pic.setImageBitmap(BitmapUtils.getBitmapFromString(picString));
+                            String picString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.PICTURE);
+                            pic.setImageBitmap(BitmapUtils.getBitmapFromString(context,picString));
                             Preferences.getInstance(context)
                                     .putString(Keys.PICTURE,picString)
                                     .commit();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            //TODO Errorhandling
+                            printError(R.id.profile_container,"e0");
                         }
                     }else {
-                        //TODO Errorhandling
+                        //If some Backend Error hide Progressbar and handle Error
+                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
                     }
                     hideProgressBar(pic, R.id.progress_bar_pic);
                 }
             },new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-                    //TODO Errorhandling
+                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            savePicture(thePic);
+                        }
+                    });
                     hideProgressBar(pic, R.id.progress_bar_pic);
                 }
             });
         }catch (UserNotFoundException e){
             SessionController.getInstance().logoutUser(this);
         }
+    }
+
+    private void saveEmail(final String email) {
+        showProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
+        try{
+            UserController.getInstance().saveUserDetail(this, Keys.EMAIL, email, new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+
+                    if(ConnectionUtils.Success(jsonObject)){
+                        removeInputError(R.id.profile_email_input_layout);
+                        try {
+                            String emailString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.EMAIL);
+                            setText(R.id.profile_email_text,emailString);
+                            Preferences.getInstance(context)
+                                    .putString(Keys.EMAIL,emailString)
+                                    .commit();
+                            showEmail(false);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            printError(R.id.profile_email_input_layout,"e0");
+                        }
+                    }else {
+                        //If some Backend Error hide Progressbar and handle Error
+                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
+                        printError(R.id.profile_email_input_layout,errorCode);
+
+                    }
+                    hideProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
+                }
+            },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            saveEmail(email);
+                        }
+                    });
+                    hideProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
+                }
+            });
+        }catch (UserNotFoundException e){
+            SessionController.getInstance().logoutUser(this);
+        }
+    }
+
+    private void saveFirstname(final String firstname) {
+        showProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
+        try{
+            UserController.getInstance().saveUserDetail(this, Keys.FIRSTNAME, firstname, new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+
+                    if(ConnectionUtils.Success(jsonObject)){
+                        try {
+                            removeInputError(R.id.profile_firstname_input_layout);
+                            String firstnameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.FIRSTNAME);
+                            setText(R.id.profile_firstname_text,firstnameString);
+                            Preferences.getInstance(context)
+                                    .putString(Keys.FIRSTNAME,firstnameString)
+                                    .commit();
+                            showFirstname(false);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            printError(R.id.profile_firstname_input_layout,"e0");
+                        }
+                    }else {
+                        //If some Backend Error hide Progressbar and handle Error
+                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
+                        printError(R.id.profile_firstname_input_layout,errorCode);
+                    }
+                    hideProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
+                }
+            },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            saveFirstname(firstname);
+                        }
+                    });
+                    hideProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
+                }
+            });
+        }catch (UserNotFoundException e){
+            SessionController.getInstance().logoutUser(this);
+        }
+    }
+
+    private void saveLastname(final String lastname) {
+        showProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
+        try{
+            UserController.getInstance().saveUserDetail(this, Keys.LASTNAME, lastname, new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+
+                    if(ConnectionUtils.Success(jsonObject)){
+                        try {
+                            String lastnameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.LASTNAME);
+                            setText(R.id.profile_lastname_text,lastnameString);
+                            Preferences.getInstance(context)
+                                    .putString(Keys.LASTNAME,lastnameString)
+                                    .commit();
+                            showLastname(false);
+                            removeInputError(R.id.profile_lastname_input_layout);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            printError(R.id.profile_lastname_input_layout,"e0");
+                        }
+                    }else {
+                        //If some Backend Error hide Progressbar and handle Error
+                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
+                        printError(R.id.profile_lastname_input_layout,errorCode);
+                    }
+                    hideProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
+                }
+            },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            saveLastname(lastname);
+                        }
+                    });
+                    hideProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
+                }
+            });
+        }catch (UserNotFoundException e){
+            SessionController.getInstance().logoutUser(this);
+        }
+    }
+
+    private void savePassword(final String password) {
+        showProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
+        try{
+            UserController.getInstance().saveUserDetail(this, Keys.PASSWORD, password, new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+
+                    if(ConnectionUtils.Success(jsonObject)){
+                        removeInputError(R.id.profile_password_input_layout);
+                        removeInputError(R.id.profile_password_confirm_input_layout);
+                        showPassword(false);
+                    }else {
+                        //If some Backend Error hide Progressbar and handle Error
+                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
+                        printError(R.id.profile_password_input_layout,errorCode);
+                        printError(R.id.profile_password_confirm_input_layout,errorCode);
+                    }
+                    hideProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
+                }
+            },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            savePassword(password);
+                        }
+                    });
+                    hideProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
+                }
+            });
+        }catch (UserNotFoundException e){
+            SessionController.getInstance().logoutUser(this);
+        }
+
+    }
+
+    private void saveUsername(final String username) {
+        showProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
+        try{
+            UserController.getInstance().saveUserDetail(this, Keys.USERNAME, username, new Response.Listener<JSONObject>(){
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+
+                    if(ConnectionUtils.Success(jsonObject)){
+                        try {
+                            removeInputError(R.id.profile_username_input_layout);
+                            String usernameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.USERNAME);
+                            setText(R.id.profile_username_text,usernameString);
+                            Preferences.getInstance(context)
+                                    .putString(Keys.USERNAME,usernameString)
+                                    .commit();
+                            showUsername(false);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            printError(R.id.profile_username_input_layout,"e0");
+                        }
+                    }else {
+                        //If some Backend Error hide Progressbar and handle Error
+                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
+                        printError(R.id.profile_username_input_layout,errorCode);
+                    }
+                    hideProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
+                }
+            },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            saveUsername(username);
+                        }
+                    });
+                    hideProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
+                }
+            });
+        }catch (UserNotFoundException e){
+            SessionController.getInstance().logoutUser(this);
+        }
+
     }
 
     private void performCrop(Uri uri){
@@ -557,6 +790,44 @@ public class ProfileActivity extends NavigationActivity {
                 getString(R.string.select_picture)), SELECT_PICTURE);
     }
 
+    private void performFabCameraClick() {
+        performFabClick();
+        try{
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent,CAM_REQUEST);
+        }catch(ActivityNotFoundException e){
+            //display an error message
+            printError(R.id.profile_container,"e5");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isSomethingShown()){
+            closeAll();
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+                performCrop(data.getData());
+            }else if(requestCode == PIC_CROP){
+                Bundle extras = data.getExtras();
+                Bitmap thePic = extras.getParcelable("data");
+                Log.e("PICTURE", String.valueOf(thePic.getWidth()));
+                Log.e("PICTURE", String.valueOf(thePic.getHeight()));
+                savePicture(thePic);
+            }
+        }
+
+
+    }
+
     private void performFabClick() {
         if(isEditFabOpen){
             fabCamera.startAnimation(fabClose);
@@ -579,13 +850,6 @@ public class ProfileActivity extends NavigationActivity {
         return isEmailShown||isFirstnameShown||isLastnameShown||isUsernameShown||isPasswordShown;
     }
 
-    private void closeAll(){
-        showLastname(false);
-        showUsername(false);
-        showEmail(false);
-        showFirstname(false);
-        showPassword(false);
-    }
     private void animateOut(final View view){
         Animation goOut = AnimationUtils.loadAnimation(this,R.anim.go_out);
         goOut.setAnimationListener(new Animation.AnimationListener() {
@@ -624,6 +888,14 @@ public class ProfileActivity extends NavigationActivity {
             }
         });
         view.startAnimation(goIn);
+    }
+
+    private void closeAll(){
+        showEmail(false);
+        showLastname(false);
+        showUsername(false);
+        showPassword(false);
+        showFirstname(false);
     }
 
     private Animation fadeInOut(View view){

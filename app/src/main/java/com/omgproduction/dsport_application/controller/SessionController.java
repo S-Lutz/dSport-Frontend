@@ -118,5 +118,6 @@ public class SessionController {
         Preferences.getInstance(context)
                 .clear()
                 .commit();
+
     }
 }
