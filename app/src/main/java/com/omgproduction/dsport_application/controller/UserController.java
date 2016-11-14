@@ -25,7 +25,7 @@ public class UserController {
         return UserController.instance;
     }
 
-    public void savePicture(Context context, String stringFromBitmap, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) throws UserNotFoundException{
+    public void saveUserDetail(Context context, final String key, final String value, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) throws UserNotFoundException{
 
         String userID = Preferences.getInstance(context)
                 .getStringDetail(Keys.USERID,"");
@@ -35,7 +35,7 @@ public class UserController {
                     .errorListener(errorListener)
                     .responseListener(listener)
                     .param(Keys.USERID, userID)
-                    .param(Keys.PICTURE,stringFromBitmap);
+                    .param(key,value);
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
             throw new UserNotFoundException();

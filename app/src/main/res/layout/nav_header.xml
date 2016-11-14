@@ -13,7 +13,6 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:adjustViewBounds="true"
         android:src="@drawable/test_profile"
         android:id="@+id/nav_img"/>

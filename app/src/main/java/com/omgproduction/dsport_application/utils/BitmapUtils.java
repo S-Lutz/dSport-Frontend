@@ -1,8 +1,11 @@
 package com.omgproduction.dsport_application.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+
+import com.omgproduction.dsport_application.R;
 
 import java.io.ByteArrayOutputStream;
 
@@ -24,9 +27,14 @@ public class BitmapUtils {
         return encodedImage;
     }
 
-    public static Bitmap getBitmapFromString(String stringPicture) {
-        byte[] decodedString = Base64.decode(stringPicture, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        return decodedByte;
+    public static Bitmap getBitmapFromString(Context context, String stringPicture) {
+        try{
+            byte[] decodedString = Base64.decode(stringPicture, Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            return decodedByte;
+        }catch (IllegalArgumentException ex){
+            return BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.test_profile);
+        }
     }
 }
