@@ -8,7 +8,7 @@ import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.BackendFunctions;
 import com.omgproduction.dsport_application.config.Keys;
-import com.omgproduction.dsport_application.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 import com.omgproduction.dsport_application.utils.Converter;
@@ -41,7 +41,7 @@ public class UserController {
                     .errorListener(new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            listener.onResult();
+                            listener.onFinish();
                             listener.onConnectionError(volleyError);
                         }
                     })
@@ -49,16 +49,16 @@ public class UserController {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             if(ConnectionUtils.Success(jsonObject)){
-                                listener.onResult();
+                                listener.onFinish();
                                 try {
                                     String value = ConnectionUtils.extractJSONValue(jsonObject).getString(key);
                                     update(context,key,value);
                                     listener.onSuccess(value);
                                 } catch (JSONException e) {
-                                    listener.onJSONError(e);
+                                    listener.onJSONException(e);
                                 }
                             }else{
-                                listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject),ConnectionUtils.extractErrorString(context,jsonObject));
+                                listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
                             }
                         }
                     })
@@ -66,13 +66,13 @@ public class UserController {
                     .param(key,value);
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
-            listener.onResult();
+            listener.onFinish();
             listener.onUserNotFound();
         }
 
     }
 
-    public void getUser(final Context context, final OnResultListener<User> listener){
+    public void getGlobalUser(final Context context, final OnResultListener<User> listener){
 
         listener.onStart();
 
@@ -85,13 +85,13 @@ public class UserController {
                     .responseListener(new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
-                            listener.onResult();
+                            listener.onFinish();
                             if(ConnectionUtils.Success(jsonObject)){
                                 JSONObject jsonUser = ConnectionUtils.extractJSONValue(jsonObject);
                                 User user = Converter.convertUser(jsonUser);
                                 listener.onSuccess(user);
                             }else{
-                                listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject),ConnectionUtils.extractErrorString(context,jsonObject));
+                                listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
                             }
 
                         }
@@ -99,14 +99,38 @@ public class UserController {
                     .errorListener(new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            listener.onResult();
+                            listener.onFinish();
                             listener.onConnectionError(volleyError);
                         }
                     });
 
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
-            listener.onResult();
+            listener.onFinish();
+            listener.onUserNotFound();
+        }
+
+    }
+
+    public void getLocalUser(final Context context, final OnResultListener<User> listener){
+
+        listener.onStart();
+        String userID = Preferences.getInstance(context).getStringDetail(Keys.USERID,"");
+        if(!userID.trim().isEmpty()){
+            User user = new User(
+                    Preferences.getInstance(context).getStringDetail(Keys.USERID,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.USERNAME,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.EMAIL,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.PICTURE,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.FIRSTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.LASTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.CREATED,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.AGB_VERSION,"")
+            );
+            listener.onFinish();
+            listener.onSuccess(user);
+        }else{
+            listener.onFinish();
             listener.onUserNotFound();
         }
 

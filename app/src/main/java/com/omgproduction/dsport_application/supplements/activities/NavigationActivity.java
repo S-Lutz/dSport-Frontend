@@ -1,35 +1,25 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
-import android.app.ActionBar;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.activities.LoginActivity;
 import com.omgproduction.dsport_application.activities.MainActivity;
 import com.omgproduction.dsport_application.activities.ProfileActivity;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedAppCompatActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 /**
@@ -144,17 +134,7 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     }
 
     protected void logoutUser(){
-        SessionController.getInstance().logoutUser(this);
-        startLoginActivity(this);
-    }
-
-    protected void startLoginActivity(Context context){
-        Intent i = new Intent(context, LoginActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        context.startActivity(i);
+        SessionController.getInstance().logout(this);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -29,11 +29,8 @@ public class WelcomeActivity extends Activity {
 
         Intent i = getIntent();
         username = i.getStringExtra(Keys.USERNAME);
-        email = i.getStringExtra(Keys.EMAIL);
-        //Resources res = getResources();
-       // String text = String.format(res.getString(R.string.welcome_message), username, email);
         Resources res = getResources();
-        String text = res.getQuantityString(R.plurals.welcome_messages, 1, username, email);
+        String text = res.getQuantityString(R.plurals.welcome_messages, 1, username);
 
         ((TextView)findViewById(R.id.welcome_message)).setText(text);
 

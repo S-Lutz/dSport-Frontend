@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.AnimationAdapter;
@@ -23,21 +22,17 @@ import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
-import com.omgproduction.dsport_application.exceptions.UserNotFoundException;
-import com.omgproduction.dsport_application.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
-import com.omgproduction.dsport_application.utils.ConnectionUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class ProfileActivity extends NavigationActivity {
 
-    private AppCompatImageView pic;
     private FloatingActionButton fabEdit, fabGallery, fabCamera;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
     private boolean isEditFabOpen = false;
@@ -62,12 +57,10 @@ public class ProfileActivity extends NavigationActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        pic = (AppCompatImageView) findViewById(R.id.profile_pic);
-        pic.setImageDrawable(getResources().getDrawable(R.drawable.logo));
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        pic.setMaxHeight(size.x/2);
+        ((AppCompatImageView) findViewById(R.id.profile_pic)).setMaxHeight(size.x/2);
 
         getSupportActionBar().setTitle("");
 
@@ -81,19 +74,34 @@ public class ProfileActivity extends NavigationActivity {
     }
 
     private void loadLocalData() {
-        showProgressBar(R.id.contentPanel,R.id.progress_bar);
-        showProgressBar(pic,R.id.progress_bar_pic);
+        UserController.getInstance().getLocalUser(context,new OnResultAdapter<User>(){
+            @Override
+            public void onStart() {
+                showProgressBar(R.id.contentPanel,R.id.progress_bar);
+                showProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
+            }
 
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.contentPanel,R.id.progress_bar);
+                hideProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
+            }
 
-        User user = User.getInstance();
-        setText(R.id.profile_username_text,user.getUsername());
-        setText(R.id.profile_email_text,user.getEmail());
-        setText(R.id.profile_firstname_text,user.getFirstname());
-        setText(R.id.profile_lastname_text,user.getLastname());
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(context);
+            }
 
-        pic.setImageBitmap(user.getBitmap(context));
-        hideProgressBar(R.id.contentPanel,R.id.progress_bar);
-        hideProgressBar(pic,R.id.progress_bar_pic);
+            @Override
+            public void onSuccess(User user) {
+                setText(R.id.profile_username_text,user.getUsername());
+                setText(R.id.profile_email_text,user.getEmail());
+                setText(R.id.profile_firstname_text,user.getFirstname());
+                setText(R.id.profile_lastname_text,user.getLastname());
+                setPic(R.id.profile_pic,user.getBitmap(context));
+            }
+        });
+
     }
 
     private void addActionListeners() {
@@ -125,11 +133,11 @@ public class ProfileActivity extends NavigationActivity {
     }
 
     private void loadOnlineData() {
-        UserController.getInstance().getUser(this, new OnResultListener<User>() {
+        UserController.getInstance().getGlobalUser(this, new OnResultAdapter<User>() {
             @Override
             public void onStart() {
                 showProgressBar(R.id.contentPanel,R.id.progress_bar);
-                showProgressBar(pic,R.id.progress_bar_pic);
+                showProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
             }
 
             @Override
@@ -138,7 +146,7 @@ public class ProfileActivity extends NavigationActivity {
                 setText(R.id.profile_email_text, user.getEmail());
                 setText(R.id.profile_firstname_text, user.getFirstname());
                 setText(R.id.profile_lastname_text, user.getLastname());
-                pic.setImageBitmap(user.getBitmap(context));
+                setPic(R.id.profile_pic,user.getBitmap(context));
             }
 
             @Override
@@ -147,25 +155,25 @@ public class ProfileActivity extends NavigationActivity {
             }
 
             @Override
-            public void onBackendError(String ErrorCode, String ErrorString) {
+            public void onBackendError(String ErrorCode) {
                 //TODO Errorhandling
             }
 
             @Override
-            public void onJSONError(JSONException e) {
+            public void onJSONException(JSONException e) {
                 //TODO Errorhandling
                 e.printStackTrace();
             }
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logoutUser(context);
+                SessionController.getInstance().logout(context);
             }
 
             @Override
-            public void onResult() {
+            public void onFinish() {
                 hideProgressBar(R.id.contentPanel, R.id.progress_bar);
-                hideProgressBar(pic, R.id.progress_bar_pic);
+                hideProgressBar(R.id.profile_pic, R.id.progress_bar_pic);
             }
         });
 
@@ -246,8 +254,7 @@ public class ProfileActivity extends NavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logoutUser(this);
-            startLoginActivity(this);
+            SessionController.getInstance().logout(this);
         }
     }
 
@@ -267,8 +274,7 @@ public class ProfileActivity extends NavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logoutUser(this);
-            startLoginActivity(this);
+            SessionController.getInstance().logout(this);
         }
     }
 
@@ -288,8 +294,7 @@ public class ProfileActivity extends NavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logoutUser(this);
-            startLoginActivity(this);
+            SessionController.getInstance().logout(this);
         }
     }
 
@@ -309,8 +314,7 @@ public class ProfileActivity extends NavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logoutUser(this);
-            startLoginActivity(this);
+            SessionController.getInstance().logout(this);
         }
     }
 
@@ -499,291 +503,284 @@ public class ProfileActivity extends NavigationActivity {
 
 
     private void savePicture(final Bitmap thePic) {
-        showProgressBar(pic,R.id.progress_bar_pic);
-        try{
-            UserController.getInstance().saveUserDetail(this, Keys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultListener<String>() {
-                @Override
-                public void onStart() {
+        UserController.getInstance().saveUserDetail(this, Keys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
+            @Override
+            public void onStart() {
+                showProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
+            }
 
-                }
+            @Override
+            public void onSuccess(String picString) {
+                setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(context,picString));
+            }
 
-                @Override
-                public void onSuccess(String picString) {
-                    pic.setImageBitmap(BitmapUtils.getBitmapFromString(context,picString));
-                }
-
-                @Override
-                public void onConnectionError(VolleyError error) {
-                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            savePicture(thePic);
-                        }
-                    });
-                }
-
-                @Override
-                public void onBackendError(String ErrorCode, String ErrorString) {
-
-                }
-
-                @Override
-                public void onJSONError(JSONException e) {
-                    e.printStackTrace();
-                    printError(R.id.profile_container,"e0");
-                }
-
-                @Override
-                public void onUserNotFound() {
-                    SessionController.getInstance().logoutUser(context);
-                }
-
-                @Override
-                public void onResult() {
-                    hideProgressBar(pic, R.id.progress_bar_pic);
-                }
-            }new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject jsonObject) {
-
-                    if(ConnectionUtils.Success(jsonObject)){
-                        try {
-
-                        } catch (JSONException e) {
-                        }
-                    }else {
-                        //If some Backend Error hide Progressbar and handle Error
-                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
+            @Override
+            public void onConnectionError(VolleyError error) {
+                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        savePicture(thePic);
                     }
-                    hideProgressBar(pic, R.id.progress_bar_pic);
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            savePicture(thePic);
-                        }
-                    });
-                    hideProgressBar(pic, R.id.progress_bar_pic);
-                }
-            });
-        }catch (UserNotFoundException e){
-            SessionController.getInstance().logoutUser(this);
-        }
+                });
+            }
+
+            @Override
+            public void onBackendError(String errorCode) {
+                printError(R.id.profile_container,errorCode);
+            }
+
+            @Override
+            public void onJSONException(JSONException e) {
+                e.printStackTrace();
+                printError(R.id.profile_container,"e0");
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(context);
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.profile_pic, R.id.progress_bar_pic);
+            }
+        });
     }
 
     private void saveEmail(final String email) {
-        showProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
-        try{
-            UserController.getInstance().saveUserDetail(this, Keys.EMAIL, email, new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject jsonObject) {
+        UserController.getInstance().saveUserDetail(this, Keys.EMAIL, email, new OnResultAdapter<String>() {
+            @Override
+            public void onStart() {
+                removeInputError(R.id.profile_email_input_layout);
+                showProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
+            }
 
-                    if(ConnectionUtils.Success(jsonObject)){
-                        removeInputError(R.id.profile_email_input_layout);
-                        try {
-                            String emailString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.EMAIL);
-                            setText(R.id.profile_email_text,emailString);
-                            UserController.getInstance().update(context,Keys.EMAIL,emailString);
-                            showEmail(false);
+            @Override
+            public void onSuccess(String emailString) {
+                setText(R.id.profile_email_text,emailString);
+                showEmail(false);
+            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            printError(R.id.profile_email_input_layout,"e0");
-                        }
-                    }else {
-                        //If some Backend Error hide Progressbar and handle Error
-                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
-                        printError(R.id.profile_email_input_layout,errorCode);
-
+            @Override
+            public void onConnectionError(VolleyError error) {
+                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveEmail(email);
                     }
-                    hideProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            saveEmail(email);
-                        }
-                    });
-                    hideProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
-                }
-            });
-        }catch (UserNotFoundException e){
-            SessionController.getInstance().logoutUser(this);
-        }
+                });
+            }
+
+            @Override
+            public void onBackendError(String errorCode) {
+                printError(R.id.profile_email_input_layout,errorCode);
+            }
+
+            @Override
+            public void onJSONException(JSONException e) {
+                e.printStackTrace();
+                printError(R.id.profile_email_input_layout,"e0");
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(context);
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
+            }
+        });
     }
 
     private void saveFirstname(final String firstname) {
-        showProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
-        try{
-            UserController.getInstance().saveUserDetail(this, Keys.FIRSTNAME, firstname, new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject jsonObject) {
+        UserController.getInstance().saveUserDetail(this, Keys.FIRSTNAME, firstname, new OnResultAdapter<String>() {
+            @Override
+            public void onStart() {
+                showProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
+                removeInputError(R.id.profile_firstname_input_layout);
+            }
 
-                    if(ConnectionUtils.Success(jsonObject)){
-                        try {
-                            removeInputError(R.id.profile_firstname_input_layout);
-                            String firstnameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.FIRSTNAME);
-                            setText(R.id.profile_firstname_text,firstnameString);
-                            UserController.getInstance().update(context,Keys.FIRSTNAME,firstnameString);
-                            showFirstname(false);
+            @Override
+            public void onSuccess(String firstnameString) {
+                setText(R.id.profile_firstname_text,firstnameString);
+                showFirstname(false);
+            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            printError(R.id.profile_firstname_input_layout,"e0");
-                        }
-                    }else {
-                        //If some Backend Error hide Progressbar and handle Error
-                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
-                        printError(R.id.profile_firstname_input_layout,errorCode);
+            @Override
+            public void onConnectionError(VolleyError error) {
+                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveFirstname(firstname);
                     }
-                    hideProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            saveFirstname(firstname);
-                        }
-                    });
-                    hideProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
-                }
-            });
-        }catch (UserNotFoundException e){
-            SessionController.getInstance().logoutUser(this);
-        }
+                });
+            }
+
+            @Override
+            public void onBackendError(String errorCode) {
+                printError(R.id.profile_firstname_input_layout,errorCode);
+            }
+
+            @Override
+            public void onJSONException(JSONException e) {
+                e.printStackTrace();
+                printError(R.id.profile_firstname_input_layout,"e0");
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(context);
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
+            }
+        });
     }
 
     private void saveLastname(final String lastname) {
-        showProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
-        try{
-            UserController.getInstance().saveUserDetail(this, Keys.LASTNAME, lastname, new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject jsonObject) {
+        UserController.getInstance().saveUserDetail(this, Keys.LASTNAME, lastname, new OnResultAdapter<String>() {
+            @Override
+            public void onStart() {
+                showProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
+                removeInputError(R.id.profile_lastname_input_layout);
+            }
 
-                    if(ConnectionUtils.Success(jsonObject)){
-                        try {
-                            String lastnameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.LASTNAME);
-                            setText(R.id.profile_lastname_text,lastnameString);
-                            UserController.getInstance().update(context,Keys.LASTNAME,lastnameString);
-                            showLastname(false);
-                            removeInputError(R.id.profile_lastname_input_layout);
+            @Override
+            public void onSuccess(String lastnameString) {
+                setText(R.id.profile_lastname_text,lastnameString);
+                showLastname(false);
+            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            printError(R.id.profile_lastname_input_layout,"e0");
-                        }
-                    }else {
-                        //If some Backend Error hide Progressbar and handle Error
-                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
-                        printError(R.id.profile_lastname_input_layout,errorCode);
+            @Override
+            public void onConnectionError(VolleyError error) {
+                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveLastname(lastname);
                     }
-                    hideProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            saveLastname(lastname);
-                        }
-                    });
-                    hideProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
-                }
-            });
-        }catch (UserNotFoundException e){
-            SessionController.getInstance().logoutUser(this);
-        }
+                });
+            }
+
+            @Override
+            public void onBackendError(String errorCode) {
+                printError(R.id.profile_lastname_input_layout,errorCode);
+            }
+
+            @Override
+            public void onJSONException(JSONException e) {
+                e.printStackTrace();
+                printError(R.id.profile_lastname_input_layout,"e0");
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(context);
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
+            }
+        });
     }
 
     private void savePassword(final String password) {
-        showProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
-        try{
-            UserController.getInstance().saveUserDetail(this, Keys.PASSWORD, password, new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject jsonObject) {
+        UserController.getInstance().saveUserDetail(this, Keys.PASSWORD, password, new OnResultAdapter<String>() {
+            @Override
+            public void onStart() {
+                showProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
+                removeInputError(R.id.profile_password_input_layout);
+                removeInputError(R.id.profile_password_confirm_input_layout);
+            }
 
-                    if(ConnectionUtils.Success(jsonObject)){
-                        removeInputError(R.id.profile_password_input_layout);
-                        removeInputError(R.id.profile_password_confirm_input_layout);
-                        showPassword(false);
-                    }else {
-                        //If some Backend Error hide Progressbar and handle Error
-                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
-                        printError(R.id.profile_password_input_layout,errorCode);
-                        printError(R.id.profile_password_confirm_input_layout,errorCode);
+            @Override
+            public void onSuccess(String result) {
+                showPassword(false);
+            }
+
+            @Override
+            public void onConnectionError(VolleyError error) {
+                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        savePassword(password);
                     }
-                    hideProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            savePassword(password);
-                        }
-                    });
-                    hideProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
-                }
-            });
-        }catch (UserNotFoundException e){
-            SessionController.getInstance().logoutUser(this);
-        }
+                });
+            }
+
+            @Override
+            public void onBackendError(String errorCode) {
+                printError(R.id.profile_password_input_layout,errorCode);
+                printError(R.id.profile_password_confirm_input_layout,errorCode);
+            }
+
+            @Override
+            public void onJSONException(JSONException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(context);
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
+            }
+        });
 
     }
 
     private void saveUsername(final String username) {
-        showProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
-        try{
-            UserController.getInstance().saveUserDetail(this, Keys.USERNAME, username, new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject jsonObject) {
+        UserController.getInstance().saveUserDetail(this, Keys.USERNAME, username, new OnResultAdapter<String>() {
+            @Override
+            public void onStart() {
+                showProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
+                removeInputError(R.id.profile_username_input_layout);
+            }
 
-                    if(ConnectionUtils.Success(jsonObject)){
-                        try {
-                            removeInputError(R.id.profile_username_input_layout);
-                            String usernameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.USERNAME);
-                            setText(R.id.profile_username_text,usernameString);
-                            Preferences.getInstance(context)
-                                    .putString(Keys.USERNAME,usernameString)
-                                    .commit();
-                            showUsername(false);
+            @Override
+            public void onSuccess(String usernameString) {
+                setText(R.id.profile_username_text,usernameString);
+                showUsername(false);
+            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            printError(R.id.profile_username_input_layout,"e0");
-                        }
-                    }else {
-                        //If some Backend Error hide Progressbar and handle Error
-                        String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
-                        printError(R.id.profile_username_input_layout,errorCode);
+            @Override
+            public void onConnectionError(VolleyError error) {
+                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        saveUsername(username);
                     }
-                    hideProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            saveUsername(username);
-                        }
-                    });
-                    hideProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
-                }
-            });
-        }catch (UserNotFoundException e){
-            SessionController.getInstance().logoutUser(this);
-        }
+                });
+            }
+
+            @Override
+            public void onBackendError(String errorCode) {
+                printError(R.id.profile_username_input_layout,errorCode);
+            }
+
+            @Override
+            public void onJSONException(JSONException e) {
+                e.printStackTrace();
+                printError(R.id.profile_username_input_layout,"e0");
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(context);
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
+            }
+        });
 
     }
 

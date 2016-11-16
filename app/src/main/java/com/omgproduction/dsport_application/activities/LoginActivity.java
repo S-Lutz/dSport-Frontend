@@ -11,9 +11,11 @@ import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -85,44 +87,57 @@ public class LoginActivity extends AdvancedActivity {
             return;
         }
 
-        //Start showing the Progressbar
-        showProgressBar(R.id.login_input_container,R.id.progress_bar);
 
         //Process login with Backend
         //Send request to Backend and wait for response
-        SessionController.getInstance().loginUser(this,username, password, new Response.Listener<JSONObject>() {
+        SessionController.getInstance().loginUser(this,username, password, new OnResultAdapter<JSONObject>(){
             @Override
-            public void onResponse(JSONObject jsonObject) {
-
-                hideProgressBar(R.id.login_input_container,R.id.progress_bar);
-
-                //Check if Backend send any Errors
-                if(ConnectionUtils.Success(jsonObject)){
-                    boolean saved = SessionController.getInstance().saveLocalUser(context,ConnectionUtils.extractJSONValue(jsonObject));
-                    if(saved){ startMainActivity(context); }
-                }else{
-                    //Errorhandling for Internal Errors
-                    String errorCode = ConnectionUtils.extractErrorCode(jsonObject);
-
-                    //Check Errorcode (See it in error_codes.xml
-                    switch (errorCode){
-                        case "e303": printInputError(R.id.login_layout_password,errorCode); break;
-                        default: printError(R.id.login_layout,"e0");
-                    }
-                }
-
+            public void onStart() {
+                showProgressBar(R.id.login_input_container,R.id.progress_bar);
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                //If some Connection error print e100 Connection failed
-                hideProgressBar(R.id.login_input_container,R.id.progress_bar);
+            public void onSuccess(JSONObject jsonObject) {
+                SessionController.getInstance().saveLocalUser(context,jsonObject, new OnResultAdapter<Void>(){
+                    @Override
+                    public void onStart() {
+                        showProgressBar(R.id.login_input_container,R.id.progress_bar);
+                    }
+
+                    @Override
+                    public void onSuccess(Void result) {
+                        startMainActivity(context);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        hideProgressBar(R.id.login_input_container,R.id.progress_bar);
+                    }
+                });
+            }
+
+            @Override
+            public void onConnectionError(VolleyError e) {
                 printError(R.id.login_layout,"e100", R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         loginUser();
                     }
                 });
+            }
+
+            @Override
+            public void onBackendError(String errorCode) {
+                //Check Errorcode (See it in error_codes.xml
+                switch (errorCode){
+                    case "e303": printInputError(R.id.login_layout_password,errorCode); break;
+                    default: printError(R.id.login_layout,"e0");
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.login_input_container,R.id.progress_bar);
             }
         });
     }

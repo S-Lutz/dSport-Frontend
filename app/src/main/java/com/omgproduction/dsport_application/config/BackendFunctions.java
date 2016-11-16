@@ -16,7 +16,7 @@ public class BackendFunctions {
     // Server user register url
     public static final String REGISTER = HOST+HOME+"/users/signup/";
     // Server user register url
-    public static final String GET_USER = HOST+HOME+"/users/getUser/";
+    public static final String GET_USER = HOST+HOME+"/users/getGlobalUser/";
     // Server user register url
     public static final String DEL_USER = HOST+HOME+"/users/deleteUser/";
     // Server user register url

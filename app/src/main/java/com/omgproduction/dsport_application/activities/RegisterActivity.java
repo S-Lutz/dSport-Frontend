@@ -3,7 +3,6 @@ package com.omgproduction.dsport_application.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -13,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
@@ -146,41 +146,19 @@ public class RegisterActivity extends AdvancedActivity {
         showProgressBar(R.id.register_input_container,R.id.progress_bar);
 
         //Process Registration with Backend-Server
-        SessionController.getInstance().registerUser(username, firstname, lastname, email, password_1, new Response.Listener<JSONObject>() {
+        SessionController.getInstance().registerUser(username, firstname, lastname, email, password_1, new OnResultAdapter<String>(){
             @Override
-            public void onResponse(JSONObject jsonObject) {
-                try {
-                    //Check if Backend send some Errors
-                    if(ConnectionUtils.Success(jsonObject)){
-                        //If no Backend Errors hide Progressbar and Logout user to comeback to Login Activity and delete Session-Data
-                        hideProgressBar(R.id.register_input_container,R.id.progress_bar);
-                        removeAllErrors();
-                        SessionController.getInstance().logoutUser(context);
-                        startWelcomeActivity(ConnectionUtils.extractJSONValue(jsonObject));
-                    }else{
-                        //If some Backend Error hide Progressbar and handle Error
-                        hideProgressBar(R.id.register_input_container,R.id.progress_bar);
-                        String errorCode = jsonObject.getString("value");
-                        //Check Error-Code (See in error_codes.xml
-                        switch (errorCode){
-                            case "e301": printInputError(R.id.register_layout_username,errorCode); break;
-                            case "e302": printInputError(R.id.register_layout_email,errorCode); break;
-                            //On any other Error print Universal-Error e0
-                            default: printError(R.id.register_layout,"e0");
-                        }
-                    }
-                } catch (JSONException e) {
-                    //If some JSON_Error hide Progressbar print Universal-Error e0
-                    e.printStackTrace();
-                    hideProgressBar(R.id.register_input_container,R.id.progress_bar);
-                    printError(R.id.register_layout,"e0");
-                }
+            public void onStart() {
+                removeAllErrors();
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                //If some Connection Error hide Progressbar and print Connection-Failed-Error e100 in Snackbar with Retry-Button
-                hideProgressBar(R.id.register_input_container,R.id.progress_bar);
+            public void onSuccess(String result) {
+                startWelcomeActivity(result);
+            }
+
+            @Override
+            public void onConnectionError(VolleyError e) {
                 printError(R.id.register_layout,"e100", R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -188,28 +166,43 @@ public class RegisterActivity extends AdvancedActivity {
                         registerUser();
                     }
                 });
+            }
 
+            @Override
+            public void onBackendError(String errorCode) {
+                switch (errorCode){
+                    case "e301": printInputError(R.id.register_layout_username,errorCode); break;
+                    case "e302": printInputError(R.id.register_layout_email,errorCode); break;
+                    //On any other Error print Universal-Error e0
+                    default: printError(R.id.register_layout,"e0");
+                }
+            }
+
+            @Override
+            public void onJSONException(JSONException e) {
+                e.printStackTrace();
+                printError(R.id.register_layout,"e0");
+            }
+
+            @Override
+            public void onUserNotFound() {
+                super.onUserNotFound();
+            }
+
+            @Override
+            public void onFinish() {
+                hideProgressBar(R.id.register_input_container,R.id.progress_bar);
             }
         });
     }
 
-    private void startWelcomeActivity(JSONObject jsonObject) {
-        try {
-            String username = jsonObject.getString(Keys.USERNAME);
-            String email = jsonObject.getString(Keys.EMAIL);
-
-            Intent i = new Intent(this, WelcomeActivity.class);
-            i.putExtra(Keys.USERNAME,username);
-            i.putExtra(Keys.EMAIL,email);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(i);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+    private void startWelcomeActivity(String username) {
+        Intent i = new Intent(this, WelcomeActivity.class);
+        i.putExtra(Keys.USERNAME,username);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
     }
 
     protected void removeAllErrors(){

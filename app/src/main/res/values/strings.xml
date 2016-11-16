@@ -37,7 +37,7 @@
     <string name="age">Age</string>
 
     <plurals name="welcome_messages">
-        <item quantity="one">Hello, %1$s!\nCheck %2$s to verify your account.</item>
+        <item quantity="one">Hello, %1$s!\nCheck your Emails to verify your account.</item>
     </plurals>
 
     <!-- TODO: Remove or change this placeholder text -->
