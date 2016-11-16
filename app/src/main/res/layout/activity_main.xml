@@ -9,6 +9,5 @@
     tools:openDrawer="start">
 
     <include layout="@layout/tab_toolbar_layout"/>
-
     <include layout="@layout/navigation_layout"/>
 </android.support.v4.widget.DrawerLayout>

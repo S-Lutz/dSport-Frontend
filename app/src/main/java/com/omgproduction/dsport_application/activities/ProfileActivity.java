@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -25,6 +24,8 @@ import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.exceptions.UserNotFoundException;
+import com.omgproduction.dsport_application.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
@@ -83,19 +84,14 @@ public class ProfileActivity extends NavigationActivity {
         showProgressBar(R.id.contentPanel,R.id.progress_bar);
         showProgressBar(pic,R.id.progress_bar_pic);
 
-        Preferences preferences = Preferences.getInstance(context);
 
-        setText(R.id.profile_username_text,preferences.getStringDetail(Keys.USERNAME,""));
-        setText(R.id.profile_email_text,preferences.getStringDetail(Keys.EMAIL,""));
-        setText(R.id.profile_firstname_text,preferences.getStringDetail(Keys.FIRSTNAME,""));
-        setText(R.id.profile_lastname_text,preferences.getStringDetail(Keys.LASTNAME,""));
+        User user = User.getInstance();
+        setText(R.id.profile_username_text,user.getUsername());
+        setText(R.id.profile_email_text,user.getEmail());
+        setText(R.id.profile_firstname_text,user.getFirstname());
+        setText(R.id.profile_lastname_text,user.getLastname());
 
-        String bitmapString = preferences.getStringDetail(Keys.PICTURE,"");
-        if(bitmapString.isEmpty()){
-            pic.setImageDrawable(getResources().getDrawable(R.drawable.logo));
-        }else{
-            pic.setImageBitmap(BitmapUtils.getBitmapFromString(this,preferences.getStringDetail(Keys.PICTURE,"")));
-        }
+        pic.setImageBitmap(user.getBitmap(context));
         hideProgressBar(R.id.contentPanel,R.id.progress_bar);
         hideProgressBar(pic,R.id.progress_bar_pic);
     }
@@ -129,49 +125,49 @@ public class ProfileActivity extends NavigationActivity {
     }
 
     private void loadOnlineData() {
-        showProgressBar(R.id.contentPanel,R.id.progress_bar);
-        showProgressBar(pic,R.id.progress_bar_pic);
+        UserController.getInstance().getUser(this, new OnResultListener<User>() {
+            @Override
+            public void onStart() {
+                showProgressBar(R.id.contentPanel,R.id.progress_bar);
+                showProgressBar(pic,R.id.progress_bar_pic);
+            }
 
-        try {
-            UserController.getInstance().getUser(this, new Response.Listener<JSONObject>(){
-                @Override
-                public void onResponse(JSONObject jsonObject) {
-                    if(ConnectionUtils.Success(jsonObject)){
-                        JSONObject user = ConnectionUtils.extractJSONValue(jsonObject);
-                        SessionController.getInstance().saveLocalUser(context,user);
-                        try {
-                            setText(R.id.profile_username_text,user.getString(Keys.USERNAME));
-                            setText(R.id.profile_email_text,user.getString(Keys.EMAIL));
-                            setText(R.id.profile_firstname_text,user.getString(Keys.FIRSTNAME));
-                            setText(R.id.profile_lastname_text,user.getString(Keys.LASTNAME));
+            @Override
+            public void onSuccess(User user) {
+                setText(R.id.profile_username_text, user.getUsername());
+                setText(R.id.profile_email_text, user.getEmail());
+                setText(R.id.profile_firstname_text, user.getFirstname());
+                setText(R.id.profile_lastname_text, user.getLastname());
+                pic.setImageBitmap(user.getBitmap(context));
+            }
 
-                            String bitmapString = user.getString(Keys.PICTURE);
-                            if(bitmapString.isEmpty()){
-                                pic.setImageDrawable(getResources().getDrawable(R.drawable.logo));
-                            }else{
-                                pic.setImageBitmap(BitmapUtils.getBitmapFromString(context,user.getString(Keys.PICTURE)));
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+            @Override
+            public void onConnectionError(VolleyError error) {
+                error.printStackTrace();
+            }
 
-                    }else{
-                        //TODO Errorhandling
-                    }
-                    hideProgressBar(R.id.contentPanel,R.id.progress_bar);
-                    hideProgressBar(pic,R.id.progress_bar_pic);
-                }
-            }, new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    hideProgressBar(R.id.contentPanel,R.id.progress_bar);
-                    hideProgressBar(pic,R.id.progress_bar_pic);
-                    //TODO Errorhandling
-                }
-            });
-        } catch (UserNotFoundException e) {
-            SessionController.getInstance().logoutUser(this);
-        }
+            @Override
+            public void onBackendError(String ErrorCode, String ErrorString) {
+                //TODO Errorhandling
+            }
+
+            @Override
+            public void onJSONError(JSONException e) {
+                //TODO Errorhandling
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logoutUser(context);
+            }
+
+            @Override
+            public void onResult() {
+                hideProgressBar(R.id.contentPanel, R.id.progress_bar);
+                hideProgressBar(pic, R.id.progress_bar_pic);
+            }
+        });
 
     }
 
@@ -505,21 +501,55 @@ public class ProfileActivity extends NavigationActivity {
     private void savePicture(final Bitmap thePic) {
         showProgressBar(pic,R.id.progress_bar_pic);
         try{
-            UserController.getInstance().saveUserDetail(this, Keys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new Response.Listener<JSONObject>(){
+            UserController.getInstance().saveUserDetail(this, Keys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultListener<String>() {
+                @Override
+                public void onStart() {
+
+                }
+
+                @Override
+                public void onSuccess(String picString) {
+                    pic.setImageBitmap(BitmapUtils.getBitmapFromString(context,picString));
+                }
+
+                @Override
+                public void onConnectionError(VolleyError error) {
+                    printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            savePicture(thePic);
+                        }
+                    });
+                }
+
+                @Override
+                public void onBackendError(String ErrorCode, String ErrorString) {
+
+                }
+
+                @Override
+                public void onJSONError(JSONException e) {
+                    e.printStackTrace();
+                    printError(R.id.profile_container,"e0");
+                }
+
+                @Override
+                public void onUserNotFound() {
+                    SessionController.getInstance().logoutUser(context);
+                }
+
+                @Override
+                public void onResult() {
+                    hideProgressBar(pic, R.id.progress_bar_pic);
+                }
+            }new Response.Listener<JSONObject>(){
                 @Override
                 public void onResponse(JSONObject jsonObject) {
 
                     if(ConnectionUtils.Success(jsonObject)){
                         try {
-                            String picString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.PICTURE);
-                            pic.setImageBitmap(BitmapUtils.getBitmapFromString(context,picString));
-                            Preferences.getInstance(context)
-                                    .putString(Keys.PICTURE,picString)
-                                    .commit();
 
                         } catch (JSONException e) {
-                            e.printStackTrace();
-                            printError(R.id.profile_container,"e0");
                         }
                     }else {
                         //If some Backend Error hide Progressbar and handle Error
@@ -556,9 +586,7 @@ public class ProfileActivity extends NavigationActivity {
                         try {
                             String emailString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.EMAIL);
                             setText(R.id.profile_email_text,emailString);
-                            Preferences.getInstance(context)
-                                    .putString(Keys.EMAIL,emailString)
-                                    .commit();
+                            UserController.getInstance().update(context,Keys.EMAIL,emailString);
                             showEmail(false);
 
                         } catch (JSONException e) {
@@ -602,9 +630,7 @@ public class ProfileActivity extends NavigationActivity {
                             removeInputError(R.id.profile_firstname_input_layout);
                             String firstnameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.FIRSTNAME);
                             setText(R.id.profile_firstname_text,firstnameString);
-                            Preferences.getInstance(context)
-                                    .putString(Keys.FIRSTNAME,firstnameString)
-                                    .commit();
+                            UserController.getInstance().update(context,Keys.FIRSTNAME,firstnameString);
                             showFirstname(false);
 
                         } catch (JSONException e) {
@@ -646,9 +672,7 @@ public class ProfileActivity extends NavigationActivity {
                         try {
                             String lastnameString = ConnectionUtils.extractJSONValue(jsonObject).getString(Keys.LASTNAME);
                             setText(R.id.profile_lastname_text,lastnameString);
-                            Preferences.getInstance(context)
-                                    .putString(Keys.LASTNAME,lastnameString)
-                                    .commit();
+                            UserController.getInstance().update(context,Keys.LASTNAME,lastnameString);
                             showLastname(false);
                             removeInputError(R.id.profile_lastname_input_layout);
 
