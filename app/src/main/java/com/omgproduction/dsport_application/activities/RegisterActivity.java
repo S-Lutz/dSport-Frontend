@@ -3,6 +3,7 @@ package com.omgproduction.dsport_application.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -43,6 +44,8 @@ public class RegisterActivity extends AdvancedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        setRefresher((SwipeRefreshLayout)findViewById(R.id.register_refresher));
 
         context = this;
 
@@ -143,7 +146,7 @@ public class RegisterActivity extends AdvancedActivity {
         }
 
         //Show Progressbar
-        showProgressBar(R.id.register_input_container,R.id.progress_bar);
+        showProgressBar(true);
 
         //Process Registration with Backend-Server
         SessionController.getInstance().registerUser(username, firstname, lastname, email, password_1, new OnResultAdapter<String>(){
@@ -191,7 +194,7 @@ public class RegisterActivity extends AdvancedActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.register_input_container,R.id.progress_bar);
+                showProgressBar(false);
             }
         });
     }
@@ -217,5 +220,10 @@ public class RegisterActivity extends AdvancedActivity {
     @Override
     public void onBackPressed() {
         startLoginActivity(this);
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

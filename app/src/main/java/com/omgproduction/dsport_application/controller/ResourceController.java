@@ -26,12 +26,12 @@ public class ResourceController {
      * @param errorListener
      */
     public void getLatestAGB (Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
-
+        /*
         JSONRequest requestBuilder = new JSONRequest(BackendFunctions.GET_LATEST_AGB)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
-
+        */
     }
 
 
@@ -41,12 +41,12 @@ public class ResourceController {
      * @param errorListener
      */
     public void getLatestDataPrivacy (Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
-
+        /*
         JSONRequest requestBuilder = new JSONRequest(BackendFunctions.GET_LATEST_AGB)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
-
+        */
     }
 
     /**
@@ -57,12 +57,13 @@ public class ResourceController {
      * @param errorListener
      */
     public void putAGBVersion(String user_id, String agb_version, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
-
+        /*
         JSONRequest requestBuilder = new JSONRequest(BackendFunctions.PUT_AGP_VERSION)
                 .param(Keys.USERID, user_id)
                 .param(Keys.AGB_VERSION, agb_version)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
+        */
     }
 }

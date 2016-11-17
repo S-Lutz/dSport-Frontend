@@ -7,8 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.supplements.activities.AdvancedFragment;
 
-public class EventFragment extends Fragment {
+public class EventFragment extends AdvancedFragment {
     public EventFragment() {
         // Required empty public constructor
     }
@@ -17,5 +18,10 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_event, container, false);
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

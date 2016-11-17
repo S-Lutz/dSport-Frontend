@@ -4,6 +4,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
@@ -11,10 +12,11 @@ import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.fragments.ChatFragment;
 import com.omgproduction.dsport_application.fragments.EventFragment;
 import com.omgproduction.dsport_application.fragments.ExerciseUnitFragment;
-import com.omgproduction.dsport_application.fragments.SozialFragment;
+import com.omgproduction.dsport_application.fragments.SocialFragment;
 import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
 
-public class MainActivity extends NavigationActivity {
+
+public class MainActivity extends NavigationActivity{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -35,11 +37,16 @@ public class MainActivity extends NavigationActivity {
         tabLayout = (TabLayout)findViewById(R.id.tabLayout);
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
+        SocialFragment socialFragment = new SocialFragment();
+        ExerciseUnitFragment exerciseUnitFragment = new ExerciseUnitFragment();
+        EventFragment eventFragment = new EventFragment();
+        ChatFragment chatFragment = new ChatFragment();
+
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragments(new SozialFragment(),getString(R.string.social));
-        viewPagerAdapter.addFragments(new ExerciseUnitFragment(),getString(R.string.exercise_units));
-        viewPagerAdapter.addFragments(new EventFragment(),getString(R.string.events));
-        viewPagerAdapter.addFragments(new ChatFragment(),getString(R.string.chats));
+        viewPagerAdapter.addFragments(socialFragment,getString(R.string.social));
+        viewPagerAdapter.addFragments(exerciseUnitFragment,getString(R.string.exercise_units));
+        viewPagerAdapter.addFragments(eventFragment,getString(R.string.events));
+        viewPagerAdapter.addFragments(chatFragment,getString(R.string.chats));
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -72,6 +79,11 @@ public class MainActivity extends NavigationActivity {
 
     @Override
     public void onClick(View v) {
+
+    }
+
+    @Override
+    public void onRefresh() {
 
     }
 }

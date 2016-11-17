@@ -3,6 +3,7 @@ package com.omgproduction.dsport_application.supplements.activities;
 import android.graphics.Bitmap;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -14,48 +15,9 @@ import android.widget.TextView;
  * Created by Florian on 06.11.2016.
  */
 
-public abstract class AdvancedAppCompatActivity extends AppCompatActivity implements View.OnClickListener{
-    /**
-     * Hide all Input-Fields and show Progress-bar instead
-     */
-    protected void showProgressBar(int containerIDToHide, int progressBarId){
-        showProgressBar(findViewById(containerIDToHide),progressBarId);
-    }
-    /**
-     * Hide all Input-Fields and show Progress-bar instead
-     */
-    protected void showProgressBar(View containerToHide, int progressBarId){
-        containerToHide.setVisibility(ProgressBar.GONE);
-        findViewById(progressBarId).setVisibility(ProgressBar.VISIBLE);
-    }
+public abstract class AdvancedAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
-    /**
-     * Hide Progressbar and show all Input-Fields instead
-     */
-    protected void hideProgressBar(int containerIDToShow, int progressBarId){
-        hideProgressBar(findViewById(containerIDToShow),progressBarId);
-    }
-
-    /**
-     * Hide Progressbar and show all Input-Fields instead
-     */
-    protected void hideProgressBar(View containerToShow, int progressBarId){
-        containerToShow.setVisibility(ProgressBar.VISIBLE);
-        findViewById(progressBarId).setVisibility(ProgressBar.GONE);
-    }
-    /**
-     * show Progress-bar
-     */
-    protected void showProgressBar(int progressBarId){
-        findViewById(progressBarId).setVisibility(ProgressBar.VISIBLE);
-    }
-
-    /**
-     * Hide Progressbar
-     */
-    protected void hideProgressBar(int progressBarId){
-        findViewById(progressBarId).setVisibility(ProgressBar.GONE);
-    }
+    protected SwipeRefreshLayout refresher;
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
@@ -144,5 +106,15 @@ public abstract class AdvancedAppCompatActivity extends AppCompatActivity implem
      */
     protected void setPic(int id, Bitmap bitmap){
         ((ImageView)findViewById(id)).setImageBitmap(bitmap);
+    }
+    public void setRefresher(SwipeRefreshLayout refresher){
+        this.refresher = refresher;
+        refresher.setOnRefreshListener(this);
+    }
+
+    public void showProgressBar(boolean flag){
+        if(refresher!=null){
+            refresher.setRefreshing(flag);
+        }
     }
 }

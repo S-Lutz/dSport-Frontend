@@ -24,7 +24,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -56,16 +56,8 @@
         <activity
             android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.IntroActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.CreatePostActivity"></activity>
+        <activity android:name=".activities.CreatePostActivity" />
+        <activity android:name=".activities.PostDetailActivity"></activity>
     </application>
 
 </manifest>

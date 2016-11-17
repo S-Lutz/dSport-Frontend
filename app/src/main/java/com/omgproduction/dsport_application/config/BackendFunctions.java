@@ -1,29 +1,19 @@
 package com.omgproduction.dsport_application.config;
 
 /**
- * Created by Florian on 17.10.2016.
+ * Created by Florian on 17.11.2016.
  */
+
 public class BackendFunctions {
-
-    //private static final String HOST = "http://www.herborn-software.com:9000";
-    private static final String HOST = "http://www.daily-sport.de:9000";
-    //private static final String HOST = "http://10.0.2.2:9000";
-    //private static final String HOST = "http://localhost:9000";
-    private static final String HOME = "/dsport";
-
-    // Server user login url
+    public static final String HOST = "http://www.daily-sport.de:9000";
+    public static final String HOME = "/dsport";
     public static final String LOGIN = HOST+HOME+"/users/login/";
-    // Server user register url
     public static final String REGISTER = HOST+HOME+"/users/signup/";
-    // Server user register url
-    public static final String GET_USER = HOST+HOME+"/users/getGlobalUser/";
-    // Server user register url
-    public static final String DEL_USER = HOST+HOME+"/users/deleteUser/";
-    // Server user register url
-    public static final String EDIT_USER = HOST+HOME+"/users/editUser/";
-    // Get latest AGB
-    public static final String GET_LATEST_AGB = HOST+HOME+"/users/get_latest_agb/";
-    // Update AGB Version
-    public static final String PUT_AGP_VERSION = HOST+HOME+"/users/put_agb_version/";
+    public static final String GET_USER = HOST+HOME+"/users/get/";
+    public static final String DELETE_USER = HOST+HOME+"/users/delete/";
+    public static final String EDIT_USER = HOST+HOME+"/users/edit/";
+    public static final String GET_AGB = HOST+HOME+"/agb/get/";
+    public static final String GET_POSTS = HOST+HOME+"/posts/getAll/";
+    public static final String ADD_POST = HOST+HOME+"/posts/add/";
+    public static final String GET_POST_DETAIL = HOST+HOME+"/posts/getDetail/";
 }
-

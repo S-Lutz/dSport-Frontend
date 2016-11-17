@@ -110,12 +110,12 @@ public class SessionController {
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
     }
 
-    public void saveLocalUser(Context context, JSONObject user, OnResultListener<Void> onResultListener){
+    public void saveLocalUser(Context context, JSONObject user, OnResultListener<User> onResultListener){
         onResultListener.onStart();
         try {
             Preferences preferencesController = Preferences.getInstance(context)
                     .putBoolean(Keys.IS_LOGIN, true)
-                    .putString(Keys.USERID, user.getString(Keys.USERID))
+                    .putString(Keys.USER_ID, user.getString(Keys.USER_ID))
                     .putString(Keys.USERNAME, user.getString(Keys.USERNAME))
                     .putString(Keys.EMAIL, user.getString(Keys.EMAIL))
                     .putString(Keys.FIRSTNAME, user.getString(Keys.FIRSTNAME))
@@ -127,7 +127,7 @@ public class SessionController {
             // commit changes
             preferencesController.commit();
             onResultListener.onFinish();
-            onResultListener.onSuccess(null);
+            onResultListener.onSuccess(Converter.convertUser(user));
         } catch (JSONException e) {
             onResultListener.onFinish();
             onResultListener.onJSONException(e);

@@ -3,6 +3,7 @@ package com.omgproduction.dsport_application.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.EditText;
 
@@ -12,6 +13,7 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
@@ -34,6 +36,8 @@ public class LoginActivity extends AdvancedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        setRefresher((SwipeRefreshLayout)findViewById(R.id.login_refresher));
 
         checkLogin();
 
@@ -93,25 +97,25 @@ public class LoginActivity extends AdvancedActivity {
         SessionController.getInstance().loginUser(this,username, password, new OnResultAdapter<JSONObject>(){
             @Override
             public void onStart() {
-                showProgressBar(R.id.login_input_container,R.id.progress_bar);
+                showProgressBar(true);
             }
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
-                SessionController.getInstance().saveLocalUser(context,jsonObject, new OnResultAdapter<Void>(){
+                SessionController.getInstance().saveLocalUser(context,jsonObject, new OnResultAdapter<User>(){
                     @Override
                     public void onStart() {
-                        showProgressBar(R.id.login_input_container,R.id.progress_bar);
+                        showProgressBar(true);
                     }
 
                     @Override
-                    public void onSuccess(Void result) {
+                    public void onSuccess(User result) {
                         startMainActivity(context);
                     }
 
                     @Override
                     public void onFinish() {
-                        hideProgressBar(R.id.login_input_container,R.id.progress_bar);
+                        showProgressBar(false);
                     }
                 });
             }
@@ -137,7 +141,7 @@ public class LoginActivity extends AdvancedActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.login_input_container,R.id.progress_bar);
+                showProgressBar(false);
             }
         });
     }
@@ -163,5 +167,10 @@ public class LoginActivity extends AdvancedActivity {
     protected void removeAllErrors(){
         removeInputError(R.id.login_layout_username);
         removeInputError(R.id.login_layout_password);
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

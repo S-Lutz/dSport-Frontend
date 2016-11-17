@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.omgproduction.dsport_application.config.Keys;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +28,15 @@ public class ConnectionUtils {
     public static JSONObject extractJSONValue(JSONObject jsonObject){
         try {
             return jsonObject.getJSONObject(Keys.VALUE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONArray extractJSONArray(JSONObject jsonObject, String arrayName){
+        try {
+            return extractJSONValue(jsonObject).getJSONArray(arrayName);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

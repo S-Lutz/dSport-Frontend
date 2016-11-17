@@ -7,8 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.supplements.activities.AdvancedFragment;
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends AdvancedFragment {
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -20,4 +21,8 @@ public class ChatFragment extends Fragment {
     }
 
 
+    @Override
+    public void onRefresh() {
+
+    }
 }

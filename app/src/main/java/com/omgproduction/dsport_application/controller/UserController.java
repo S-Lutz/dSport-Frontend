@@ -34,7 +34,7 @@ public class UserController {
 
         listener.onStart();
         String userID = Preferences.getInstance(context)
-                .getStringDetail(Keys.USERID,"");
+                .getStringDetail(Keys.USER_ID,"");
 
         if(!userID.trim().isEmpty()){
             JSONRequest request = new JSONRequest(BackendFunctions.EDIT_USER)
@@ -51,7 +51,10 @@ public class UserController {
                             if(ConnectionUtils.Success(jsonObject)){
                                 listener.onFinish();
                                 try {
-                                    String value = ConnectionUtils.extractJSONValue(jsonObject).getString(key);
+                                    String value = "";
+                                    if(!key.equals(Keys.PASSWORD)){
+                                        value = ConnectionUtils.extractJSONValue(jsonObject).getString(key);
+                                    }
                                     update(context,key,value);
                                     listener.onSuccess(value);
                                 } catch (JSONException e) {
@@ -62,7 +65,7 @@ public class UserController {
                             }
                         }
                     })
-                    .param(Keys.USERID, userID)
+                    .param(Keys.USER_ID, userID)
                     .param(key,value);
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
@@ -77,18 +80,24 @@ public class UserController {
         listener.onStart();
 
         String userID = Preferences.getInstance(context)
-                .getStringDetail(Keys.USERID,"");
+                .getStringDetail(Keys.USER_ID,"");
 
         if(!userID.trim().isEmpty()){
             JSONRequest request = new JSONRequest(BackendFunctions.GET_USER)
-                    .param(Keys.USERID,userID)
+                    .param(Keys.USER_ID,userID)
                     .responseListener(new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             listener.onFinish();
                             if(ConnectionUtils.Success(jsonObject)){
                                 JSONObject jsonUser = ConnectionUtils.extractJSONValue(jsonObject);
-                                User user = Converter.convertUser(jsonUser);
+                                User user = null;
+                                try {
+                                    user = Converter.convertUser(jsonUser);
+                                    SessionController.getInstance().saveLocalUser(context,jsonUser,listener);
+                                } catch (JSONException e) {
+                                    listener.onJSONException(e);
+                                }
                                 listener.onSuccess(user);
                             }else{
                                 listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
@@ -115,10 +124,10 @@ public class UserController {
     public void getLocalUser(final Context context, final OnResultListener<User> listener){
 
         listener.onStart();
-        String userID = Preferences.getInstance(context).getStringDetail(Keys.USERID,"");
+        String userID = Preferences.getInstance(context).getStringDetail(Keys.USER_ID,"");
         if(!userID.trim().isEmpty()){
             User user = new User(
-                    Preferences.getInstance(context).getStringDetail(Keys.USERID,""),
+                    Preferences.getInstance(context).getStringDetail(Keys.USER_ID,""),
                     Preferences.getInstance(context).getStringDetail(Keys.USERNAME,""),
                     Preferences.getInstance(context).getStringDetail(Keys.EMAIL,""),
                     Preferences.getInstance(context).getStringDetail(Keys.PICTURE,""),

@@ -1,4 +1,4 @@
-package com.omgproduction.dsport_application.adapters;
+package com.omgproduction.dsport_application.listeners.adapters;
 
 import android.view.animation.Animation;
 

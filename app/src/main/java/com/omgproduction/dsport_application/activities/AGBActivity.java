@@ -12,7 +12,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.ResourceController;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
@@ -33,24 +32,24 @@ public class AGBActivity extends AdvancedActivity {
         this.context = this;
 
         Intent i = getIntent();
-        String agbString = i.getStringExtra(Keys.TEXT);
+        //String agbString = i.getStringExtra(Keys.TEXT);
 
 
 
-        try {
-            JSONObject agb = new JSONObject(agbString);
+        //try {
+            //JSONObject agb = new JSONObject(agbString);
 
-            agb_text = agb.getString(Keys.TEXT);
-            agb_version = agb.getString(Keys.AGB_VERSION);
+            //agb_text = agb.getString(Keys.TEXT);
+            //agb_version = agb.getString(Keys.AGB_VERSION);
 
             findViewById(R.id.btn_goon).setOnClickListener(this);
             ((AppCompatTextView)findViewById(R.id.agb_info)).setText(getString(R.string.version)+" "+agb_version);
             ((AppCompatTextView)findViewById(R.id.agb_text)).setText(agb_text);
 
-        } catch (JSONException | NullPointerException e) {
-            e.printStackTrace();
-            startActivity(new Intent(this,MainActivity.class));
-        }
+        //} catch (JSONException | NullPointerException e) {
+        //    e.printStackTrace();
+        //    startActivity(new Intent(this,MainActivity.class));
+        //}
 
 
 
@@ -79,6 +78,7 @@ public class AGBActivity extends AdvancedActivity {
     }
 
     private void onAGBAccepted() {
+        /*
         Preferences.getInstance(this)
                 .putString(Keys.AGB_VERSION,agb_version)
                 .commit();
@@ -106,7 +106,7 @@ public class AGBActivity extends AdvancedActivity {
                         });
                     }
                 }
-        );
+        );*/
     }
 
     private void startMainActivity(){
@@ -118,6 +118,11 @@ public class AGBActivity extends AdvancedActivity {
 
     @Override
     protected void removeAllErrors() {
+
+    }
+
+    @Override
+    public void onRefresh() {
 
     }
 }

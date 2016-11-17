@@ -8,18 +8,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.adapters.AnimationAdapter;
+import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.Keys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
@@ -27,14 +29,18 @@ import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
+import com.omgproduction.dsport_application.utils.Transitions;
+import com.omgproduction.dsport_application.utils.ViewUtils;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 
-public class ProfileActivity extends NavigationActivity {
+
+public class ProfileActivity extends NavigationActivity{
 
     private FloatingActionButton fabEdit, fabGallery, fabCamera;
-    private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise;
+    private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise, fabOpenBig;
     private boolean isEditFabOpen = false;
     private static final int CAM_REQUEST = 1;
     private static final int PIC_CROP = 2;
@@ -65,6 +71,7 @@ public class ProfileActivity extends NavigationActivity {
         getSupportActionBar().setTitle("");
 
 
+
         preferFloatingButtons();
         addActionListeners();
 
@@ -77,14 +84,12 @@ public class ProfileActivity extends NavigationActivity {
         UserController.getInstance().getLocalUser(context,new OnResultAdapter<User>(){
             @Override
             public void onStart() {
-                showProgressBar(R.id.contentPanel,R.id.progress_bar);
-                showProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
+                showProgressBar(true);
             }
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.contentPanel,R.id.progress_bar);
-                hideProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
+                showProgressBar(false);
             }
 
             @Override
@@ -105,6 +110,7 @@ public class ProfileActivity extends NavigationActivity {
     }
 
     private void addActionListeners() {
+        setRefresher((SwipeRefreshLayout)findViewById(R.id.profile_refresher));
         findViewById(R.id.profile_firstname_edit).setOnClickListener(this);
         findViewById(R.id.profile_lastname_edit).setOnClickListener(this);
         findViewById(R.id.profile_username_edit).setOnClickListener(this);
@@ -123,6 +129,7 @@ public class ProfileActivity extends NavigationActivity {
         fabGallery = (FloatingActionButton) findViewById(R.id.profile_edit_fab_gallery);
 
         fabOpen = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
+        fabOpenBig = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open_big);
         fabClose = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         fabClockWise = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_clockwise);
         fabAntiClockWise = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.rotate_anti_clockwise);
@@ -136,8 +143,7 @@ public class ProfileActivity extends NavigationActivity {
         UserController.getInstance().getGlobalUser(this, new OnResultAdapter<User>() {
             @Override
             public void onStart() {
-                showProgressBar(R.id.contentPanel,R.id.progress_bar);
-                showProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
+                showProgressBar(true);
             }
 
             @Override
@@ -172,8 +178,7 @@ public class ProfileActivity extends NavigationActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.contentPanel, R.id.progress_bar);
-                hideProgressBar(R.id.profile_pic, R.id.progress_bar_pic);
+                showProgressBar(false);
             }
         });
 
@@ -236,7 +241,7 @@ public class ProfileActivity extends NavigationActivity {
 
     private void performEmailConfirm() {
         final String email = getTVText(R.id.profile_email_input);
-        final String currentEmail = Preferences.getInstance(this).getStringDetail(Keys.EMAIL,"");
+        final String currentEmail = Preferences.getInstance(this).getStringDetail(getString(R.string.key_email),"");
         if(!currentEmail.trim().isEmpty()){
             if(!email.trim().isEmpty()){
                 if(!email.equals(currentEmail)){
@@ -260,7 +265,7 @@ public class ProfileActivity extends NavigationActivity {
 
     private void performLastnameConfirm() {
         String lastname = getTVText(R.id.profile_lastname_input);
-        String currentLastname = Preferences.getInstance(this).getStringDetail(Keys.LASTNAME,"");
+        String currentLastname = Preferences.getInstance(this).getStringDetail(getString(R.string.key_lastname),"");
         if(!currentLastname.trim().isEmpty()){
             if(!lastname.trim().isEmpty()){
                 if(!lastname.equals(currentLastname)){
@@ -280,7 +285,7 @@ public class ProfileActivity extends NavigationActivity {
 
     private void performFirstnameConfirm() {
         final String firstname = getTVText(R.id.profile_firstname_input);
-        final String currentFirstname = Preferences.getInstance(this).getStringDetail(Keys.FIRSTNAME,"");
+        final String currentFirstname = Preferences.getInstance(this).getStringDetail(getString(R.string.key_firstname),"");
         if(!currentFirstname.trim().isEmpty()){
             if(!firstname.trim().isEmpty()){
                 if(!firstname.equals(currentFirstname)){
@@ -300,7 +305,7 @@ public class ProfileActivity extends NavigationActivity {
 
     private void performUsernameConfirm() {
         final String username = getTVText(R.id.profile_username_input);
-        final String currentUsername = Preferences.getInstance(this).getStringDetail(Keys.USERNAME,"");
+        final String currentUsername = Preferences.getInstance(this).getStringDetail(getString(R.string.key_username),"");
         if(!currentUsername.trim().isEmpty()){
             if(!username.trim().isEmpty()){
                 if(!username.equals(currentUsername)){
@@ -358,155 +363,12 @@ public class ProfileActivity extends NavigationActivity {
         }
     }
 
-    private void showPassword(boolean flag){
-        isPasswordShown = flag;
-        if(flag){
-            showAnimation(R.id.profile_password_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_firstname_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_password_input_container);
-        }else{
-            hideAnimation(R.id.profile_password_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_firstname_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_password_input_container);
-        }
-
-    }
-
-    private void showUsername(boolean flag){
-        isUsernameShown = flag;
-        if(flag){
-            showAnimation(R.id.profile_username_edit,new int[]{
-                    R.id.profile_firstname_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_username_input_container);
-        }else{
-            hideAnimation(R.id.profile_username_edit,new int[]{
-                    R.id.profile_firstname_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_username_input_container);
-        }
-    }
-
-    private void showFirstname(boolean flag){
-        isFirstnameShown = flag;
-        if(flag){
-            showAnimation(R.id.profile_firstname_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_firstname_input_container);
-        }else{
-            hideAnimation(R.id.profile_firstname_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_firstname_input_container);
-        }
-    }
-
-    private void showLastname(boolean flag){
-        isLastnameShown = flag;
-        if(flag){
-            showAnimation(R.id.profile_lastname_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_firstname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_lastname_input_container);
-        }else{
-            hideAnimation(R.id.profile_lastname_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_firstname_edit,
-                    R.id.profile_email_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_lastname_input_container);
-        }
-    }
-
-    private void showEmail(boolean flag){
-        isEmailShown = flag;
-        if(flag){
-            showAnimation(R.id.profile_email_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_firstname_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_email_input_container);
-        }else{
-            hideAnimation(R.id.profile_email_edit,new int[]{
-                    R.id.profile_username_edit,
-                    R.id.profile_firstname_edit,
-                    R.id.profile_lastname_edit,
-                    R.id.profile_password_edit,
-                    R.id.profile_edit_fab
-            }, R.id.profile_email_input_container);
-        }
-    }
-
-    private void showAnimation(int vMain, final int[] vOthers, final int container){
-        fadeInOut(findViewById(vMain)).setAnimationListener(new AnimationAdapter() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                for(int id :vOthers){
-                    animateOut(findViewById(id));
-                }
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                goInDown(findViewById(container)).setAnimationListener(new AnimationAdapter() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        findViewById(container).setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-        });
-    }
-    private void hideAnimation(final int vMain, final int[] vOthers, final int container){
-        goOutUp(findViewById(container)).setAnimationListener(new AnimationAdapter() {
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                findViewById(container).setVisibility( View.GONE);
-                fadeInOut(findViewById(vMain)).setAnimationListener(new AnimationAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        for(int id : vOthers){
-                            animateIn(findViewById(id));
-                        }
-                    }
-                });
-            }
-        });
-    }
-
 
     private void savePicture(final Bitmap thePic) {
-        UserController.getInstance().saveUserDetail(this, Keys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, getString(R.string.key_picture), BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
             @Override
             public void onStart() {
-                showProgressBar(R.id.profile_pic,R.id.progress_bar_pic);
+                showProgressBar(true);
             }
 
             @Override
@@ -542,17 +404,17 @@ public class ProfileActivity extends NavigationActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.profile_pic, R.id.progress_bar_pic);
+                showProgressBar(false);
             }
         });
     }
 
     private void saveEmail(final String email) {
-        UserController.getInstance().saveUserDetail(this, Keys.EMAIL, email, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, getString(R.string.key_email), email, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
                 removeInputError(R.id.profile_email_input_layout);
-                showProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
+                showProgressBar(true);
             }
 
             @Override
@@ -589,16 +451,16 @@ public class ProfileActivity extends NavigationActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.profile_email_input_container,R.id.progress_bar_email);
+                showProgressBar(false);
             }
         });
     }
 
     private void saveFirstname(final String firstname) {
-        UserController.getInstance().saveUserDetail(this, Keys.FIRSTNAME, firstname, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, getString(R.string.key_firstname), firstname, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
-                showProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
+                showProgressBar(true);
                 removeInputError(R.id.profile_firstname_input_layout);
             }
 
@@ -636,16 +498,16 @@ public class ProfileActivity extends NavigationActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.profile_firstname_input_container,R.id.progress_bar_firstname);
+                showProgressBar(false);
             }
         });
     }
 
     private void saveLastname(final String lastname) {
-        UserController.getInstance().saveUserDetail(this, Keys.LASTNAME, lastname, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, getString(R.string.key_lastname), lastname, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
-                showProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
+                showProgressBar(true);
                 removeInputError(R.id.profile_lastname_input_layout);
             }
 
@@ -683,16 +545,16 @@ public class ProfileActivity extends NavigationActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.profile_lastname_input_container,R.id.progress_bar_lastname);
+                showProgressBar(false);
             }
         });
     }
 
     private void savePassword(final String password) {
-        UserController.getInstance().saveUserDetail(this, Keys.PASSWORD, password, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, getString(R.string.key_password), password, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
-                showProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
+                showProgressBar(true);
                 removeInputError(R.id.profile_password_input_layout);
                 removeInputError(R.id.profile_password_confirm_input_layout);
             }
@@ -730,17 +592,17 @@ public class ProfileActivity extends NavigationActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.profile_password_input_container,R.id.progress_bar_password);
+                showProgressBar(false);
             }
         });
 
     }
 
     private void saveUsername(final String username) {
-        UserController.getInstance().saveUserDetail(this, Keys.USERNAME, username, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, getString(R.string.key_username), username, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
-                showProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
+                showProgressBar(true);
                 removeInputError(R.id.profile_username_input_layout);
             }
 
@@ -778,7 +640,7 @@ public class ProfileActivity extends NavigationActivity {
 
             @Override
             public void onFinish() {
-                hideProgressBar(R.id.profile_username_input_container,R.id.progress_bar_username);
+                showProgressBar(false);
             }
         });
 
@@ -791,8 +653,8 @@ public class ProfileActivity extends NavigationActivity {
             cropIntent.putExtra("crop", "true");
             cropIntent.putExtra("aspectX", 2);
             cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 512);
-            cropIntent.putExtra("outputY", 256);
+            cropIntent.putExtra("outputX", 2048);
+            cropIntent.putExtra("outputY", 1024);
             cropIntent.putExtra("return-data", true);
             startActivityForResult(cropIntent, PIC_CROP);
         }
@@ -835,13 +697,17 @@ public class ProfileActivity extends NavigationActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
+            final Bundle extras = data.getExtras();
             if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+
+                //TODO FIX QUALITY OF BITMAP
+                //temporaryOwnCrop(data.getData());
                 performCrop(data.getData());
             }else if(requestCode == PIC_CROP){
-                Bundle extras = data.getExtras();
+                //TODO FIX QUALITY OF BITMAP
                 Bitmap thePic = extras.getParcelable("data");
-                Log.e("PICTURE", String.valueOf(thePic.getWidth()));
-                Log.e("PICTURE", String.valueOf(thePic.getHeight()));
+                Log.e("PIC",String.valueOf(thePic.getHeight()));
+                Log.e("PIC",String.valueOf(thePic.getWidth()));
                 savePicture(thePic);
             }
         }
@@ -867,50 +733,135 @@ public class ProfileActivity extends NavigationActivity {
         }
     }
 
+    private void showPassword(boolean flag){
+        if(flag){
+
+            showAnimation(R.id.profile_password_edit, R.id.profile_password_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }else if (isPasswordShown){
+            hideAnimation(R.id.profile_password_edit, R.id.profile_password_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }
+        isPasswordShown = flag;
+
+    }
+
+    private void showUsername(boolean flag){
+        if(flag){
+            showAnimation(R.id.profile_username_edit, R.id.profile_username_input_container,
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }else if (isUsernameShown){
+            hideAnimation(R.id.profile_username_edit, R.id.profile_username_input_container,
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }
+        isUsernameShown = flag;
+    }
+
+    private void showFirstname(boolean flag){
+        if(flag){
+            showAnimation(R.id.profile_firstname_edit, R.id.profile_firstname_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }else if (isFirstnameShown){
+            hideAnimation(R.id.profile_firstname_edit, R.id.profile_firstname_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }
+        isFirstnameShown = flag;
+    }
+
+    private void showLastname(boolean flag){
+        if(flag){
+            showAnimation(R.id.profile_lastname_edit, R.id.profile_lastname_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }else if(isLastnameShown){
+            hideAnimation(R.id.profile_lastname_edit, R.id.profile_lastname_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_email_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }
+        isLastnameShown = flag;
+    }
+
+    private void showEmail(boolean flag){
+        if(flag){
+            showAnimation(R.id.profile_email_edit, R.id.profile_email_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }else if(isEmailShown){
+            hideAnimation(R.id.profile_email_edit, R.id.profile_email_input_container,
+                    findViewById(R.id.profile_username_edit),
+                    findViewById(R.id.profile_firstname_edit),
+                    findViewById(R.id.profile_lastname_edit),
+                    findViewById(R.id.profile_password_edit),
+                    findViewById(R.id.profile_edit_fab));
+        }
+        isEmailShown = flag;
+    }
+
+    private void showAnimation(int vMain, final int container, final View... vOthers){
+        fabEdit.setAnimation(fabClose);
+        fadeInOut(findViewById(vMain)).setAnimationListener(new AnimationAdapter() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                Transitions.slideOutLeft((ViewGroup) findViewById(R.id.profile_container),vOthers);
+                Transitions.slideOutRight((ViewGroup) findViewById(R.id.profile_container), fabEdit);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Transitions.slideInBottom((ViewGroup) findViewById(R.id.profile_container),findViewById(container));
+            }
+        });
+    }
+    private void hideAnimation(final int vMain, final int container, final View... vOthers){
+
+        Transitions.slideOutBottom((ViewGroup) findViewById(R.id.profile_container),findViewById(container));
+        fabEdit.setAnimation(fabOpenBig);
+        fadeInOut(findViewById(vMain)).setAnimationListener(new AnimationAdapter() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Transitions.slideInLeft((ViewGroup) findViewById(R.id.profile_container),vOthers);
+                Transitions.slideInRight((ViewGroup) findViewById(R.id.profile_container), fabEdit);
+            }
+        });
+    }
+
     private boolean isSomethingShown(){
         return isEmailShown||isFirstnameShown||isLastnameShown||isUsernameShown||isPasswordShown;
     }
-
-    private void animateOut(final View view){
-        Animation goOut = AnimationUtils.loadAnimation(this,R.anim.go_out);
-        goOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                view.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        view.startAnimation(goOut);
-    }
-    private void animateIn(final View view){
-        Animation goIn = AnimationUtils.loadAnimation(this,R.anim.go_in);
-        goIn.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                view.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        view.startAnimation(goIn);
-    }
-
+    //magic happens here
     private void closeAll(){
         showEmail(false);
         showLastname(false);
@@ -925,15 +876,8 @@ public class ProfileActivity extends NavigationActivity {
         return fade;
     }
 
-    private Animation goInDown(final View view){
-        Animation anim = AnimationUtils.loadAnimation(this,R.anim.go_in_up);
-        view.startAnimation(anim);
-        return anim;
-    }
-
-    private Animation goOutUp(final View view){
-        Animation anim = AnimationUtils.loadAnimation(this,R.anim.go_out_down);
-        view.startAnimation(anim);
-        return anim;
+    @Override
+    public void onRefresh() {
+        loadOnlineData();
     }
 }
