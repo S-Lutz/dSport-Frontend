@@ -8,18 +8,15 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
-import com.omgproduction.dsport_application.utils.ConnectionUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by Florian on 17.10.2016.
@@ -54,7 +51,7 @@ public class RegisterActivity extends AdvancedActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(Keys.USERNAME))!=null){
+        if((username = i.getStringExtra(ApplicationKeys.USERNAME))!=null){
             ((EditText)findViewById(R.id.register_username)).setText(username);
         }
     }
@@ -75,7 +72,7 @@ public class RegisterActivity extends AdvancedActivity {
 
     private void startLoginActivity(Context context){
         Intent i = new Intent(context, LoginActivity.class);
-        i.putExtra(Keys.USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
+        i.putExtra(ApplicationKeys.USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -201,7 +198,7 @@ public class RegisterActivity extends AdvancedActivity {
 
     private void startWelcomeActivity(String username) {
         Intent i = new Intent(this, WelcomeActivity.class);
-        i.putExtra(Keys.USERNAME,username);
+        i.putExtra(ApplicationKeys.USERNAME,username);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

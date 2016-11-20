@@ -4,17 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 
 public class WelcomeActivity extends Activity {
 
@@ -28,7 +21,7 @@ public class WelcomeActivity extends Activity {
 
 
         Intent i = getIntent();
-        username = i.getStringExtra(Keys.USERNAME);
+        username = i.getStringExtra(ApplicationKeys.USERNAME);
         Resources res = getResources();
         String text = res.getQuantityString(R.plurals.welcome_messages, 1, username);
 
@@ -40,7 +33,7 @@ public class WelcomeActivity extends Activity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra(Keys.USERNAME,username);
+        i.putExtra(ApplicationKeys.USERNAME,username);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

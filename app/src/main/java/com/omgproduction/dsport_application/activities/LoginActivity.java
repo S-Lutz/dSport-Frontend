@@ -7,17 +7,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.EditText;
 
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
-import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -49,7 +46,7 @@ public class LoginActivity extends AdvancedActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(Keys.USERNAME))!=null){
+        if((username = i.getStringExtra(ApplicationKeys.USERNAME))!=null){
             ((EditText)findViewById(R.id.login_username)).setText(username);
         }
 
@@ -155,7 +152,7 @@ public class LoginActivity extends AdvancedActivity {
 
     private void startRegistrationActivity(Context context){
         Intent i = new Intent(context, RegisterActivity.class);
-        i.putExtra(Keys.USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
+        i.putExtra(ApplicationKeys.USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);

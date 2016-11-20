@@ -4,7 +4,7 @@ package com.omgproduction.dsport_application.config;
  * Created by Florian on 17.11.2016.
  */
 
-public class BackendFunctions {
+public class BackendConfig {
     public static final String HOST = "http://www.daily-sport.de:9000";
     public static final String HOME = "/dsport";
     public static final String LOGIN = HOST+HOME+"/users/login/";

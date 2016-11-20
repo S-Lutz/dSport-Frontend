@@ -16,10 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.controller.SessionController;
@@ -30,11 +30,8 @@ import com.omgproduction.dsport_application.supplements.activities.NavigationAct
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
 import com.omgproduction.dsport_application.utils.Transitions;
-import com.omgproduction.dsport_application.utils.ViewUtils;
 
 import org.json.JSONException;
-
-import java.io.IOException;
 
 
 public class ProfileActivity extends NavigationActivity{
@@ -241,7 +238,7 @@ public class ProfileActivity extends NavigationActivity{
 
     private void performEmailConfirm() {
         final String email = getTVText(R.id.profile_email_input);
-        final String currentEmail = Preferences.getInstance(this).getStringDetail(getString(R.string.key_email),"");
+        final String currentEmail = Preferences.getInstance(this).getStringDetail(ApplicationKeys.EMAIL,"");
         if(!currentEmail.trim().isEmpty()){
             if(!email.trim().isEmpty()){
                 if(!email.equals(currentEmail)){
@@ -265,7 +262,7 @@ public class ProfileActivity extends NavigationActivity{
 
     private void performLastnameConfirm() {
         String lastname = getTVText(R.id.profile_lastname_input);
-        String currentLastname = Preferences.getInstance(this).getStringDetail(getString(R.string.key_lastname),"");
+        String currentLastname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.LASTNAME,"");
         if(!currentLastname.trim().isEmpty()){
             if(!lastname.trim().isEmpty()){
                 if(!lastname.equals(currentLastname)){
@@ -285,7 +282,7 @@ public class ProfileActivity extends NavigationActivity{
 
     private void performFirstnameConfirm() {
         final String firstname = getTVText(R.id.profile_firstname_input);
-        final String currentFirstname = Preferences.getInstance(this).getStringDetail(getString(R.string.key_firstname),"");
+        final String currentFirstname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.FIRSTNAME,"");
         if(!currentFirstname.trim().isEmpty()){
             if(!firstname.trim().isEmpty()){
                 if(!firstname.equals(currentFirstname)){
@@ -305,7 +302,7 @@ public class ProfileActivity extends NavigationActivity{
 
     private void performUsernameConfirm() {
         final String username = getTVText(R.id.profile_username_input);
-        final String currentUsername = Preferences.getInstance(this).getStringDetail(getString(R.string.key_username),"");
+        final String currentUsername = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USERNAME,"");
         if(!currentUsername.trim().isEmpty()){
             if(!username.trim().isEmpty()){
                 if(!username.equals(currentUsername)){
@@ -365,7 +362,7 @@ public class ProfileActivity extends NavigationActivity{
 
 
     private void savePicture(final Bitmap thePic) {
-        UserController.getInstance().saveUserDetail(this, getString(R.string.key_picture), BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
             @Override
             public void onStart() {
                 showProgressBar(true);
@@ -410,7 +407,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveEmail(final String email) {
-        UserController.getInstance().saveUserDetail(this, getString(R.string.key_email), email, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.EMAIL, email, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
                 removeInputError(R.id.profile_email_input_layout);
@@ -457,7 +454,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveFirstname(final String firstname) {
-        UserController.getInstance().saveUserDetail(this, getString(R.string.key_firstname), firstname, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.FIRSTNAME, firstname, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
                 showProgressBar(true);
@@ -504,7 +501,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveLastname(final String lastname) {
-        UserController.getInstance().saveUserDetail(this, getString(R.string.key_lastname), lastname, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.LASTNAME, lastname, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
                 showProgressBar(true);
@@ -551,7 +548,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void savePassword(final String password) {
-        UserController.getInstance().saveUserDetail(this, getString(R.string.key_password), password, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.PASSWORD, password, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
                 showProgressBar(true);
@@ -599,7 +596,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveUsername(final String username) {
-        UserController.getInstance().saveUserDetail(this, getString(R.string.key_username), username, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USERNAME, username, new OnResultAdapter<String>() {
             @Override
             public void onStart() {
                 showProgressBar(true);

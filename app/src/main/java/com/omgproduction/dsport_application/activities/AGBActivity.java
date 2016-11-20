@@ -32,15 +32,15 @@ public class AGBActivity extends AdvancedActivity {
         this.context = this;
 
         Intent i = getIntent();
-        //String agbString = i.getStringExtra(Keys.TEXT);
+        //String agbString = i.getStringExtra(ApplicationKeys.TEXT);
 
 
 
         //try {
             //JSONObject agb = new JSONObject(agbString);
 
-            //agb_text = agb.getString(Keys.TEXT);
-            //agb_version = agb.getString(Keys.AGB_VERSION);
+            //agb_text = agb.getString(ApplicationKeys.TEXT);
+            //agb_version = agb.getString(ApplicationKeys.AGB_VERSION);
 
             findViewById(R.id.btn_goon).setOnClickListener(this);
             ((AppCompatTextView)findViewById(R.id.agb_info)).setText(getString(R.string.version)+" "+agb_version);
@@ -80,13 +80,13 @@ public class AGBActivity extends AdvancedActivity {
     private void onAGBAccepted() {
         /*
         Preferences.getInstance(this)
-                .putString(Keys.AGB_VERSION,agb_version)
+                .putString(ApplicationKeys.AGB_VERSION,agb_version)
                 .commit();
 
         ResourceController resourceController = ResourceController.getInstance();
         resourceController.putAGBVersion(
                 Preferences.getInstance(this)
-                        .getStringDetail(Keys.USERID, "0"),
+                        .getStringDetail(ApplicationKeys.USERID, "0"),
                 agb_version,
                 new Response.Listener<JSONObject>() {
                     @Override

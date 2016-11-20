@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.omgproduction.dsport_application"
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.01"
     }
     buildTypes {
         release {

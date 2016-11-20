@@ -6,8 +6,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.BackendFunctions;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.BackendConfig;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
@@ -34,10 +34,10 @@ public class UserController {
 
         listener.onStart();
         String userID = Preferences.getInstance(context)
-                .getStringDetail(Keys.USER_ID,"");
+                .getStringDetail(ApplicationKeys.USER_ID,"");
 
         if(!userID.trim().isEmpty()){
-            JSONRequest request = new JSONRequest(BackendFunctions.EDIT_USER)
+            JSONRequest request = new JSONRequest(BackendConfig.EDIT_USER)
                     .errorListener(new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
@@ -52,7 +52,7 @@ public class UserController {
                                 listener.onFinish();
                                 try {
                                     String value = "";
-                                    if(!key.equals(Keys.PASSWORD)){
+                                    if(!key.equals(ApplicationKeys.PASSWORD)){
                                         value = ConnectionUtils.extractJSONValue(jsonObject).getString(key);
                                     }
                                     update(context,key,value);
@@ -65,7 +65,7 @@ public class UserController {
                             }
                         }
                     })
-                    .param(Keys.USER_ID, userID)
+                    .param(ApplicationKeys.USER_ID, userID)
                     .param(key,value);
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
@@ -80,11 +80,11 @@ public class UserController {
         listener.onStart();
 
         String userID = Preferences.getInstance(context)
-                .getStringDetail(Keys.USER_ID,"");
+                .getStringDetail(ApplicationKeys.USER_ID,"");
 
         if(!userID.trim().isEmpty()){
-            JSONRequest request = new JSONRequest(BackendFunctions.GET_USER)
-                    .param(Keys.USER_ID,userID)
+            JSONRequest request = new JSONRequest(BackendConfig.GET_USER)
+                    .param(ApplicationKeys.USER_ID,userID)
                     .responseListener(new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
@@ -124,17 +124,17 @@ public class UserController {
     public void getLocalUser(final Context context, final OnResultListener<User> listener){
 
         listener.onStart();
-        String userID = Preferences.getInstance(context).getStringDetail(Keys.USER_ID,"");
+        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,"");
         if(!userID.trim().isEmpty()){
             User user = new User(
-                    Preferences.getInstance(context).getStringDetail(Keys.USER_ID,""),
-                    Preferences.getInstance(context).getStringDetail(Keys.USERNAME,""),
-                    Preferences.getInstance(context).getStringDetail(Keys.EMAIL,""),
-                    Preferences.getInstance(context).getStringDetail(Keys.PICTURE,""),
-                    Preferences.getInstance(context).getStringDetail(Keys.FIRSTNAME,""),
-                    Preferences.getInstance(context).getStringDetail(Keys.LASTNAME,""),
-                    Preferences.getInstance(context).getStringDetail(Keys.CREATED,""),
-                    Preferences.getInstance(context).getStringDetail(Keys.AGB_VERSION,"")
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USERNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.EMAIL,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.PICTURE,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.FIRSTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.LASTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.CREATED,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.AGB_VERSION,"")
             );
             listener.onFinish();
             listener.onSuccess(user);

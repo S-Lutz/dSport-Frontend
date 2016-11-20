@@ -4,7 +4,7 @@ package com.omgproduction.dsport_application.config;
  * Created by Florian on 17.11.2016.
  */
 
-public class Keys {
+public class ApplicationKeys {
     public static final String IS_LOGIN = "IsLoggedIn";
     public static final String USER_ID = "user_id";
     public static final String USERNAME = "username";

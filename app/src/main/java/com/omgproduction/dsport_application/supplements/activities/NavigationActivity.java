@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +19,11 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.MainActivity;
 import com.omgproduction.dsport_application.activities.ProfileActivity;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by Florian on 06.11.2016.
@@ -32,6 +35,8 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     protected Context context;
     protected NavigationView navigationView;
     protected DrawerLayout drawer;
+
+    public ArrayList<DrawerLayout.DrawerListener> drawerListeners = new ArrayList<>();
 
     private static int id = R.id.nav_main;
 
@@ -68,9 +73,36 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
                 if (newState == DrawerLayout.STATE_SETTLING) {
+                    for(DrawerLayout.DrawerListener d : drawerListeners){
+                        d.onDrawerStateChanged(newState);
+                    }
                     if (!isDrawerOpened()) {
                         updateNavigationValues();
                     }
+                }
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                for(DrawerLayout.DrawerListener d : drawerListeners){
+                    d.onDrawerSlide(drawerView,slideOffset);
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                for(DrawerLayout.DrawerListener d : drawerListeners){
+                    d.onDrawerOpened(drawerView);
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                for(DrawerLayout.DrawerListener d : drawerListeners){
+                    d.onDrawerClosed(drawerView);
                 }
             }
         };
@@ -96,9 +128,9 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     public void updateNavigationValues() {
         View headerLayout =
                 navigationView.getHeaderView(0);
-        ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(Preferences.getInstance(this).getStringDetail(Keys.USERNAME,getString(R.string.empty)));
-        ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(Preferences.getInstance(this).getStringDetail(Keys.EMAIL,getString(R.string.empty)));
-        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(this,Preferences.getInstance(this).getStringDetail(Keys.PICTURE,getString(R.string.empty))));
+        ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(Preferences.getInstance(this).getStringDetail(ApplicationKeys.USERNAME,getString(R.string.empty)));
+        ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(Preferences.getInstance(this).getStringDetail(ApplicationKeys.EMAIL,getString(R.string.empty)));
+        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(this,Preferences.getInstance(this).getStringDetail(ApplicationKeys.PICTURE,getString(R.string.empty))));
     }
 
     @Override
@@ -155,5 +187,13 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
 
     public void openDrawer(){
         ((DrawerLayout) findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.START);
+    }
+
+    public void addDrawerListener(DrawerLayout.DrawerListener drawerListener){
+        this.drawerListeners.add(drawerListener);
+    }
+
+    public void removeDrawerListener(DrawerLayout.DrawerListener drawerListener){
+        this.drawerListeners.remove(drawerListener);
     }
 }

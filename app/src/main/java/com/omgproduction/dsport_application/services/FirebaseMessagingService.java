@@ -8,7 +8,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.RemoteMessage;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.MainActivity;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 
 /**
  * Created by Florian on 19.10.2016.
@@ -18,7 +18,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        showNotification(remoteMessage.getData().get(Keys.MESSAGE));
+        showNotification(remoteMessage.getData().get(ApplicationKeys.MESSAGE));
 
     }
 

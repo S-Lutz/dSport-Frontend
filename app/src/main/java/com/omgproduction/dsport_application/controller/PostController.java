@@ -6,12 +6,10 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.builder.JSONRequest;
-import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.BackendFunctions;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.BackendConfig;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.models.Post;
-import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 import com.omgproduction.dsport_application.utils.Converter;
 
@@ -35,15 +33,15 @@ public class PostController {
 
     public void getAllPosts(final Context context, final String localUserID, final String ownerUserID, final OnResultListener<ArrayList<Post>> listener){
         listener.onStart();
-        JSONRequest request = new JSONRequest(BackendFunctions.GET_POSTS)
-                .param(Keys.USER_ID,localUserID)
-                .param(Keys.OWNER_ID,ownerUserID)
+        JSONRequest request = new JSONRequest(BackendConfig.GET_POSTS)
+                .param(ApplicationKeys.USER_ID,localUserID)
+                .param(ApplicationKeys.OWNER_ID,ownerUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         listener.onFinish();
                         if(ConnectionUtils.Success(jsonObject)){
-                            JSONArray jsonPosts = ConnectionUtils.extractJSONArray(jsonObject,Keys.POSTS);
+                            JSONArray jsonPosts = ConnectionUtils.extractJSONArray(jsonObject, ApplicationKeys.POSTS);
                             ArrayList<Post> posts = new ArrayList<>();
                             Log.e("Response",String.valueOf(jsonPosts.length()));
                                 try {
