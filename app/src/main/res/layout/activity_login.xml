@@ -31,7 +31,7 @@
                 android:paddingTop="50dp">
 
                 <!--dSport-Logo-->
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Username-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/login_username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Password-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/login_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <!--Button to Start Login-->
-                    <Button
+                    <android.support.v7.widget.AppCompatButton
                         android:id="@+id/btn_login"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

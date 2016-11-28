@@ -2,14 +2,16 @@ package com.omgproduction.dsport_application.controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.omgproduction.dsport_application.activities.LoginActivity;
+import com.omgproduction.dsport_application.activities.main.LoginActivity;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.BackendConfig;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
@@ -83,10 +85,14 @@ public class SessionController {
      * @param onResultListener Listener to do something after recieve response
      */
     public void loginUser(final Context context, String username, String password, final OnResultListener<JSONObject> onResultListener) {
+        final String token = Preferences.getInstance(context)
+                .getStringDetail(ApplicationKeys.TOKEN,"");
+
         onResultListener.onStart();
         JSONRequest requestBuilder = new JSONRequest(BackendConfig.LOGIN)
                 .param(ApplicationKeys.USERNAME, username)
                 .param(ApplicationKeys.PASSWORD, password)
+                .param(ApplicationKeys.TOKEN, token)
                 .errorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
@@ -142,6 +148,9 @@ public class SessionController {
         //https://www.youtube.com/watch?v=LiKCEa5_Cs8
         //https://www.youtube.com/watch?v=MYZVhs6T_W8
 
+        Preferences.getInstance(ApplicationController.getInstance().getApplicationContext())
+                .putString(ApplicationKeys.TOKEN,token);
+
     }
 
     /**
@@ -157,16 +166,52 @@ public class SessionController {
     /**
      * Clear session details
      */
-    public void logout(Context context) {
-        Preferences.getInstance(context)
-                .clear()
-                .commit();
-        Intent i = new Intent(context, LoginActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        context.startActivity(i);
+    public void logout(final Context context) {
 
+        discardToken(context, new OnResultAdapter<Void>(){
+            @Override
+            public void onSuccess(Void result) {
+                Preferences.getInstance(context)
+                        .clear()
+                        .commit();
+                Intent i = new Intent(context, LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                context.startActivity(i);
+            }
+        });
+
+    }
+
+    public void discardToken(final Context context, final OnResultListener<Void> onResultListener){
+        final String token = Preferences.getInstance(context)
+                .getStringDetail(ApplicationKeys.TOKEN,"");
+
+        onResultListener.onStart();
+        JSONRequest requestBuilder = new JSONRequest(BackendConfig.DISCARD_TOKEN)
+                .param(ApplicationKeys.TOKEN, token)
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        onResultListener.onFinish();
+                        onResultListener.onConnectionError(volleyError);
+                    }
+                })
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        if(ConnectionUtils.Success(jsonObject)){
+                            onResultListener.onFinish();
+                            onResultListener.onSuccess(null);
+                        }else{
+                            onResultListener.onFinish();
+                            onResultListener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
     }
 }

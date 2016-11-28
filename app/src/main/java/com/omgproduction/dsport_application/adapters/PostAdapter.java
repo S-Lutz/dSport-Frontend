@@ -3,6 +3,7 @@ package com.omgproduction.dsport_application.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,12 @@ import java.util.ArrayList;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder>{
 
     private ArrayList<Post> posts = new ArrayList<>();
+
+    public interface OnPostClickedListener{
+        void onPostClicked(Post p);
+    }
+
+    private final ArrayList<OnPostClickedListener> onPostClickedListeners = new ArrayList<>();
 
     public PostAdapter(ArrayList<Post> posts) {
         this.posts = posts;
@@ -43,8 +50,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.tv_username.setText(post.getUsername());
         holder.tv_title.setText(post.getTitle());
 
-        Bitmap postPicture = post.getBitmapPostPicture(holder.ccntext);
-        Bitmap picture = post.getBitmapPicture(holder.ccntext);
+        holder.contextView.setOnClickListener(new OnPostClicked(post));
+
+        Bitmap postPicture = post.getBitmapPostPicture(holder.contextView.getContext());
+        Bitmap picture = post.getBitmapPicture(holder.contextView.getContext());
         if(picture!=null){
             holder.iv_picture.setImageBitmap(picture);
         }
@@ -65,11 +74,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         private ImageView iv_picture, iv_post_picture;
         private TextView tv_username, tv_text, tv_likes, tv_comments, tv_shares, tv_date, tv_title;
-        private final Context ccntext;
+        private final View contextView;
 
         public PostViewHolder(View view) {
             super(view);
-            ccntext = view.getContext();
+            contextView = view;
             iv_picture = (ImageView) view.findViewById(R.id.post_picture);
             iv_post_picture = (ImageView) view.findViewById(R.id.post_post_picture);
             tv_username = (TextView) view.findViewById(R.id.post_username);
@@ -80,5 +89,27 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             tv_date = (TextView) view.findViewById(R.id.post_date);
             tv_title = (TextView) view.findViewById(R.id.post_title);
         }
+    }
+
+    private class OnPostClicked implements View.OnClickListener{
+        final Post post;
+        private OnPostClicked(final Post post){
+            this.post = post;
+        }
+
+        @Override
+        public void onClick(View v) {
+            for (OnPostClickedListener onPostClickedListener: onPostClickedListeners){
+                onPostClickedListener.onPostClicked(post);
+            }
+        }
+    }
+
+    public void addOnPostClickedListener(OnPostClickedListener onPostClickedListener){
+        this.onPostClickedListeners.add(onPostClickedListener);
+    }
+
+    public void removeOnPostClickedListener(OnPostClickedListener onPostClickedListener){
+        this.onPostClickedListeners.remove(onPostClickedListener);
     }
 }

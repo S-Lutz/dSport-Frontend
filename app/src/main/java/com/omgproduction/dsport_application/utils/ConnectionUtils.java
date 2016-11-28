@@ -45,7 +45,16 @@ public class ConnectionUtils {
 
     public static String extractErrorCode(JSONObject jsonObject){
         try {
-            return jsonObject.getString(ApplicationKeys.VALUE);
+            return jsonObject.getString(ApplicationKeys.ERROR);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String extractNotificationCode(JSONObject jsonObject){
+        try {
+            return jsonObject.getString(ApplicationKeys.NOTIFICATION);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

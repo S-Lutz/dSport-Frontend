@@ -9,6 +9,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:id="@+id/social_menu_sub_button_holder">
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/social_fab_picture"

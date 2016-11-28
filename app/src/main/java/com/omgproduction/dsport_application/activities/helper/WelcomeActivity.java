@@ -1,4 +1,4 @@
-package com.omgproduction.dsport_application.activities;
+package com.omgproduction.dsport_application.activities.helper;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.activities.main.LoginActivity;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 
 public class WelcomeActivity extends Activity {

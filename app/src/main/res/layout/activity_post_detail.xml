@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
+<android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -9,7 +9,6 @@
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/test_profile"
             android:scaleType="centerCrop"
             android:id="@+id/post_profile_pic"
             android:adjustViewBounds="true"/>
@@ -65,19 +64,14 @@
                 android:text="Shared"/>
         </LinearLayout>-->
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Paul Panzer"
+        <android.support.v7.widget.AppCompatTextView
             android:gravity="center"
             android:layout_below="@id/post_profile_pic"
             android:id="@+id/post_username"
-            android:textAppearance="@android:style/TextAppearance.Material.WindowTitle"
-            android:layout_margin="@dimen/activity_horizontal_margin"/>
-        <TextView
+            style="@style/header"/>
+        <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="23.1.2017"
             android:layout_marginLeft="16dp"
             android:layout_marginBottom="4dp"
             android:id="@+id/post_date"
@@ -90,16 +84,11 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:adjustViewBounds="true"
-            android:id="@+id/post_picture"
-            android:src="@drawable/test_profile"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/post_picture"/>
+        <android.support.v7.widget.AppCompatTextView
+            style="@style/sub_header"
             android:layout_below="@id/post_picture"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:id="@+id/post_text"
-            android:textAppearance="@android:style/TextAppearance.Material.Body1"
-            android:text="fkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfdsfkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfdsfkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfdsfkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfdsfkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfdsfkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfdsfkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfdsfkhgadgbkjladhsbjnjklsfdnjkbnasjknfff.fnvcddcfsyfrgvgfds"/>
+            android:id="@+id/post_text"/>
 
         <View
             android:layout_width="match_parent"
@@ -108,8 +97,8 @@
             android:layout_below="@+id/post_text"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@android:color/darker_gray"/>
+            style="@style/devider"/>
     </RelativeLayout>
 
 
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

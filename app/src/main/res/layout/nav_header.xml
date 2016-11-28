@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
@@ -20,7 +20,7 @@
             android:fitsSystemWindows="true"
             android:id="@+id/nav_img"/>
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
@@ -36,7 +36,7 @@
         android:orientation="vertical"
         android:layout_gravity="bottom|left"
         android:layout_height="match_parent">
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/nav_username"
@@ -47,7 +47,7 @@
             android:text="Android Studio"
             android:layout_above="@+id/nav_email" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/nav_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

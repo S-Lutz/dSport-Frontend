@@ -1,4 +1,4 @@
-package com.omgproduction.dsport_application.activities;
+package com.omgproduction.dsport_application.activities.main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.activities.helper.WelcomeActivity;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;

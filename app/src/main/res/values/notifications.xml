@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_title_new_posts">There are some new Posts waiting for you!</string>
+    <string name="notification_text_new_posts">While you was away some of your friends are posting her Lives. Click here to see what they are doing!</string>
+</resources>

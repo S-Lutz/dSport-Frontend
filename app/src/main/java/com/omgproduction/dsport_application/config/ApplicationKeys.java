@@ -29,4 +29,7 @@ public class ApplicationKeys {
     public static final String ERROR = "error";
     public static final String OK = "OK";
     public static final String VALUE = "value";
+
+    public static final String TOKEN = "token";
+    public static final String NOTIFICATION = "notification";
 }

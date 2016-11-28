@@ -13,9 +13,9 @@ import android.view.animation.LinearInterpolator;
  * Created by Florian on 18.11.2016.
  */
 
-public class FABHideOnScroll  extends FloatingActionButton.Behavior {
+public class HideOnScrollBehaviour extends FloatingActionButton.Behavior {
 
-    public FABHideOnScroll(Context context, AttributeSet attrs) {
+    public HideOnScrollBehaviour(Context context, AttributeSet attrs) {
         super();
     }
 

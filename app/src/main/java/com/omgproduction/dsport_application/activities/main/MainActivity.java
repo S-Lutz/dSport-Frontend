@@ -1,4 +1,4 @@
-package com.omgproduction.dsport_application.activities;
+package com.omgproduction.dsport_application.activities.main;
 
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -8,14 +8,18 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.adapters.DrawerListenerAdapter;
+import com.omgproduction.dsport_application.controller.SessionController;
+import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
-import com.omgproduction.dsport_application.fragments.ChatFragment;
-import com.omgproduction.dsport_application.fragments.EventFragment;
-import com.omgproduction.dsport_application.fragments.ExerciseUnitFragment;
-import com.omgproduction.dsport_application.fragments.SocialMenuFragment;
-import com.omgproduction.dsport_application.fragments.SocialFragment;
-import com.omgproduction.dsport_application.interfaces.IFABMenu;
+import com.omgproduction.dsport_application.fragments.main.ChatFragment;
+import com.omgproduction.dsport_application.fragments.main.EventFragment;
+import com.omgproduction.dsport_application.fragments.main.ExerciseUnitFragment;
+import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
+import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.interfaces.FloatingMenu;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
 
 
@@ -24,7 +28,6 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
-    private boolean isFABMenuOpened = false;
     private SocialMenuFragment socialMenuFragment;
 
     @Override
@@ -46,6 +49,18 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
 
         socialMenuFragment = new SocialMenuFragment();
         socialMenuFragment.setRootFab((FloatingActionButton) findViewById(R.id.options_fab));
+
+        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
+            @Override
+            public void onSuccess(User result) {
+                socialMenuFragment.setPinboardOwner(result.getId());
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(MainActivity.this);
+            }
+        });
 
 
         getSupportFragmentManager().beginTransaction()
@@ -93,7 +108,7 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
 
     @Override
     public boolean onBackPressedAfterNavigationClosed() {
-        if(isFABMenuOpened){
+        if(socialMenuFragment.isOpened()){
             showFABMenu(false);
             return false;
         }else if (viewPager.getCurrentItem() == 0) {
@@ -113,32 +128,35 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.options_fab:
-                showFABMenu(!isFABMenuOpened);
+                showFABMenu(!socialMenuFragment.isOpened());
                 break;
         }
     }
 
     private void showFABMenu(boolean flag) {
         if(flag){
-            switch (viewPager.getCurrentItem()){
-                case 0 : showFABMenu(socialMenuFragment,true);
-                    break;
+            if(!socialMenuFragment.isOpened()){
+                switch (viewPager.getCurrentItem()){
+                    case 0 : showFABMenu(socialMenuFragment,true);
+                        break;
+                }
             }
         }else{
-            switch (viewPager.getCurrentItem()){
-                case 0 : showFABMenu(socialMenuFragment,false);
-                    break;
+            if(socialMenuFragment.isOpened()) {
+                switch (viewPager.getCurrentItem()) {
+                    case 0:
+                        showFABMenu(socialMenuFragment, false);
+                        break;
+                }
             }
         }
     }
 
-    private void showFABMenu(IFABMenu ifabMenu, boolean flag){
+    private void showFABMenu(FloatingMenu floatingMenu, boolean flag){
         if(flag){
-            ifabMenu.show();
-            isFABMenuOpened = flag;
+            floatingMenu.show();
         }else{
-            ifabMenu.hide();
-            isFABMenuOpened = flag;
+            floatingMenu.hide();
         }
     }
 

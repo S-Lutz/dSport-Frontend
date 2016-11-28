@@ -1,4 +1,4 @@
-package com.omgproduction.dsport_application.activities;
+package com.omgproduction.dsport_application.activities.main;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -417,6 +418,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onSuccess(String emailString) {
                 setText(R.id.profile_email_text,emailString);
+                setText(R.id.profile_email_input,"");
                 showEmail(false);
             }
 
@@ -464,6 +466,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onSuccess(String firstnameString) {
                 setText(R.id.profile_firstname_text,firstnameString);
+                setText(R.id.profile_firstname_input,"");
                 showFirstname(false);
             }
 
@@ -511,6 +514,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onSuccess(String lastnameString) {
                 setText(R.id.profile_lastname_text,lastnameString);
+                setText(R.id.profile_lastname_input,"");
                 showLastname(false);
             }
 
@@ -559,6 +563,8 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onSuccess(String result) {
                 showPassword(false);
+                setText(R.id.profile_password_input1,"");
+                setText(R.id.profile_password_input2,"");
             }
 
             @Override
@@ -606,6 +612,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onSuccess(String usernameString) {
                 setText(R.id.profile_username_text,usernameString);
+                setText(R.id.profile_username_input,"");
                 showUsername(false);
             }
 

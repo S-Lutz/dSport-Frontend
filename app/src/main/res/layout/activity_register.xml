@@ -15,7 +15,6 @@
         <!--Scrollable Main View with all Input or Output Fields-->
         <android.support.v4.widget.NestedScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/login_bg">
@@ -30,7 +29,7 @@
                 android:paddingTop="50dp">
 
                 <!--dSport-Logo-->
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
@@ -58,7 +57,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Username-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/register_username"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -73,7 +72,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Firstname-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/register_firstname"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -88,7 +87,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Lastname-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/register_lastname"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -103,7 +102,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Email-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/register_email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -119,7 +118,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Password-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/register_password"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -134,7 +133,7 @@
                         android:layout_height="wrap_content">
 
                         <!--Input for Password Confirmation-->
-                        <EditText
+                        <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/register_password_confirm"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -160,7 +159,7 @@
                         android:gravity="center"/>
 
                     <!--Button to start registration-->
-                    <Button
+                    <android.support.v7.widget.AppCompatButton
                         android:id="@+id/btn_register"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

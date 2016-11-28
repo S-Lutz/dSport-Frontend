@@ -1,4 +1,4 @@
-package com.omgproduction.dsport_application.activities;
+package com.omgproduction.dsport_application.activities.main;
 
 import android.content.Context;
 import android.content.Intent;

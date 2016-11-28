@@ -20,7 +20,7 @@ import com.omgproduction.dsport_application.utils.BitmapUtils;
 /**
  * Created by Florian on 21.10.2016.
  */
-public abstract class AdvancedActivity extends Activity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public abstract class AdvancedActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     protected SwipeRefreshLayout refresher;
 

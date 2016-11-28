@@ -8,7 +8,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.activities.MainActivity;
-import com.omgproduction.dsport_application.activities.ProfileActivity;
+import com.omgproduction.dsport_application.activities.main.MainActivity;
+import com.omgproduction.dsport_application.activities.main.PinboardActivity;
+import com.omgproduction.dsport_application.activities.main.ProfileActivity;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
@@ -151,6 +151,7 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
         id = item.getItemId();
         switch (id){
             case R.id.nav_main: startActivity(new Intent(this, MainActivity.class)); break;
+            case R.id.nav_pinboard: startActivity(new Intent(this, PinboardActivity.class)); break;
             case R.id.nav_profile: performProfileClick();break;
             case R.id.nav_friends: break;
             case R.id.nav_logout: logoutUser(); break;
@@ -173,7 +174,6 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        item.setChecked(false);
         return super.onOptionsItemSelected(item);
     }
 

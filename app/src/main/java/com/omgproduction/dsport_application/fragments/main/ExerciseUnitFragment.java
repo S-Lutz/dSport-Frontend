@@ -1,4 +1,4 @@
-package com.omgproduction.dsport_application.fragments;
+package com.omgproduction.dsport_application.fragments.main;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
