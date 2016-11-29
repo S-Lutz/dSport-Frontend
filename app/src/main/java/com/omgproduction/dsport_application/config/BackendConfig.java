@@ -22,7 +22,7 @@ public class BackendConfig {
     public static final String CREATE_EXERCISE_UNIT  = HOST+HOME+"/exercise_unit/create/";
     public static final String POST_EXERCISE_UNIT = HOST+HOME+"/posts/exercise_unit/";
 
-    public static final String DISCARD_TOKEN = HOST+HOME+"/users/token/discard";
+    public static final String DISCARD_TOKEN = HOST+HOME+"/token/discard/";
 
     public static final String DELETE_USER = HOST+HOME+"/users/delete/";
     public static final String GET_AGB = HOST+HOME+"/agb/get/";
