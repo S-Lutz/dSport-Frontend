@@ -85,8 +85,10 @@ public class SessionController {
      * @param onResultListener Listener to do something after recieve response
      */
     public void loginUser(final Context context, String username, String password, final OnResultListener<JSONObject> onResultListener) {
-        final String token = Preferences.getInstance(context)
+        final String token = Preferences.getInstance(ApplicationController.getInstance().getApplicationContext())
                 .getStringDetail(ApplicationKeys.TOKEN,"");
+
+        //Log.e("TOKEN","LOAD-LOCAL: "+token);
 
         onResultListener.onStart();
         JSONRequest requestBuilder = new JSONRequest(BackendConfig.LOGIN)
@@ -140,16 +142,16 @@ public class SessionController {
         }
     }
 
-    public void registerToken(String token) {
+    public void saveLocalToken(final String token) {
         //Send Token to the Server and Save it into User Table...
         //We will need it to send Notifications to the Client
 
         //Tutorial Videos:
         //https://www.youtube.com/watch?v=LiKCEa5_Cs8
         //https://www.youtube.com/watch?v=MYZVhs6T_W8
-
+        //Log.e("TOKEN","SAVE: "+token);
         Preferences.getInstance(ApplicationController.getInstance().getApplicationContext())
-                .putString(ApplicationKeys.TOKEN,token);
+                .putString(ApplicationKeys.TOKEN,token).commit();
 
     }
 
@@ -168,12 +170,22 @@ public class SessionController {
      */
     public void logout(final Context context) {
 
-        discardToken(context, new OnResultAdapter<Void>(){
+        discardToken(new OnResultAdapter<Void>(){
             @Override
             public void onSuccess(Void result) {
+
                 Preferences.getInstance(context)
-                        .clear()
+                        .putBoolean(ApplicationKeys.IS_LOGIN, false)
+                        .putString(ApplicationKeys.USER_ID, "")
+                        .putString(ApplicationKeys.USERNAME, "")
+                        .putString(ApplicationKeys.EMAIL, "")
+                        .putString(ApplicationKeys.FIRSTNAME, "")
+                        .putString(ApplicationKeys.LASTNAME,  "")
+                        .putString(ApplicationKeys.CREATED, "")
+                        .putString(ApplicationKeys.AGB_VERSION, "")
+                        .putString(ApplicationKeys.PICTURE, "")
                         .commit();
+
                 Intent i = new Intent(context, LoginActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -185,9 +197,10 @@ public class SessionController {
 
     }
 
-    public void discardToken(final Context context, final OnResultListener<Void> onResultListener){
-        final String token = Preferences.getInstance(context)
+    public void discardToken(final OnResultListener<Void> onResultListener){
+        final String token = Preferences.getInstance(ApplicationController.getInstance().getApplicationContext())
                 .getStringDetail(ApplicationKeys.TOKEN,"");
+        //Log.e("TOKEN","DISCARD: "+token);
 
         onResultListener.onStart();
         JSONRequest requestBuilder = new JSONRequest(BackendConfig.DISCARD_TOKEN)
