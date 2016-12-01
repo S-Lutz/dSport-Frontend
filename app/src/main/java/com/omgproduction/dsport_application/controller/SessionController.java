@@ -2,13 +2,20 @@ package com.omgproduction.dsport_application.controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.omgproduction.dsport_application.activities.main.LoginActivity;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.BackendFunctions;
-import com.omgproduction.dsport_application.config.Keys;
-import com.omgproduction.dsport_application.exceptions.UserNotFoundException;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.BackendConfig;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.utils.ConnectionUtils;
+import com.omgproduction.dsport_application.utils.Converter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,19 +41,39 @@ public class SessionController {
      * @param lastname Users real lastname
      * @param email Users email-address
      * @param password Users Password
-     * @param responseListener Listener to do something after recieve response
-     * @param errorListener Listener to handle some Errors
+     * @param onResultListener Listener to do something after recieve response
      */
-    public void registerUser(String username, String firstname, String lastname, String email, String password, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
+    public void registerUser(String username, String firstname, String lastname, String email, String password, final OnResultListener<String> onResultListener) {
 
-        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.REGISTER)
-                .param(Keys.USERNAME, username)
-                .param(Keys.FIRSTNAME, firstname)
-                .param(Keys.LASTNAME, lastname)
-                .param(Keys.EMAIL, email)
-                .param(Keys.PASSWORD, password)
-                .responseListener(responseListener)
-                .errorListener(errorListener);
+        JSONRequest requestBuilder = new JSONRequest(BackendConfig.REGISTER)
+                .param(ApplicationKeys.USERNAME, username)
+                .param(ApplicationKeys.FIRSTNAME, firstname)
+                .param(ApplicationKeys.LASTNAME, lastname)
+                .param(ApplicationKeys.EMAIL, email)
+                .param(ApplicationKeys.PASSWORD, password)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        if(ConnectionUtils.Success(jsonObject)){
+                            onResultListener.onFinish();
+                            try {
+                                onResultListener.onSuccess(ConnectionUtils.extractJSONValue(jsonObject).getString(ApplicationKeys.USERNAME));
+                            } catch (JSONException e) {
+                                onResultListener.onJSONException(e);
+                            }
+                        }else{
+                            onResultListener.onFinish();
+                            onResultListener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        onResultListener.onFinish();
+                        onResultListener.onConnectionError(volleyError);
+                    }
+                });
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
 
     }
@@ -55,49 +82,76 @@ public class SessionController {
      * Login user with the Backend System
      * @param username Users username
      * @param password Users Password
-     * @param responseListener Listener to do something after recieve response
-     * @param errorListener Listener to handle some Errors
+     * @param onResultListener Listener to do something after recieve response
      */
-    public void loginUser(final Context context, String username, String password, final Response.Listener<JSONObject> responseListener, final Response.ErrorListener errorListener) {
+    public void loginUser(final Context context, String username, String password, final OnResultListener<JSONObject> onResultListener) {
+        final String token = Preferences.getInstance(ApplicationController.getInstance().getApplicationContext())
+                .getStringDetail(ApplicationKeys.TOKEN,"");
 
-        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.LOGIN)
-                .param(Keys.USERNAME, username)
-                .param(Keys.PASSWORD, password)
-                .errorListener(errorListener)
-                .responseListener(responseListener);
+        //Log.e("TOKEN","LOAD-LOCAL: "+token);
+
+        onResultListener.onStart();
+        JSONRequest requestBuilder = new JSONRequest(BackendConfig.LOGIN)
+                .param(ApplicationKeys.USERNAME, username)
+                .param(ApplicationKeys.PASSWORD, password)
+                .param(ApplicationKeys.TOKEN, token)
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        onResultListener.onFinish();
+                        onResultListener.onConnectionError(volleyError);
+                    }
+                })
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        if(ConnectionUtils.Success(jsonObject)){
+                            onResultListener.onFinish();
+                            onResultListener.onSuccess(ConnectionUtils.extractJSONValue(jsonObject));
+                        }else{
+                            onResultListener.onFinish();
+                            onResultListener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                });
 
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
     }
 
-    public boolean saveLocalUser(Context context, JSONObject user){
+    public void saveLocalUser(Context context, JSONObject user, OnResultListener<User> onResultListener){
+        onResultListener.onStart();
         try {
             Preferences preferencesController = Preferences.getInstance(context)
-                    .putBoolean(Keys.IS_LOGIN, true)
-                    .putString(Keys.USERID, user.getString(Keys.USERID))
-                    .putString(Keys.USERNAME, user.getString(Keys.USERNAME))
-                    .putString(Keys.EMAIL, user.getString(Keys.EMAIL))
-                    .putString(Keys.FIRSTNAME, user.getString(Keys.FIRSTNAME))
-                    .putString(Keys.LASTNAME,  user.getString(Keys.LASTNAME))
-                    .putString(Keys.CREATED, user.getString(Keys.CREATED))
-                    .putString(Keys.AGB_VERSION, user.getString(Keys.AGB_VERSION))
-                    .putString(Keys.PICTURE, user.getString(Keys.PICTURE));
+                    .putBoolean(ApplicationKeys.IS_LOGIN, true)
+                    .putString(ApplicationKeys.USER_ID, user.getString(ApplicationKeys.USER_ID))
+                    .putString(ApplicationKeys.USERNAME, user.getString(ApplicationKeys.USERNAME))
+                    .putString(ApplicationKeys.EMAIL, user.getString(ApplicationKeys.EMAIL))
+                    .putString(ApplicationKeys.FIRSTNAME, user.getString(ApplicationKeys.FIRSTNAME))
+                    .putString(ApplicationKeys.LASTNAME,  user.getString(ApplicationKeys.LASTNAME))
+                    .putString(ApplicationKeys.CREATED, user.getString(ApplicationKeys.CREATED))
+                    .putString(ApplicationKeys.AGB_VERSION, user.getString(ApplicationKeys.AGB_VERSION))
+                    .putString(ApplicationKeys.PICTURE, user.getString(ApplicationKeys.PICTURE));
 
             // commit changes
             preferencesController.commit();
-            return true;
+            onResultListener.onFinish();
+            onResultListener.onSuccess(Converter.convertUser(user));
         } catch (JSONException e) {
-            e.printStackTrace();
+            onResultListener.onFinish();
+            onResultListener.onJSONException(e);
         }
-        return  false;
     }
 
-    public void registerToken(String token) {
+    public void saveLocalToken(final String token) {
         //Send Token to the Server and Save it into User Table...
         //We will need it to send Notifications to the Client
 
         //Tutorial Videos:
         //https://www.youtube.com/watch?v=LiKCEa5_Cs8
         //https://www.youtube.com/watch?v=MYZVhs6T_W8
+        //Log.e("TOKEN","SAVE: "+token);
+        Preferences.getInstance(ApplicationController.getInstance().getApplicationContext())
+                .putString(ApplicationKeys.TOKEN,token).commit();
 
     }
 
@@ -107,17 +161,70 @@ public class SessionController {
      * Else won't do anything
      */
     public boolean checkLogin(Context context) {
-        return Preferences.getInstance(context).getBooleanDetail(Keys.IS_LOGIN,false);
+        return Preferences.getInstance(context).getBooleanDetail(ApplicationKeys.IS_LOGIN,false);
 
     }
 
     /**
      * Clear session details
      */
-    public void logoutUser(Context context) {
-        Preferences.getInstance(context)
-                .clear()
-                .commit();
+    public void logout(final Context context) {
 
+        discardToken(new OnResultAdapter<Void>(){
+            @Override
+            public void onSuccess(Void result) {
+
+                Preferences.getInstance(context)
+                        .putBoolean(ApplicationKeys.IS_LOGIN, false)
+                        .putString(ApplicationKeys.USER_ID, "")
+                        .putString(ApplicationKeys.USERNAME, "")
+                        .putString(ApplicationKeys.EMAIL, "")
+                        .putString(ApplicationKeys.FIRSTNAME, "")
+                        .putString(ApplicationKeys.LASTNAME,  "")
+                        .putString(ApplicationKeys.CREATED, "")
+                        .putString(ApplicationKeys.AGB_VERSION, "")
+                        .putString(ApplicationKeys.PICTURE, "")
+                        .commit();
+
+                Intent i = new Intent(context, LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                context.startActivity(i);
+            }
+        });
+
+    }
+
+    public void discardToken(final OnResultListener<Void> onResultListener){
+        final String token = Preferences.getInstance(ApplicationController.getInstance().getApplicationContext())
+                .getStringDetail(ApplicationKeys.TOKEN,"");
+        //Log.e("TOKEN","DISCARD: "+token);
+
+        onResultListener.onStart();
+        JSONRequest requestBuilder = new JSONRequest(BackendConfig.DISCARD_TOKEN)
+                .param(ApplicationKeys.TOKEN, token)
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        onResultListener.onFinish();
+                        onResultListener.onConnectionError(volleyError);
+                    }
+                })
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        if(ConnectionUtils.Success(jsonObject)){
+                            onResultListener.onFinish();
+                            onResultListener.onSuccess(null);
+                        }else{
+                            onResultListener.onFinish();
+                            onResultListener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
     }
 }

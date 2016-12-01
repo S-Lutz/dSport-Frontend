@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,8 +7,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.omgproduction.dsport_application.activities.ProfileActivity"
+    tools:context="com.omgproduction.dsport_application.activities.main.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
     <LinearLayout
@@ -36,7 +36,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:alpha="0.74"
@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_centerVertical="true">
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/profile_username_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#212121" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="56dp"
@@ -65,7 +65,7 @@
                         android:textColor="#727272" />
                 </LinearLayout>
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
@@ -75,13 +75,6 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
-            <android.support.v4.widget.ContentLoadingProgressBar
-                style="@style/Base.Widget.AppCompat.ProgressBar"
-                android:layout_width="match_parent"
-                android:id="@+id/progress_bar_username"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_username_input_container"
                 android:layout_width="match_parent"
@@ -94,9 +87,12 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/profile_username_input_layout"
                     android:layout_height="wrap_content">
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:id="@+id/profile_username_input"
+                        android:maxLines="1"
+                        android:maxLength="20"
+                        android:inputType="textPersonName|textAutoComplete"
                         android:hint="@string/new_username_hint"
                         android:layout_height="wrap_content" />
                 </android.support.design.widget.TextInputLayout>
@@ -133,7 +129,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:alpha="0.74"
@@ -144,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_centerVertical="true">
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/profile_firstname_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -153,7 +149,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#212121" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="56dp"
@@ -162,7 +158,7 @@
                         android:textColor="#727272" />
                 </LinearLayout>
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
@@ -172,13 +168,6 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
-            <android.support.v4.widget.ContentLoadingProgressBar
-                style="@style/Base.Widget.AppCompat.ProgressBar"
-                android:layout_width="match_parent"
-                android:id="@+id/progress_bar_firstname"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_firstname_input_container"
                 android:layout_width="match_parent"
@@ -191,9 +180,11 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/profile_firstname_input_layout"
                     android:layout_height="wrap_content">
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:id="@+id/profile_firstname_input"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textAutoComplete"
                         android:hint="@string/new_firstname_hint"
                         android:layout_height="wrap_content" />
                 </android.support.design.widget.TextInputLayout>
@@ -230,7 +221,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:alpha="0.74"
@@ -241,7 +232,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_centerVertical="true">
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/profile_lastname_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -250,7 +241,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#212121" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="56dp"
@@ -259,7 +250,7 @@
                         android:textColor="#727272" />
                 </LinearLayout>
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
@@ -269,13 +260,6 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
-            <android.support.v4.widget.ContentLoadingProgressBar
-                style="@style/Base.Widget.AppCompat.ProgressBar"
-                android:layout_width="match_parent"
-                android:id="@+id/progress_bar_lastname"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_lastname_input_container"
                 android:layout_width="match_parent"
@@ -288,9 +272,11 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/profile_lastname_input_layout"
                     android:layout_height="wrap_content">
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
                         android:id="@+id/profile_lastname_input"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textAutoComplete"
                         android:hint="@string/new_lastname_hint"
                         android:layout_height="wrap_content" />
                 </android.support.design.widget.TextInputLayout>
@@ -327,7 +313,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:alpha="0.74"
@@ -338,7 +324,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_centerVertical="true">
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/profile_email_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -347,7 +333,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#212121" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="56dp"
@@ -356,7 +342,7 @@
                         android:textColor="#727272" />
                 </LinearLayout>
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
@@ -366,13 +352,6 @@
                     android:src="@drawable/ic_edit" />
 
             </RelativeLayout>
-            <android.support.v4.widget.ContentLoadingProgressBar
-                style="@style/Base.Widget.AppCompat.ProgressBar"
-                android:layout_width="match_parent"
-                android:id="@+id/progress_bar_email"
-                android:layout_height="wrap_content"
-                android:indeterminate="true"
-                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/profile_email_input_container"
                 android:layout_width="match_parent"
@@ -385,10 +364,11 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/profile_email_input_layout"
                     android:layout_height="wrap_content">
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:layout_width="match_parent"
+                        android:maxLines="1"
                         android:id="@+id/profile_email_input"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textEmailAddress|textAutoComplete"
                         android:hint="@string/new_email_hint"
                         android:layout_height="wrap_content" />
                 </android.support.design.widget.TextInputLayout>
@@ -425,7 +405,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:alpha="0.74"
@@ -436,7 +416,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_centerVertical="true">
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/profile_password_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -445,7 +425,7 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#212121" />
 
-                    <TextView
+                    <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="56dp"
@@ -454,7 +434,7 @@
                         android:textColor="#727272" />
                 </LinearLayout>
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
@@ -483,9 +463,10 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/profile_password_input_layout"
                     android:layout_height="wrap_content">
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/profile_password_input1"
                         android:layout_width="match_parent"
+                        android:maxLines="1"
                         android:layout_height="wrap_content"
                         android:hint="@string/new_password_hint"
                         android:inputType="textPassword" />
@@ -495,7 +476,7 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/profile_password_confirm_input_layout"
                     android:layout_height="wrap_content">
-                    <EditText
+                    <android.support.v7.widget.AppCompatEditText
                         android:id="@+id/profile_password_input2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

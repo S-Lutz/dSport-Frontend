@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@drawable/login_bg"
-    tools:context="com.omgproduction.dsport_application.activities.WelcomeActivity">
+    tools:context="com.omgproduction.dsport_application.activities.helper.WelcomeActivity">
 
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_height="100dp"
             android:layout_margin="30dp"
             android:src="@drawable/ic_lock"/>
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"

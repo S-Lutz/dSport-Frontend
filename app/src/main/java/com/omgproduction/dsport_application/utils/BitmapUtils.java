@@ -33,8 +33,7 @@ public class BitmapUtils {
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             return decodedByte;
         }catch (IllegalArgumentException ex){
-            return BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.test_profile);
+            return null;
         }
     }
 }

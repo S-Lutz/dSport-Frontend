@@ -3,12 +3,17 @@ package com.omgproduction.dsport_application.controller;
 import android.content.Context;
 
 import com.android.volley.Response;
-import com.omgproduction.dsport_application.exceptions.UserNotFoundException;
+import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.BackendFunctions;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.BackendConfig;
+import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.utils.ConnectionUtils;
+import com.omgproduction.dsport_application.utils.Converter;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -25,39 +30,124 @@ public class UserController {
         return UserController.instance;
     }
 
-    public void saveUserDetail(Context context, final String key, final String value, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) throws UserNotFoundException{
+    public void saveUserDetail(final Context context, final String key, final String value, final OnResultListener<String> listener){
 
+        listener.onStart();
         String userID = Preferences.getInstance(context)
-                .getStringDetail(Keys.USERID,"");
+                .getStringDetail(ApplicationKeys.USER_ID,"");
 
         if(!userID.trim().isEmpty()){
-            JSONRequest request = new JSONRequest(BackendFunctions.EDIT_USER)
-                    .errorListener(errorListener)
-                    .responseListener(listener)
-                    .param(Keys.USERID, userID)
+            JSONRequest request = new JSONRequest(BackendConfig.EDIT_USER)
+                    .errorListener(new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            listener.onFinish();
+                            listener.onConnectionError(volleyError);
+                        }
+                    })
+                    .responseListener(new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            if(ConnectionUtils.Success(jsonObject)){
+                                listener.onFinish();
+                                try {
+                                    String value = "";
+                                    if(!key.equals(ApplicationKeys.PASSWORD)){
+                                        value = ConnectionUtils.extractJSONValue(jsonObject).getString(key);
+                                    }
+                                    update(context,key,value);
+                                    listener.onSuccess(value);
+                                } catch (JSONException e) {
+                                    listener.onJSONException(e);
+                                }
+                            }else{
+                                listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                            }
+                        }
+                    })
+                    .param(ApplicationKeys.USER_ID, userID)
                     .param(key,value);
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
-            throw new UserNotFoundException();
+            listener.onFinish();
+            listener.onUserNotFound();
         }
 
     }
 
-    public void getUser(Context context, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) throws UserNotFoundException{
+    public void getGlobalUser(final Context context, final OnResultListener<User> listener){
+
+        listener.onStart();
 
         String userID = Preferences.getInstance(context)
-                .getStringDetail(Keys.USERID,"");
+                .getStringDetail(ApplicationKeys.USER_ID,"");
 
         if(!userID.trim().isEmpty()){
-            JSONRequest request = new JSONRequest(BackendFunctions.GET_USER)
-                    .param(Keys.USERID,userID)
-                    .responseListener(listener)
-                    .errorListener(errorListener);
+            JSONRequest request = new JSONRequest(BackendConfig.GET_USER)
+                    .param(ApplicationKeys.USER_ID,userID)
+                    .responseListener(new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject jsonObject) {
+                            listener.onFinish();
+                            if(ConnectionUtils.Success(jsonObject)){
+                                JSONObject jsonUser = ConnectionUtils.extractJSONValue(jsonObject);
+                                User user = null;
+                                try {
+                                    user = Converter.convertUser(jsonUser);
+                                    SessionController.getInstance().saveLocalUser(context,jsonUser,listener);
+                                } catch (JSONException e) {
+                                    listener.onJSONException(e);
+                                }
+                                listener.onSuccess(user);
+                            }else{
+                                listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                            }
+
+                        }
+                    })
+                    .errorListener(new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            listener.onFinish();
+                            listener.onConnectionError(volleyError);
+                        }
+                    });
 
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
-            throw new UserNotFoundException();
+            listener.onFinish();
+            listener.onUserNotFound();
         }
 
+    }
+
+    public void getLocalUser(final Context context, final OnResultListener<User> listener){
+
+        listener.onStart();
+        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,"");
+        if(!userID.trim().isEmpty()){
+            User user = new User(
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USERNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.EMAIL,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.PICTURE,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.FIRSTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.LASTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.CREATED,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.AGB_VERSION,"")
+            );
+            listener.onFinish();
+            listener.onSuccess(user);
+        }else{
+            listener.onFinish();
+            listener.onUserNotFound();
+        }
+
+    }
+
+    private void update(Context context, String key, String value){
+        Preferences.getInstance(context)
+                .putString(key,value)
+                .commit();
     }
 }

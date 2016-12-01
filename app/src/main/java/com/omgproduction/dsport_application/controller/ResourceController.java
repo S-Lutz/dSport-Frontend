@@ -1,9 +1,6 @@
 package com.omgproduction.dsport_application.controller;
 
 import com.android.volley.Response;
-import com.omgproduction.dsport_application.builder.JSONRequest;
-import com.omgproduction.dsport_application.config.BackendFunctions;
-import com.omgproduction.dsport_application.config.Keys;
 
 import org.json.JSONObject;
 
@@ -26,12 +23,12 @@ public class ResourceController {
      * @param errorListener
      */
     public void getLatestAGB (Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
-
-        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.GET_LATEST_AGB)
+        /*
+        JSONRequest requestBuilder = new JSONRequest(BackendConfig.GET_LATEST_AGB)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
-
+        */
     }
 
 
@@ -41,12 +38,12 @@ public class ResourceController {
      * @param errorListener
      */
     public void getLatestDataPrivacy (Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener){
-
-        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.GET_LATEST_AGB)
+        /*
+        JSONRequest requestBuilder = new JSONRequest(BackendConfig.GET_LATEST_AGB)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
-
+        */
     }
 
     /**
@@ -57,12 +54,13 @@ public class ResourceController {
      * @param errorListener
      */
     public void putAGBVersion(String user_id, String agb_version, Response.Listener<JSONObject> responseListener, Response.ErrorListener errorListener) {
-
-        JSONRequest requestBuilder = new JSONRequest(BackendFunctions.PUT_AGP_VERSION)
-                .param(Keys.USERID, user_id)
-                .param(Keys.AGB_VERSION, agb_version)
+        /*
+        JSONRequest requestBuilder = new JSONRequest(BackendConfig.PUT_AGP_VERSION)
+                .param(ApplicationKeys.USERID, user_id)
+                .param(ApplicationKeys.AGB_VERSION, agb_version)
                 .responseListener(responseListener)
                 .errorListener(errorListener);
         ApplicationController.getInstance().addToRequestQueue(requestBuilder.build());
+        */
     }
 }

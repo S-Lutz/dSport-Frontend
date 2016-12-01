@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,41 +13,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 
 /**
  * Created by Florian on 21.10.2016.
  */
-public abstract class AdvancedActivity extends Activity implements View.OnClickListener{
-    /**
-     * Hide all Input-Fields and show Progress-bar instead
-     */
-    protected void showProgressBar(int containerIDToHide, int progressBarId){
-        findViewById(containerIDToHide).setVisibility(ProgressBar.GONE);
-        findViewById(progressBarId).setVisibility(ProgressBar.VISIBLE);
-    }
+public abstract class AdvancedActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
-    /**
-     * Hide Progressbar and show all Input-Fields instead
-     */
-    protected void hideProgressBar(int containerIDToShow, int progressBarId){
-        findViewById(containerIDToShow).setVisibility(ProgressBar.VISIBLE);
-        findViewById(progressBarId).setVisibility(ProgressBar.GONE);
-    }
-    /**
-     * show Progress-bar
-     */
-    protected void showProgressBar(int progressBarId){
-        findViewById(progressBarId).setVisibility(ProgressBar.VISIBLE);
-    }
-
-    /**
-     * Hide Progressbar
-     */
-    protected void hideProgressBar(int progressBarId){
-        findViewById(progressBarId).setVisibility(ProgressBar.GONE);
-    }
+    protected SwipeRefreshLayout refresher;
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
@@ -136,5 +112,14 @@ public abstract class AdvancedActivity extends Activity implements View.OnClickL
     protected void setPic(int id, Bitmap bitmap){
         ((ImageView)findViewById(id)).setImageBitmap(bitmap);
     }
+    public void setRefresher(SwipeRefreshLayout refresher){
+        this.refresher = refresher;
+        refresher.setOnRefreshListener(this);
+    }
 
+    public void showProgressBar(boolean flag){
+        if(refresher!=null){
+            refresher.setRefreshing(flag);
+        }
+    }
 }

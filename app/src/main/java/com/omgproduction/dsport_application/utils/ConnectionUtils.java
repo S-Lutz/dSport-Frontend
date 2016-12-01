@@ -2,8 +2,9 @@ package com.omgproduction.dsport_application.utils;
 
 import android.content.Context;
 
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +18,7 @@ public class ConnectionUtils {
 
     public static boolean Success(JSONObject jsonObject){
         try {
-            return jsonObject.getString(Keys.ERROR).equals(Keys.OK);
+            return jsonObject.getString(ApplicationKeys.ERROR).equals(ApplicationKeys.OK);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
@@ -26,7 +27,16 @@ public class ConnectionUtils {
 
     public static JSONObject extractJSONValue(JSONObject jsonObject){
         try {
-            return jsonObject.getJSONObject(Keys.VALUE);
+            return jsonObject.getJSONObject(ApplicationKeys.VALUE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static JSONArray extractJSONArray(JSONObject jsonObject, String arrayName){
+        try {
+            return extractJSONValue(jsonObject).getJSONArray(arrayName);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -35,7 +45,16 @@ public class ConnectionUtils {
 
     public static String extractErrorCode(JSONObject jsonObject){
         try {
-            return jsonObject.getString(Keys.VALUE);
+            return jsonObject.getString(ApplicationKeys.ERROR);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String extractNotificationCode(JSONObject jsonObject){
+        try {
+            return jsonObject.getString(ApplicationKeys.NOTIFICATION);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

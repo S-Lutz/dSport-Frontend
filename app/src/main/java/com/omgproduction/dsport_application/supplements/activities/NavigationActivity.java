@@ -1,36 +1,29 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
-import android.app.ActionBar;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.Toolbar;
-import android.view.Display;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.activities.LoginActivity;
-import com.omgproduction.dsport_application.activities.MainActivity;
-import com.omgproduction.dsport_application.activities.ProfileActivity;
+import com.omgproduction.dsport_application.activities.main.MainActivity;
+import com.omgproduction.dsport_application.activities.main.PinboardActivity;
+import com.omgproduction.dsport_application.activities.main.ProfileActivity;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.Keys;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedAppCompatActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
+
+import java.util.ArrayList;
 
 /**
  * Created by Florian on 06.11.2016.
@@ -42,6 +35,8 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     protected Context context;
     protected NavigationView navigationView;
     protected DrawerLayout drawer;
+
+    public ArrayList<DrawerLayout.DrawerListener> drawerListeners = new ArrayList<>();
 
     private static int id = R.id.nav_main;
 
@@ -78,9 +73,36 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
                 if (newState == DrawerLayout.STATE_SETTLING) {
+                    for(DrawerLayout.DrawerListener d : drawerListeners){
+                        d.onDrawerStateChanged(newState);
+                    }
                     if (!isDrawerOpened()) {
                         updateNavigationValues();
                     }
+                }
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                for(DrawerLayout.DrawerListener d : drawerListeners){
+                    d.onDrawerSlide(drawerView,slideOffset);
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                for(DrawerLayout.DrawerListener d : drawerListeners){
+                    d.onDrawerOpened(drawerView);
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                for(DrawerLayout.DrawerListener d : drawerListeners){
+                    d.onDrawerClosed(drawerView);
                 }
             }
         };
@@ -106,9 +128,9 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     public void updateNavigationValues() {
         View headerLayout =
                 navigationView.getHeaderView(0);
-        ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(Preferences.getInstance(this).getStringDetail(Keys.USERNAME,getString(R.string.empty)));
-        ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(Preferences.getInstance(this).getStringDetail(Keys.EMAIL,getString(R.string.empty)));
-        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(this,Preferences.getInstance(this).getStringDetail(Keys.PICTURE,getString(R.string.empty))));
+        ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(Preferences.getInstance(this).getStringDetail(ApplicationKeys.USERNAME,getString(R.string.empty)));
+        ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(Preferences.getInstance(this).getStringDetail(ApplicationKeys.EMAIL,getString(R.string.empty)));
+        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(this,Preferences.getInstance(this).getStringDetail(ApplicationKeys.PICTURE,getString(R.string.empty))));
     }
 
     @Override
@@ -129,6 +151,7 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
         id = item.getItemId();
         switch (id){
             case R.id.nav_main: startActivity(new Intent(this, MainActivity.class)); break;
+            case R.id.nav_pinboard: startActivity(new Intent(this, PinboardActivity.class)); break;
             case R.id.nav_profile: performProfileClick();break;
             case R.id.nav_friends: break;
             case R.id.nav_logout: logoutUser(); break;
@@ -144,24 +167,13 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     }
 
     protected void logoutUser(){
-        SessionController.getInstance().logoutUser(this);
-        startLoginActivity(this);
-    }
-
-    protected void startLoginActivity(Context context){
-        Intent i = new Intent(context, LoginActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        context.startActivity(i);
+        SessionController.getInstance().logout(this);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        item.setChecked(false);
         return super.onOptionsItemSelected(item);
     }
 
@@ -175,5 +187,13 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
 
     public void openDrawer(){
         ((DrawerLayout) findViewById(R.id.drawer_layout)).openDrawer(GravityCompat.START);
+    }
+
+    public void addDrawerListener(DrawerLayout.DrawerListener drawerListener){
+        this.drawerListeners.add(drawerListener);
+    }
+
+    public void removeDrawerListener(DrawerLayout.DrawerListener drawerListener){
+        this.drawerListeners.remove(drawerListener);
     }
 }
