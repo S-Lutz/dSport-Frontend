@@ -138,12 +138,12 @@
                 android:id="@+id/post_detail_like_layout"
                 android:orientation="vertical">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     style="@style/sub_sub_header"
                     android:layout_height="wrap_content"
                     android:text="@string/show_likes"
                     android:padding="4dp"
-                    android:layout_gravity="center"/>
+                    android:gravity="center"/>
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:visibility="gone"
@@ -159,12 +159,92 @@
                 android:id="@+id/post_detail_comment_layout"
                 android:orientation="vertical">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     style="@style/sub_sub_header"
                     android:text="@string/comments"
                     android:padding="4dp"
-                    android:layout_gravity="center"/>
+                    android:gravity="center"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/new_comment"
+                    android:padding="4dp"
+                    android:gravity="center"
+                    android:id="@+id/post_detail_new_comment_button"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:id="@+id/post_detail_new_comment_layout"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/header"
+                        android:id="@+id/post_detail_create_comment_header_input_layout"
+                        android:layout_margin="@dimen/activity_horizontal_margin">
+                        <android.support.v7.widget.AppCompatEditText
+                            style="@style/header"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:inputType="text|textAutoComplete|textAutoCorrect"
+                            android:hint="@string/create_post_header_hint"
+                            android:background="@android:color/transparent"
+                            android:id="@+id/post_detail_create_comment_title"/>
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_below="@id/post_detail_create_comment_header_input_layout"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="16dp"
+                        android:adjustViewBounds="true"
+                        android:visibility="gone"
+                        android:id="@+id/post_detail_create_comment_post_picture"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/post_detail_create_comment_button_container"
+                        android:layout_below="@+id/post_detail_create_comment_post_picture"
+                        android:weightSum="2"
+                        android:orientation="horizontal">
+                        <android.support.v7.widget.AppCompatImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/transparent"
+                            android:layout_weight="1"
+                            android:src="@drawable/ic_camera"/>
+                        <android.support.v7.widget.AppCompatImageButton
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/ic_gallery"/>
+                    </LinearLayout>
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/body"
+                        android:id="@+id/post_detail_create_comment_text_input_layout"
+                        android:layout_below="@id/post_detail_create_comment_button_container">
+                        <android.support.v7.widget.AppCompatEditText
+                            style="@style/body"
+                            android:layout_margin="0dp"
+                            android:background="@android:color/transparent"
+                            android:id="@+id/post_detail_create_comment_text"
+                            android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
+                            android:hint="@string/create_post_text_hint"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/post_detail_create_comment_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:backgroundTint="@color/colorOkFab"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="16dp"
+                        android:layout_below="@+id/post_detail_create_comment_text_input_layout"
+                        android:src="@drawable/ic_ok" />
+                </RelativeLayout>
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

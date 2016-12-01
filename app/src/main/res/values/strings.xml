@@ -58,5 +58,6 @@
     <string name="show_likes">Show Likes</string>
     <string name="hide_likes">Hide Likes</string>
     <string name="comments">Comments</string>
+    <string name="new_comment">New Comment</string>
 
 </resources>
