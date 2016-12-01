@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "889678864719",
-    "firebase_url": "https://dsport-1341.firebaseio.com",
-    "project_id": "dsport-1341",
-    "storage_bucket": "dsport-1341.appspot.com"
+    "project_number": "524336430478",
+    "firebase_url": "https://dsport-3d903.firebaseio.com",
+    "project_id": "dsport-3d903",
+    "storage_bucket": "dsport-3d903.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:889678864719:android:1a3db282ffe525f1",
+        "mobilesdk_app_id": "1:524336430478:android:7fba3aaa01f46c33",
         "android_client_info": {
           "package_name": "com.omgproduction.dsport_application"
         }
       },
       "oauth_client": [
         {
-          "client_id": "889678864719-qvrdasohe25cpfpuceeq8958j7j8sr6r.apps.googleusercontent.com",
+          "client_id": "524336430478-s4l42dqajgk4e7u6242vq6frj9pnqibd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omgproduction.dsport_application",
+            "certificate_hash": "C84B79B818EC9339741AE7206700119984B4F313"
+          }
+        },
+        {
+          "client_id": "524336430478-hlkl069fks6tbj8qc6bss77r1ia2rg9v.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAu7RUazd1PqDu4o8g9aCEpjzIspir7tO0"
+          "current_key": "AIzaSyAj_9DpMTu1Z8-2sCoHCTSIUB3X2CQaG0c"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "524336430478-hlkl069fks6tbj8qc6bss77r1ia2rg9v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

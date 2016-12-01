@@ -55,5 +55,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Posts">Posts</string>
     <string name="nav_pinboard">Pinboard</string>
+    <string name="show_likes">Show Likes</string>
+    <string name="hide_likes">Hide Likes</string>
+    <string name="comments">Comments</string>
 
 </resources>

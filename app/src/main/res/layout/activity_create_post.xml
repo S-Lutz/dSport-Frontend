@@ -71,10 +71,30 @@
             android:adjustViewBounds="true"
             android:visibility="gone"
             android:id="@+id/create_post_post_picture"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/create_post_button_container"
+            android:layout_below="@+id/create_post_post_picture"
+            android:weightSum="2"
+            android:orientation="horizontal">
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_weight="1"
+                android:src="@drawable/ic_camera"/>
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_gallery"/>
+        </LinearLayout>
         <android.support.design.widget.TextInputLayout
             style="@style/body"
             android:id="@+id/create_post_text_input_layout"
-            android:layout_below="@id/create_post_post_picture">
+            android:layout_below="@id/create_post_button_container">
             <android.support.v7.widget.AppCompatEditText
                 style="@style/body"
                 android:layout_margin="0dp"
