@@ -11,7 +11,6 @@
         android:id="@+id/postView">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:transitionName="layout"
             android:id="@+id/post_relative_layout"
             android:layout_height="wrap_content">
             <android.support.v7.widget.AppCompatImageView
@@ -65,7 +64,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
-                android:transitionName="post_picture"
                 android:layout_marginRight="16dp"
                 android:adjustViewBounds="true"
                 android:visibility="gone"

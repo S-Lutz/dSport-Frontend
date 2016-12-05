@@ -82,10 +82,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
+                android:id="@+id/create_post_camera_button"
                 android:layout_weight="1"
                 android:src="@drawable/ic_camera"/>
             <android.support.v7.widget.AppCompatImageButton
                 android:layout_width="match_parent"
+                android:id="@+id/create_post_gallery_button"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"

@@ -1,5 +1,6 @@
 package com.omgproduction.dsport_application.adapters;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.models.Comment;
+import com.omgproduction.dsport_application.utils.DateUtils;
 
 import java.util.ArrayList;
 
@@ -42,7 +44,7 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.Comment
     @Override
     public void onBindViewHolder(CommentAdapter.CommentViewHolder holder, int position) {
         Comment comment = comments.get(position);
-        holder.tv_date.setText(comment.getCreated());
+        holder.tv_date.setText(DateUtils.convertString(holder.context,comment.getCreated()));
         holder.tv_likes.setText(comment.getLikeCount());
         holder.tv_text.setText(comment.getText());
         holder.tv_username.setText(comment.getUsername());
@@ -68,6 +70,7 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.Comment
         private ImageView iv_comment_picture;
         private TextView tv_username, tv_text, tv_likes, tv_date;
         private final View contextView;
+        private Context context;
 
         public CommentViewHolder(View view) {
             super(view);
@@ -77,6 +80,7 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.Comment
             tv_text = (TextView) view.findViewById(R.id.comment_text);
             tv_likes = (TextView) view.findViewById(R.id.comment_like_count);
             tv_date = (TextView) view.findViewById(R.id.comment_date);
+            context = view.getContext();
         }
     }
 

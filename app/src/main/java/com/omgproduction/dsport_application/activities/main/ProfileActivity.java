@@ -40,9 +40,6 @@ public class ProfileActivity extends NavigationActivity{
     private FloatingActionButton fabEdit, fabGallery, fabCamera;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise, fabOpenBig;
     private boolean isEditFabOpen = false;
-    private static final int CAM_REQUEST = 1;
-    private static final int PIC_CROP = 2;
-    private static final int SELECT_PICTURE = 3;
 
 
     private boolean isUsernameShown = false;
@@ -650,42 +647,19 @@ public class ProfileActivity extends NavigationActivity{
 
     }
 
-    private void performCrop(Uri uri){
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(uri, "image/*");
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1024);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, PIC_CROP);
-        }
-        catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.profile_container,"e6");
-        }
-    }
-
     private void performFabGalleryClick() {
         performFabClick();
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.select_picture)), SELECT_PICTURE);
+        openGallery();
     }
 
     private void performFabCameraClick() {
         performFabClick();
-        try{
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
-        }catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.profile_container,"e5");
-        }
+        openCamera();
+    }
+
+    @Override
+    protected void onBitmapResult(Bitmap bitmap) {
+        savePicture(bitmap);
     }
 
     @Override
@@ -695,28 +669,6 @@ public class ProfileActivity extends NavigationActivity{
         }else{
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            final Bundle extras = data.getExtras();
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
-
-                //TODO FIX QUALITY OF BITMAP
-                //temporaryOwnCrop(data.getData());
-                performCrop(data.getData());
-            }else if(requestCode == PIC_CROP){
-                //TODO FIX QUALITY OF BITMAP
-                Bitmap thePic = extras.getParcelable("data");
-                Log.e("PIC",String.valueOf(thePic.getHeight()));
-                Log.e("PIC",String.valueOf(thePic.getWidth()));
-                savePicture(thePic);
-            }
-        }
-
-
     }
 
     private void performFabClick() {

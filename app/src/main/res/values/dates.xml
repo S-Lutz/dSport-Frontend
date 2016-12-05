@@ -3,15 +3,15 @@
     <!-- 1= Monat 2= Tag, 3= Jahr-->
     <string name="last_years">MMMM dd, yyyy</string>
     <!-- 1= Monat 2= Tag -->
-    <string name="same_year">MMMM dd, hh:mm aaa </string>
+    <string name="same_year">MMMM dd, HH:mm aaa </string>
     <!-- 1= Monat 2= Tag, 3= 9:30 4= AM-->
-    <string name="same_month">MMMM dd, hh:mm aaa </string>
+    <string name="same_month">MMMM dd, HH:mm aaa </string>
     <!-- 1= Montag, 2= 9:30 3= AM-->
-    <string name="same_week">EEEEE, hh:dd aaa</string>
+    <string name="same_week">EEEE, HH:mm aaa</string>
     <!-- 1= 9:30 2= AM -->
-    <string name="same_day">hh:dd aaa</string>
+    <string name="same_day">HH:mm aaa</string>
     <!-- 1= 54-->
-    <string name="same_hour">%1$i minutes ago</string>
+    <string name="same_hour">%1$d minutes ago</string>
 
     <string name="now">just now</string>
 </resources>

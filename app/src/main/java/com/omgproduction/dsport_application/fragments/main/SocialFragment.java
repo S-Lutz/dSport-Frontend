@@ -58,6 +58,12 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        update();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -69,7 +75,6 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
         refresher = (SwipeRefreshLayout) view.findViewById(R.id.social_refresher);
         refresher.setOnRefreshListener(this);
 
-        update();
         return view;
     }
 
@@ -123,11 +128,10 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
         Pair<View, String> p4 = Pair.create((View) holder.getTv_title(), "post_title");
         Pair<View, String> p5 = Pair.create((View) holder.getTv_text(), "post_text");
         Pair<View, String> p6 = Pair.create((View) holder.getPost_buttons(), "post_buttons");
-        Pair<View, String> p7 = Pair.create((View) holder.getPost_layout(), "post_layout");
         Pair<View, String> p8 = Pair.create((View) holder.getTv_date(), "post_date");
         ActivityOptionsCompat options;
 
-        options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3,p4,p5,p6,p7,p8);
+        options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3,p4,p5,p6,p8);
 
         startActivity(i, options.toBundle());
     }
@@ -140,38 +144,25 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
             public void onSuccess(String result) {
                 PostController.getInstance().likePost(result, p.getPost_id(), new OnResultAdapter<Void>(){
                     @Override
-                    public void onStartQuery() {
-                        super.onStartQuery();
-                    }
-
-                    @Override
                     public void onSuccess(Void result) {
-                        super.onSuccess(result);
+                        update();
                     }
 
                     @Override
                     public void onConnectionError(VolleyError e) {
-                        super.onConnectionError(e);
+                        e.printStackTrace();
+                        printError(getView(), getView().findViewById(getView().getId()), "e100");
                     }
 
                     @Override
                     public void onBackendError(String errorCode) {
-                        super.onBackendError(errorCode);
+                        printError(getView(), getView().findViewById(getView().getId()), errorCode);
                     }
 
                     @Override
                     public void onJSONException(JSONException e) {
-                        super.onJSONException(e);
-                    }
-
-                    @Override
-                    public void onUserNotFound() {
-                        super.onUserNotFound();
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        super.onFinishQuery();
+                        e.printStackTrace();
+                        printError(getView(), getView().findViewById(getView().getId()), "e0");
                     }
                 });
             }

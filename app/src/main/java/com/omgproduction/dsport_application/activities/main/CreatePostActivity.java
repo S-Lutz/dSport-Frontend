@@ -30,16 +30,11 @@ import org.w3c.dom.Text;
 public class CreatePostActivity extends AdvancedActivity {
 
     private String pinboardOwner;
-    private String postPicture;
 
     public static final int TEXT = 0;
     public static final int PICTURE = 1;
     public static final int GALLERY = 2;
     public static final String TYPE = "TYPE";
-
-    private static final int CAM_REQUEST = 1;
-    private static final int PIC_CROP = 2;
-    private static final int SELECT_PICTURE = 3;
 
     private int type;
 
@@ -50,6 +45,8 @@ public class CreatePostActivity extends AdvancedActivity {
         setContentView(R.layout.activity_create_post);
         getIntentValues();
         findViewById(R.id.create_post_button).setOnClickListener(this);
+        findViewById(R.id.create_post_camera_button).setOnClickListener(this);
+        findViewById(R.id.create_post_gallery_button).setOnClickListener(this);
 
         UserController.getInstance().getLocalUser(this, new OnResultAdapter<User>() {
             @Override
@@ -90,6 +87,12 @@ public class CreatePostActivity extends AdvancedActivity {
         switch (v.getId()){
             case R.id.create_post_button:
                 savePost();
+                break;
+            case R.id.create_post_camera_button:
+                openCamera();
+                break;
+            case R.id.create_post_gallery_button:
+                openGallery();
                 break;
         }
     }
@@ -178,70 +181,22 @@ public class CreatePostActivity extends AdvancedActivity {
         type = getIntent().getIntExtra(TYPE,TEXT);
 
         switch (type){
-            case TEXT:
-                postPicture = "";
-                break;
             case PICTURE:
-                capture();
+                openCamera();
                 break;
             case GALLERY:
-                gallery();
-        }
-    }
-    private void capture() {
-        try{
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
-        }catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.activity_create_post,"e5");
+                openGallery();
         }
     }
 
-    private void gallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.select_picture)), SELECT_PICTURE);
-    }
-    private void performCrop(Uri uri){
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(uri, "image/*");
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1080);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, PIC_CROP);
-        }
-        catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.activity_create_post,"e6");
-        }
-    }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            final Bundle extras = data.getExtras();
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+    protected void onBitmapResult(Bitmap bitmap) {
+        ((ImageView)findViewById(R.id.create_post_post_picture)).setImageBitmap(bitmap);
+        findViewById(R.id.create_post_post_picture).setVisibility(View.VISIBLE);
+    }
 
-                //TODO FIX QUALITY OF BITMAP
-                //temporaryOwnCrop(data.getData());
-                performCrop(data.getData());
-            }else if(requestCode == PIC_CROP){
-                //TODO FIX QUALITY OF BITMAP
-                Bitmap thePic = extras.getParcelable("data");
-                Log.e("PIC",String.valueOf(thePic.getHeight()));
-                Log.e("PIC",String.valueOf(thePic.getWidth()));
-                ((ImageView)findViewById(R.id.create_post_post_picture)).setImageBitmap(thePic);
-                findViewById(R.id.create_post_post_picture).setVisibility(View.VISIBLE);
-            }
-        }else{
-            onBackPressed();
-        }
+    @Override
+    protected void onCameraException(ActivityNotFoundException e) {
+        printError(R.id.activity_create_post, "e6");
     }
 }

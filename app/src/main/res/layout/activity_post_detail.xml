@@ -2,15 +2,16 @@
 
 <android.support.v4.widget.SwipeRefreshLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/post_detail_refresher"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:transitionName="layout"
             android:id="@+id/post_detail_relative_layout"
             android:layout_height="wrap_content">
             <android.support.v7.widget.AppCompatImageView
@@ -66,7 +67,6 @@
                 android:layout_marginRight="16dp"
                 android:adjustViewBounds="true"
                 android:visibility="gone"
-                android:transitionName="post_picture"
                 android:id="@+id/post_detail_post_picture"/>
             <android.support.v7.widget.AppCompatTextView
                 style="@style/body"
@@ -181,9 +181,9 @@
             <RelativeLayout
                 android:id="@+id/post_detail_new_comment_layout"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_below="@id/post_detail_new_comment_button"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:visibility="gone"
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:layout_height="wrap_content">
 
@@ -209,6 +209,7 @@
                         android:background="@android:color/transparent"
                         android:layout_margin="@dimen/activity_horizontal_margin"
                         android:layout_weight="1"
+                        android:id="@+id/post_detail_create_comment_camera_button"
                         android:src="@drawable/ic_camera"/>
                     <View
                         android:layout_width="1dp"
@@ -219,6 +220,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:id="@+id/post_detail_create_comment_gallery_button"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_gallery"/>
                 </LinearLayout>

@@ -1,20 +1,22 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
-import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
-import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 
 /**
@@ -23,6 +25,9 @@ import com.omgproduction.dsport_application.utils.BitmapUtils;
 public abstract class AdvancedActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     protected SwipeRefreshLayout refresher;
+    private static final int CAM_REQUEST = 1;
+    private static final int PIC_CROP = 2;
+    private static final int SELECT_PICTURE = 3;
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
@@ -122,4 +127,62 @@ public abstract class AdvancedActivity extends FragmentActivity implements View.
             refresher.setRefreshing(flag);
         }
     }
+
+
+    private void openCrop(Uri uri){
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(uri, "image/*");
+            cropIntent.putExtra("openCrop", "true");
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 2048);
+            cropIntent.putExtra("outputY", 1024);
+            cropIntent.putExtra("return-data", true);
+            startActivityForResult(cropIntent, PIC_CROP);
+        }
+        catch(ActivityNotFoundException e){
+            onCameraException(e);
+        }
+    }
+
+    protected void onCameraException(ActivityNotFoundException e){};
+
+    protected void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,
+                getString(R.string.select_picture)), SELECT_PICTURE);
+    }
+
+    protected void openCamera() {
+        try{
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent,CAM_REQUEST);
+        }catch(ActivityNotFoundException e){
+            onCameraException(e);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            final Bundle extras = data.getExtras();
+            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+                //TODO FIX QUALITY OF BITMAP
+                openCrop(data.getData());
+            }else if(requestCode == PIC_CROP){
+                //TODO FIX QUALITY OF BITMAP
+                Bitmap thePic = extras.getParcelable("data");
+                onBitmapResult(thePic);
+            }
+        }
+    }
+
+    protected void onBitmapResult(Bitmap bitmap){
+
+    }
+
 }

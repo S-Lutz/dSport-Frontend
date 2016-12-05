@@ -262,4 +262,63 @@ public class PostController {
 
         ApplicationController.getInstance().addToRequestQueue(request.build());
     }
+
+    public void createComment(final String localUserID, final String post_id, final String picture, final String text, final OnResultListener<Void> listener) {
+        listener.onStartQuery();
+        JSONRequest request = new JSONRequest(BackendConfig.COMMENT_POST)
+                .param(ApplicationKeys.USER_ID, localUserID)
+                .param(ApplicationKeys.POST_ID, post_id)
+                .param(ApplicationKeys.COMMENT_PICTURE, picture)
+                .param(ApplicationKeys.TEXT, text)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        listener.onFinishQuery();
+                        if(ConnectionUtils.Success(jsonObject)){
+                            listener.onSuccess(null);
+                        }else{
+                            listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onConnectionError(volleyError);
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(request.build());
+    }
+
+    public void getPostDetail(final String post_id, final OnResultListener<Post> listener) {
+        listener.onStartQuery();
+        JSONRequest request = new JSONRequest(BackendConfig.GET_POST_DETAIL)
+                .param(ApplicationKeys.POST_ID, post_id)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        listener.onFinishQuery();
+                        if(ConnectionUtils.Success(jsonObject)){
+                            try {
+                                listener.onSuccess(Converter.convertPost(ConnectionUtils.extractJSONValue(jsonObject)));
+                            } catch (JSONException e) {
+                                listener.onJSONException(e);
+                            }
+                        }else{
+                            listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onConnectionError(volleyError);
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(request.build());
+    }
 }
