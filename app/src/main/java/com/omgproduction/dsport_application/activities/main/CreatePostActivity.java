@@ -53,7 +53,7 @@ public class CreatePostActivity extends AdvancedActivity {
 
         UserController.getInstance().getLocalUser(this, new OnResultAdapter<User>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -69,7 +69,7 @@ public class CreatePostActivity extends AdvancedActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -109,7 +109,7 @@ public class CreatePostActivity extends AdvancedActivity {
 
         UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -118,7 +118,7 @@ public class CreatePostActivity extends AdvancedActivity {
                 pinboardOwner = (pinboardOwner==null)?user.getId():pinboardOwner;
                 PostController.getInstance().createPost(user.getId(), pinboardOwner,(type == TEXT)?"":picture,text,title, new OnResultAdapter<Void>(){
                     @Override
-                    public void onStart() {
+                    public void onStartQuery() {
                         showProgressBar(true);
                     }
 
@@ -154,7 +154,7 @@ public class CreatePostActivity extends AdvancedActivity {
                     }
 
                     @Override
-                    public void onFinish() {
+                    public void onFinishQuery() {
                         showProgressBar(false);
                     }
                 });
@@ -167,7 +167,7 @@ public class CreatePostActivity extends AdvancedActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });

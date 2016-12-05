@@ -7,11 +7,13 @@ import android.graphics.BitmapFactory;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
+import java.io.Serializable;
+
 /**
  * Created by Florian Herborn on 16.11.2016.
  */
 
-public class User {
+public class User  implements Serializable {
     private String id, username, email, picture, firstname, lastname, created, agbversion;
 
     public User(String id, String username, String email, String picture, String firstname, String lastname, String created, String agbversion) {

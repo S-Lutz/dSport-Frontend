@@ -30,16 +30,9 @@
             android:gravity="bottom|left"
             android:id="@+id/comment_username"/>
 
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/header"
-            android:layout_below="@id/comment_namebar"
-            android:gravity="center"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:id="@+id/comment_title"/>
-
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="match_parent"
-            android:layout_below="@id/comment_title"
+            android:layout_below="@id/comment_username"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"

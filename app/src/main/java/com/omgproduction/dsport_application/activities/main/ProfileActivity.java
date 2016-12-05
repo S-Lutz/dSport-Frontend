@@ -81,12 +81,12 @@ public class ProfileActivity extends NavigationActivity{
     private void loadLocalData() {
         UserController.getInstance().getLocalUser(context,new OnResultAdapter<User>(){
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
 
@@ -140,7 +140,7 @@ public class ProfileActivity extends NavigationActivity{
     private void loadOnlineData() {
         UserController.getInstance().getGlobalUser(this, new OnResultAdapter<User>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -175,7 +175,7 @@ public class ProfileActivity extends NavigationActivity{
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -365,7 +365,7 @@ public class ProfileActivity extends NavigationActivity{
     private void savePicture(final Bitmap thePic) {
         UserController.getInstance().saveUserDetail(this, ApplicationKeys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -401,7 +401,7 @@ public class ProfileActivity extends NavigationActivity{
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -410,7 +410,7 @@ public class ProfileActivity extends NavigationActivity{
     private void saveEmail(final String email) {
         UserController.getInstance().saveUserDetail(this, ApplicationKeys.EMAIL, email, new OnResultAdapter<String>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 removeInputError(R.id.profile_email_input_layout);
                 showProgressBar(true);
             }
@@ -449,7 +449,7 @@ public class ProfileActivity extends NavigationActivity{
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -458,7 +458,7 @@ public class ProfileActivity extends NavigationActivity{
     private void saveFirstname(final String firstname) {
         UserController.getInstance().saveUserDetail(this, ApplicationKeys.FIRSTNAME, firstname, new OnResultAdapter<String>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
                 removeInputError(R.id.profile_firstname_input_layout);
             }
@@ -497,7 +497,7 @@ public class ProfileActivity extends NavigationActivity{
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -506,7 +506,7 @@ public class ProfileActivity extends NavigationActivity{
     private void saveLastname(final String lastname) {
         UserController.getInstance().saveUserDetail(this, ApplicationKeys.LASTNAME, lastname, new OnResultAdapter<String>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
                 removeInputError(R.id.profile_lastname_input_layout);
             }
@@ -545,7 +545,7 @@ public class ProfileActivity extends NavigationActivity{
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -554,7 +554,7 @@ public class ProfileActivity extends NavigationActivity{
     private void savePassword(final String password) {
         UserController.getInstance().saveUserDetail(this, ApplicationKeys.PASSWORD, password, new OnResultAdapter<String>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
                 removeInputError(R.id.profile_password_input_layout);
                 removeInputError(R.id.profile_password_confirm_input_layout);
@@ -594,7 +594,7 @@ public class ProfileActivity extends NavigationActivity{
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -604,7 +604,7 @@ public class ProfileActivity extends NavigationActivity{
     private void saveUsername(final String username) {
         UserController.getInstance().saveUserDetail(this, ApplicationKeys.USERNAME, username, new OnResultAdapter<String>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
                 removeInputError(R.id.profile_username_input_layout);
             }
@@ -643,7 +643,7 @@ public class ProfileActivity extends NavigationActivity{
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });

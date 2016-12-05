@@ -55,14 +55,14 @@ public class SessionController {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         if(ConnectionUtils.Success(jsonObject)){
-                            onResultListener.onFinish();
+                            onResultListener.onFinishQuery();
                             try {
                                 onResultListener.onSuccess(ConnectionUtils.extractJSONValue(jsonObject).getString(ApplicationKeys.USERNAME));
                             } catch (JSONException e) {
                                 onResultListener.onJSONException(e);
                             }
                         }else{
-                            onResultListener.onFinish();
+                            onResultListener.onFinishQuery();
                             onResultListener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
                         }
                     }
@@ -70,7 +70,7 @@ public class SessionController {
                 .errorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        onResultListener.onFinish();
+                        onResultListener.onFinishQuery();
                         onResultListener.onConnectionError(volleyError);
                     }
                 });
@@ -90,7 +90,7 @@ public class SessionController {
 
         //Log.e("TOKEN","LOAD-LOCAL: "+token);
 
-        onResultListener.onStart();
+        onResultListener.onStartQuery();
         JSONRequest requestBuilder = new JSONRequest(BackendConfig.LOGIN)
                 .param(ApplicationKeys.USERNAME, username)
                 .param(ApplicationKeys.PASSWORD, password)
@@ -98,7 +98,7 @@ public class SessionController {
                 .errorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        onResultListener.onFinish();
+                        onResultListener.onFinishQuery();
                         onResultListener.onConnectionError(volleyError);
                     }
                 })
@@ -106,10 +106,10 @@ public class SessionController {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         if(ConnectionUtils.Success(jsonObject)){
-                            onResultListener.onFinish();
+                            onResultListener.onFinishQuery();
                             onResultListener.onSuccess(ConnectionUtils.extractJSONValue(jsonObject));
                         }else{
-                            onResultListener.onFinish();
+                            onResultListener.onFinishQuery();
                             onResultListener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
                         }
                     }
@@ -119,7 +119,7 @@ public class SessionController {
     }
 
     public void saveLocalUser(Context context, JSONObject user, OnResultListener<User> onResultListener){
-        onResultListener.onStart();
+        onResultListener.onStartQuery();
         try {
             Preferences preferencesController = Preferences.getInstance(context)
                     .putBoolean(ApplicationKeys.IS_LOGIN, true)
@@ -134,10 +134,10 @@ public class SessionController {
 
             // commit changes
             preferencesController.commit();
-            onResultListener.onFinish();
+            onResultListener.onFinishQuery();
             onResultListener.onSuccess(Converter.convertUser(user));
         } catch (JSONException e) {
-            onResultListener.onFinish();
+            onResultListener.onFinishQuery();
             onResultListener.onJSONException(e);
         }
     }
@@ -202,13 +202,13 @@ public class SessionController {
                 .getStringDetail(ApplicationKeys.TOKEN,"");
         //Log.e("TOKEN","DISCARD: "+token);
 
-        onResultListener.onStart();
+        onResultListener.onStartQuery();
         JSONRequest requestBuilder = new JSONRequest(BackendConfig.DISCARD_TOKEN)
                 .param(ApplicationKeys.TOKEN, token)
                 .errorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        onResultListener.onFinish();
+                        onResultListener.onFinishQuery();
                         onResultListener.onConnectionError(volleyError);
                     }
                 })
@@ -216,10 +216,10 @@ public class SessionController {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         if(ConnectionUtils.Success(jsonObject)){
-                            onResultListener.onFinish();
+                            onResultListener.onFinishQuery();
                             onResultListener.onSuccess(null);
                         }else{
-                            onResultListener.onFinish();
+                            onResultListener.onFinishQuery();
                             onResultListener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
                         }
                     }
