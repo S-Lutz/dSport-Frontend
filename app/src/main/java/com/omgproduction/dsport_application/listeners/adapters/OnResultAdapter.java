@@ -11,7 +11,7 @@ import org.json.JSONException;
 
 public class OnResultAdapter<T> implements OnResultListener<T> {
     @Override
-    public void onStart() {
+    public void onStartQuery() {
 
     }
 
@@ -41,7 +41,7 @@ public class OnResultAdapter<T> implements OnResultListener<T> {
     }
 
     @Override
-    public void onFinish() {
+    public void onFinishQuery() {
 
     }
 }

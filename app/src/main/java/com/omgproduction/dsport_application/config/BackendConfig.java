@@ -28,4 +28,10 @@ public class BackendConfig {
     public static final String GET_AGB = HOST+HOME+"/agb/get/";
     public static final String GET_PINBOARD = HOST+HOME+"/posts/getPinboard/";
     public static final String GET_POST_DETAIL = HOST+HOME+"/posts/getDetail/";
+    public static final String GET_COMMENTS = HOST + HOME + "/posts/comments/getAll/";
+    public static final String LIKE_POST = HOST + HOME + "/posts/like/";
+    public static final String SHARE_POST = HOST + HOME + "/posts/share/";
+    public static final String COMMENT_POST = HOST + HOME + "/posts/comment/";
+    public static final String GET_LIKES = HOST + HOME + "/posts/likes/getAll/";
+    public static final String LIKE_COMMENT = HOST + HOME + "/comments/like/";
 }

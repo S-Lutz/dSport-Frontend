@@ -32,4 +32,10 @@ public class ApplicationKeys {
 
     public static final String TOKEN = "token";
     public static final String NOTIFICATION = "notification";
+    public static final String COMMENTS = "comments";
+
+    public static final String COMMENT_PICTURE = "comment_picture";
+    public static final String COMMENT_ID = "comment_id";
+    public static final String LIKE_ID = "like_id";
+    public static final String LIKES = "likes";
 }

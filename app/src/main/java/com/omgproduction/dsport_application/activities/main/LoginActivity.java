@@ -93,7 +93,7 @@ public class LoginActivity extends AdvancedActivity {
         //Send request to Backend and wait for response
         SessionController.getInstance().loginUser(this,username, password, new OnResultAdapter<JSONObject>(){
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -101,7 +101,7 @@ public class LoginActivity extends AdvancedActivity {
             public void onSuccess(JSONObject jsonObject) {
                 SessionController.getInstance().saveLocalUser(context,jsonObject, new OnResultAdapter<User>(){
                     @Override
-                    public void onStart() {
+                    public void onStartQuery() {
                         showProgressBar(true);
                     }
 
@@ -111,7 +111,7 @@ public class LoginActivity extends AdvancedActivity {
                     }
 
                     @Override
-                    public void onFinish() {
+                    public void onFinishQuery() {
                         showProgressBar(false);
                     }
                 });
@@ -137,7 +137,7 @@ public class LoginActivity extends AdvancedActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });

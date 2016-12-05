@@ -149,7 +149,7 @@ public class RegisterActivity extends AdvancedActivity {
         //Process Registration with Backend-Server
         SessionController.getInstance().registerUser(username, firstname, lastname, email, password_1, new OnResultAdapter<String>(){
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 removeAllErrors();
             }
 
@@ -191,7 +191,7 @@ public class RegisterActivity extends AdvancedActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });

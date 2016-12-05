@@ -5,11 +5,15 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.omgproduction.dsport_application.activities.main.PostDetailActivity;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.BackendConfig;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.models.Comment;
+import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
 import com.omgproduction.dsport_application.utils.Converter;
@@ -33,13 +37,13 @@ public class PostController {
     }
 
     public void getAllPosts(final Context context, final String localUserID, final OnResultListener<ArrayList<Post>> listener){
-        listener.onStart();
+        listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.GET_POSTS)
                 .param(ApplicationKeys.USER_ID,localUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        listener.onFinish();
+                        listener.onFinishQuery();
                         if(ConnectionUtils.Success(jsonObject)){
                             JSONArray jsonPosts = ConnectionUtils.extractJSONArray(jsonObject, ApplicationKeys.POSTS);
                             ArrayList<Post> posts = new ArrayList<>();
@@ -59,7 +63,7 @@ public class PostController {
                 .errorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        listener.onFinish();
+                        listener.onFinishQuery();
                         listener.onConnectionError(volleyError);
                     }
                 });
@@ -69,14 +73,14 @@ public class PostController {
     }
 
     public void getPinboard(final Context context, final String localUserID, final String ownerUserID, final OnResultListener<ArrayList<Post>> listener){
-        listener.onStart();
+        listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.GET_POSTS)
                 .param(ApplicationKeys.USER_ID,localUserID)
                 .param(ApplicationKeys.OWNER_ID,ownerUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        listener.onFinish();
+                        listener.onFinishQuery();
                         if(ConnectionUtils.Success(jsonObject)){
                             JSONArray jsonPosts = ConnectionUtils.extractJSONArray(jsonObject, ApplicationKeys.POSTS);
                             ArrayList<Post> posts = new ArrayList<>();
@@ -96,7 +100,7 @@ public class PostController {
                 .errorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        listener.onFinish();
+                        listener.onFinishQuery();
                         listener.onConnectionError(volleyError);
                     }
                 });
@@ -106,12 +110,7 @@ public class PostController {
     }
 
     public void createPost(final String localUserID, final String pinboardOwnerID, final String picture, final String text, final String title, final OnResultListener<Void> listener) {
-        listener.onStart();
-        Log.e("SEND",localUserID);
-        Log.e("SEND",pinboardOwnerID);
-        Log.e("SEND",picture);
-        Log.e("SEND",text);
-        Log.e("SEND",title);
+        listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.CREATE_POST)
                 .param(ApplicationKeys.USER_ID, localUserID)
                 .param(ApplicationKeys.OWNER_ID, pinboardOwnerID)
@@ -121,7 +120,7 @@ public class PostController {
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        listener.onFinish();
+                        listener.onFinishQuery();
                         if(ConnectionUtils.Success(jsonObject)){
                             listener.onSuccess(null);
                         }else{
@@ -132,7 +131,131 @@ public class PostController {
                 .errorListener(new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        listener.onFinish();
+                        listener.onFinishQuery();
+                        listener.onConnectionError(volleyError);
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(request.build());
+    }
+
+    public void getAllComments(final Context context, final String postID, final OnResultListener<ArrayList<Comment>> listener) {
+        listener.onStartQuery();
+        JSONRequest request = new JSONRequest(BackendConfig.GET_COMMENTS)
+                .param(ApplicationKeys.POST_ID,postID)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        listener.onFinishQuery();
+                        if(ConnectionUtils.Success(jsonObject)){
+                            JSONArray jsonPosts = ConnectionUtils.extractJSONArray(jsonObject, ApplicationKeys.COMMENTS);
+                            ArrayList<Comment> comments = new ArrayList<>();
+                            try {
+                                for(int i = 0; i< jsonPosts.length(); i++){
+                                    comments.add(Converter.convertComment(jsonPosts.getJSONObject(i)));
+                                }
+                                listener.onSuccess(comments);
+                            } catch (JSONException e) {
+                                listener.onJSONException(e);
+                            }
+                        }else{
+                            listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onConnectionError(volleyError);
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(request.build());
+    }
+
+    public void likePost(final String localUserID, final String post_id, final OnResultListener<Void> listener) {
+        listener.onStartQuery();
+        JSONRequest request = new JSONRequest(BackendConfig.LIKE_POST)
+                .param(ApplicationKeys.POST_ID,post_id)
+                .param(ApplicationKeys.USER_ID, localUserID)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        listener.onFinishQuery();
+                        if(ConnectionUtils.Success(jsonObject)){
+                            listener.onSuccess(null);
+                        }else{
+                            listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onConnectionError(volleyError);
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(request.build());
+    }
+
+    public void likeComment(final String localUserID, final String comment_id, final OnResultListener<Void> listener) {
+        listener.onStartQuery();
+        JSONRequest request = new JSONRequest(BackendConfig.LIKE_COMMENT)
+                .param(ApplicationKeys.COMMENT_ID,comment_id)
+                .param(ApplicationKeys.USER_ID, localUserID)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        listener.onFinishQuery();
+                        if(ConnectionUtils.Success(jsonObject)){
+                            listener.onSuccess(null);
+                        }else{
+                            listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onConnectionError(volleyError);
+                    }
+                });
+
+        ApplicationController.getInstance().addToRequestQueue(request.build());
+    }
+
+    public void getAllLikes(final Context context, final String postID, final OnResultListener<ArrayList<Like>> listener) {
+        listener.onStartQuery();
+        JSONRequest request = new JSONRequest(BackendConfig.GET_LIKES)
+                .param(ApplicationKeys.POST_ID,postID)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        listener.onFinishQuery();
+                        if(ConnectionUtils.Success(jsonObject)){
+                            JSONArray jsonPosts = ConnectionUtils.extractJSONArray(jsonObject, ApplicationKeys.LIKES);
+                            ArrayList<Like> likes = new ArrayList<>();
+                            try {
+                                for(int i = 0; i< jsonPosts.length(); i++){
+                                    likes.add(Converter.convertLike(jsonPosts.getJSONObject(i)));
+                                }
+                                listener.onSuccess(likes);
+                            } catch (JSONException e) {
+                                listener.onJSONException(e);
+                            }
+                        }else{
+                            listener.onBackendError(ConnectionUtils.extractErrorCode(jsonObject));
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
                         listener.onConnectionError(volleyError);
                     }
                 });

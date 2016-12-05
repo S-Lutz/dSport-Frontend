@@ -2,16 +2,23 @@ package com.omgproduction.dsport_application.models;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
+
+import java.io.Serializable;
+import java.lang.annotation.Target;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Florian on 17.11.2016.
  */
 
-public class Post {
+public class Post  implements Serializable {
 
     private String post_id,username , userid, picture, postPicture, text, created, likeCount, commentCount, shareCount, title;
 
