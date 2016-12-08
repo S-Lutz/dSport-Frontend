@@ -150,7 +150,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
         intent.putExtra(CreatePostActivity.TYPE,CreatePostActivity.PICTURE);
-        intent.putExtra(ApplicationKeys.OWNER_ID,pinboardOwner);
+        intent.putExtra(ApplicationKeys.POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
 
@@ -158,7 +158,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
         intent.putExtra(CreatePostActivity.TYPE,CreatePostActivity.GALLERY);
-        intent.putExtra(ApplicationKeys.OWNER_ID,pinboardOwner);
+        intent.putExtra(ApplicationKeys.POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
 
@@ -173,7 +173,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
         intent.putExtra(CreatePostActivity.TYPE,CreatePostActivity.TEXT);
-        intent.putExtra(ApplicationKeys.OWNER_ID,pinboardOwner);
+        intent.putExtra(ApplicationKeys.POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
 

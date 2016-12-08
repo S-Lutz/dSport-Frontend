@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="transition_user_picture">user_picture</string>
+    <string name="transition_post_username">post_username</string>
+    <string name="transition_post_picture_overlay">post_picture_overlay</string>
+    <string name="transition_post_title">post_title</string>
+    <string name="transition_post_text">post_text</string>
+    <string name="transition_post_buttons">post_buttons</string>
+    <string name="transition_post_date">post_date</string>
+</resources>

@@ -46,18 +46,18 @@ public class SessionController {
     public void registerUser(String username, String firstname, String lastname, String email, String password, final OnResultListener<String> onResultListener) {
 
         JSONRequest requestBuilder = new JSONRequest(BackendConfig.REGISTER)
-                .param(ApplicationKeys.USERNAME, username)
-                .param(ApplicationKeys.FIRSTNAME, firstname)
-                .param(ApplicationKeys.LASTNAME, lastname)
-                .param(ApplicationKeys.EMAIL, email)
-                .param(ApplicationKeys.PASSWORD, password)
+                .param(ApplicationKeys.USER_USERNAME, username)
+                .param(ApplicationKeys.USER_FIRSTNAME, firstname)
+                .param(ApplicationKeys.USER_LASTNAME, lastname)
+                .param(ApplicationKeys.USER_EMAIL, email)
+                .param(ApplicationKeys.USER_PASSWORD, password)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
                         if(ConnectionUtils.Success(jsonObject)){
                             onResultListener.onFinishQuery();
                             try {
-                                onResultListener.onSuccess(ConnectionUtils.extractJSONValue(jsonObject).getString(ApplicationKeys.USERNAME));
+                                onResultListener.onSuccess(ConnectionUtils.extractJSONValue(jsonObject).getString(ApplicationKeys.USER_USERNAME));
                             } catch (JSONException e) {
                                 onResultListener.onJSONException(e);
                             }
@@ -92,8 +92,8 @@ public class SessionController {
 
         onResultListener.onStartQuery();
         JSONRequest requestBuilder = new JSONRequest(BackendConfig.LOGIN)
-                .param(ApplicationKeys.USERNAME, username)
-                .param(ApplicationKeys.PASSWORD, password)
+                .param(ApplicationKeys.USER_USERNAME, username)
+                .param(ApplicationKeys.USER_PASSWORD, password)
                 .param(ApplicationKeys.TOKEN, token)
                 .errorListener(new Response.ErrorListener() {
                     @Override
@@ -123,14 +123,14 @@ public class SessionController {
         try {
             Preferences preferencesController = Preferences.getInstance(context)
                     .putBoolean(ApplicationKeys.IS_LOGIN, true)
-                    .putString(ApplicationKeys.USER_ID, user.getString(ApplicationKeys.USER_ID))
-                    .putString(ApplicationKeys.USERNAME, user.getString(ApplicationKeys.USERNAME))
-                    .putString(ApplicationKeys.EMAIL, user.getString(ApplicationKeys.EMAIL))
-                    .putString(ApplicationKeys.FIRSTNAME, user.getString(ApplicationKeys.FIRSTNAME))
-                    .putString(ApplicationKeys.LASTNAME,  user.getString(ApplicationKeys.LASTNAME))
-                    .putString(ApplicationKeys.CREATED, user.getString(ApplicationKeys.CREATED))
-                    .putString(ApplicationKeys.AGB_VERSION, user.getString(ApplicationKeys.AGB_VERSION))
-                    .putString(ApplicationKeys.PICTURE, user.getString(ApplicationKeys.PICTURE));
+                    .putString(ApplicationKeys.USER_USER_ID, user.getString(ApplicationKeys.USER_USER_ID))
+                    .putString(ApplicationKeys.USER_USERNAME, user.getString(ApplicationKeys.USER_USERNAME))
+                    .putString(ApplicationKeys.USER_EMAIL, user.getString(ApplicationKeys.USER_EMAIL))
+                    .putString(ApplicationKeys.USER_FIRSTNAME, user.getString(ApplicationKeys.USER_FIRSTNAME))
+                    .putString(ApplicationKeys.USER_LASTNAME,  user.getString(ApplicationKeys.USER_LASTNAME))
+                    .putString(ApplicationKeys.USER_CREATED, user.getString(ApplicationKeys.USER_CREATED))
+                    .putString(ApplicationKeys.USER_AGBVERSION, user.getString(ApplicationKeys.USER_AGBVERSION))
+                    .putString(ApplicationKeys.USER_PICTURE, user.getString(ApplicationKeys.USER_PICTURE));
 
             // commit changes
             preferencesController.commit();
@@ -176,14 +176,14 @@ public class SessionController {
 
                 Preferences.getInstance(context)
                         .putBoolean(ApplicationKeys.IS_LOGIN, false)
-                        .putString(ApplicationKeys.USER_ID, "")
-                        .putString(ApplicationKeys.USERNAME, "")
-                        .putString(ApplicationKeys.EMAIL, "")
-                        .putString(ApplicationKeys.FIRSTNAME, "")
-                        .putString(ApplicationKeys.LASTNAME,  "")
-                        .putString(ApplicationKeys.CREATED, "")
-                        .putString(ApplicationKeys.AGB_VERSION, "")
-                        .putString(ApplicationKeys.PICTURE, "")
+                        .putString(ApplicationKeys.USER_USER_ID, "")
+                        .putString(ApplicationKeys.USER_USERNAME, "")
+                        .putString(ApplicationKeys.USER_EMAIL, "")
+                        .putString(ApplicationKeys.USER_FIRSTNAME, "")
+                        .putString(ApplicationKeys.USER_LASTNAME,  "")
+                        .putString(ApplicationKeys.USER_CREATED, "")
+                        .putString(ApplicationKeys.USER_AGBVERSION, "")
+                        .putString(ApplicationKeys.USER_PICTURE, "")
                         .commit();
 
                 Intent i = new Intent(context, LoginActivity.class);

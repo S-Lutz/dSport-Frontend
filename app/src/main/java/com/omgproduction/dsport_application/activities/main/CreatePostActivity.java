@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.controller.PostController;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
@@ -37,6 +38,7 @@ public class CreatePostActivity extends AdvancedActivity {
     public static final String TYPE = "TYPE";
 
     private int type;
+    private Bitmap postPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,11 +103,10 @@ public class CreatePostActivity extends AdvancedActivity {
         final String text = ((EditText)findViewById(R.id.create_post_text)).getText().toString();
         final String title = ((EditText)findViewById(R.id.create_post_title)).getText().toString();
         String bmp;
-        try{
-            bmp = BitmapUtils.getStringFromBitmap(((BitmapDrawable)((ImageView)findViewById(R.id.create_post_post_picture)).getDrawable()).getBitmap());
-        }catch (NullPointerException e){
+        if(postPicture==null){
             bmp = "";
-            type = TEXT;
+        }else {
+            bmp = BitmapUtils.getStringFromBitmap(postPicture);
         }
         final String picture = bmp;
 
@@ -133,7 +134,7 @@ public class CreatePostActivity extends AdvancedActivity {
 
                     @Override
                     public void onConnectionError(VolleyError e) {
-                        printError(R.id.activity_create_post, "e100", R.string.retry, new View.OnClickListener() {
+                        printError(R.id.activity_create_post, ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 savePost();
@@ -177,7 +178,7 @@ public class CreatePostActivity extends AdvancedActivity {
     }
 
     public void getIntentValues() {
-        pinboardOwner = getIntent().getStringExtra(ApplicationKeys.OWNER_ID);
+        pinboardOwner = getIntent().getStringExtra(ApplicationKeys.POST_OWNER_ID);
         type = getIntent().getIntExtra(TYPE,TEXT);
 
         switch (type){
@@ -191,12 +192,9 @@ public class CreatePostActivity extends AdvancedActivity {
 
     @Override
     protected void onBitmapResult(Bitmap bitmap) {
+        type = PICTURE;
+        postPicture = bitmap;
         ((ImageView)findViewById(R.id.create_post_post_picture)).setImageBitmap(bitmap);
         findViewById(R.id.create_post_post_picture).setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onCameraException(ActivityNotFoundException e) {
-        printError(R.id.activity_create_post, "e6");
     }
 }

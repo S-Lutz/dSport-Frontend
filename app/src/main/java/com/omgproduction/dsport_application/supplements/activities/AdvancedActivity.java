@@ -1,22 +1,39 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.utils.BitmapUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static java.security.AccessController.getContext;
 
 
 /**
@@ -25,9 +42,12 @@ import com.omgproduction.dsport_application.R;
 public abstract class AdvancedActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     protected SwipeRefreshLayout refresher;
-    private static final int CAM_REQUEST = 1;
+    private static final int CAMERA_REQUEST_CODE = 1;
     private static final int PIC_CROP = 2;
     private static final int SELECT_PICTURE = 3;
+    private Uri mImageUri;
+    private File imageFile;
+    private String mCurrentPhotoPath;
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
@@ -128,7 +148,6 @@ public abstract class AdvancedActivity extends FragmentActivity implements View.
         }
     }
 
-
     private void openCrop(Uri uri){
         try {
             Intent cropIntent = new Intent("com.android.camera.action.CROP");
@@ -145,8 +164,67 @@ public abstract class AdvancedActivity extends FragmentActivity implements View.
             onCameraException(e);
         }
     }
+    //protected void openCamera(){
+    //    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    //    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//
+    //        // Create the File where the photo should go
+    //        File photoFile = null;
+    //        try {
+    //        Log.e("CCCamera","HIER");
+    //            photoFile = createImageFile();
+    //        } catch (IOException ex) {
+    //            ex.printStackTrace();
+    //            onCameraException(ex);
+    //        }
+    //        // Continue only if the File was successfully created
+    //        if (photoFile != null) {
+    //            Uri photoURI = FileProvider.getUriForFile(this, "com.omgproduction.dsport_application.fileprovider", photoFile);
+    //            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+    //            startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+    //        }
+    //    }
+    //    else{
+    //        onCameraException(new NullPointerException());
+    //    }
+    //}
+//
+    //private File createImageFile() throws IOException {
+    //    // Create an image file name
+    //    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    //    String imageFileName = "JPEG_" + timeStamp + "_";
+    //    File storageDir = new File(Environment.getExternalStoragePublicDirectory(
+    //            Environment.DIRECTORY_DCIM), "Camera");
+    //    File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+//
+    //    mCurrentPhotoPath = image.getAbsolutePath();
+    //    return image;
+    //}
+//
+    //@Override
+    //public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //    if(requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+    //        addPicToGallery();
+    //        onBitmapResult(getScaledBitmap());
+    //    }
+    //}
+    //private Bitmap getScaledBitmap() {
+//
+    //    // Get the dimensions of the bitmap
+    //    BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+    //    bmOptions.inJustDecodeBounds = false;
+//
+    //    return BitmapFactory.decodeFile(mCurrentPhotoPath, null);
+    //}
+    //private void addPicToGallery() {
+    //    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+    //    File f = new File(mCurrentPhotoPath);
+    //    Uri contentUri = Uri.fromFile(f);
+    //    mediaScanIntent.setData(contentUri);
+    //    this.sendBroadcast(mediaScanIntent);
+    //}
 
-    protected void onCameraException(ActivityNotFoundException e){};
+    protected void onCameraException(Exception e){};
 
     protected void openGallery() {
         Intent intent = new Intent();
@@ -159,7 +237,7 @@ public abstract class AdvancedActivity extends FragmentActivity implements View.
     protected void openCamera() {
         try{
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
+            startActivityForResult(cameraIntent,CAMERA_REQUEST_CODE);
         }catch(ActivityNotFoundException e){
             onCameraException(e);
         }
@@ -170,7 +248,7 @@ public abstract class AdvancedActivity extends FragmentActivity implements View.
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             final Bundle extras = data.getExtras();
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+            if (requestCode == CAMERA_REQUEST_CODE || requestCode == SELECT_PICTURE) {
                 //TODO FIX QUALITY OF BITMAP
                 openCrop(data.getData());
             }else if(requestCode == PIC_CROP){
@@ -184,5 +262,7 @@ public abstract class AdvancedActivity extends FragmentActivity implements View.
     protected void onBitmapResult(Bitmap bitmap){
 
     }
+
+
 
 }

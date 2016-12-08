@@ -39,7 +39,7 @@ public class PostController {
     public void getAllPosts(final Context context, final String localUserID, final OnResultListener<ArrayList<Post>> listener){
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.GET_POSTS)
-                .param(ApplicationKeys.USER_ID,localUserID)
+                .param(ApplicationKeys.USER_USER_ID,localUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -75,8 +75,8 @@ public class PostController {
     public void getPinboard(final Context context, final String localUserID, final String ownerUserID, final OnResultListener<ArrayList<Post>> listener){
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.GET_POSTS)
-                .param(ApplicationKeys.USER_ID,localUserID)
-                .param(ApplicationKeys.OWNER_ID,ownerUserID)
+                .param(ApplicationKeys.USER_USER_ID,localUserID)
+                .param(ApplicationKeys.POST_OWNER_ID,ownerUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -112,11 +112,11 @@ public class PostController {
     public void createPost(final String localUserID, final String pinboardOwnerID, final String picture, final String text, final String title, final OnResultListener<Void> listener) {
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.CREATE_POST)
-                .param(ApplicationKeys.USER_ID, localUserID)
-                .param(ApplicationKeys.OWNER_ID, pinboardOwnerID)
+                .param(ApplicationKeys.USER_USER_ID, localUserID)
+                .param(ApplicationKeys.POST_OWNER_ID, pinboardOwnerID)
                 .param(ApplicationKeys.POST_PICTURE, picture)
-                .param(ApplicationKeys.TEXT, text)
-                .param(ApplicationKeys.TITLE, title)
+                .param(ApplicationKeys.POST_TEXT, text)
+                .param(ApplicationKeys.POST_TITLE, title)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -142,7 +142,7 @@ public class PostController {
     public void getAllComments(final Context context, final String postID, final OnResultListener<ArrayList<Comment>> listener) {
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.GET_COMMENTS)
-                .param(ApplicationKeys.POST_ID,postID)
+                .param(ApplicationKeys.POST_POST_ID,postID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -177,8 +177,8 @@ public class PostController {
     public void likePost(final String localUserID, final String post_id, final OnResultListener<Void> listener) {
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.LIKE_POST)
-                .param(ApplicationKeys.POST_ID,post_id)
-                .param(ApplicationKeys.USER_ID, localUserID)
+                .param(ApplicationKeys.POST_POST_ID,post_id)
+                .param(ApplicationKeys.USER_USER_ID, localUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -205,7 +205,7 @@ public class PostController {
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.LIKE_COMMENT)
                 .param(ApplicationKeys.COMMENT_ID,comment_id)
-                .param(ApplicationKeys.USER_ID, localUserID)
+                .param(ApplicationKeys.USER_USER_ID, localUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -231,7 +231,7 @@ public class PostController {
     public void getAllLikes(final Context context, final String postID, final OnResultListener<ArrayList<Like>> listener) {
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.GET_LIKES)
-                .param(ApplicationKeys.POST_ID,postID)
+                .param(ApplicationKeys.POST_POST_ID,postID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -266,10 +266,10 @@ public class PostController {
     public void createComment(final String localUserID, final String post_id, final String picture, final String text, final OnResultListener<Void> listener) {
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.COMMENT_POST)
-                .param(ApplicationKeys.USER_ID, localUserID)
-                .param(ApplicationKeys.POST_ID, post_id)
+                .param(ApplicationKeys.USER_USER_ID, localUserID)
+                .param(ApplicationKeys.POST_POST_ID, post_id)
                 .param(ApplicationKeys.COMMENT_PICTURE, picture)
-                .param(ApplicationKeys.TEXT, text)
+                .param(ApplicationKeys.COMMENT_TEXT, text)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -295,7 +295,7 @@ public class PostController {
     public void getPostDetail(final String post_id, final OnResultListener<Post> listener) {
         listener.onStartQuery();
         JSONRequest request = new JSONRequest(BackendConfig.GET_POST_DETAIL)
-                .param(ApplicationKeys.POST_ID, post_id)
+                .param(ApplicationKeys.POST_POST_ID, post_id)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {

@@ -21,6 +21,7 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.PostDetailActivity;
 import com.omgproduction.dsport_application.adapters.PostAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.config.NotificationKeys;
 import com.omgproduction.dsport_application.controller.PostController;
 import com.omgproduction.dsport_application.controller.SessionController;
@@ -122,13 +123,13 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     public void onPostClicked(final PostAdapter.PostViewHolder holder, Post p){
         Intent i = new Intent(getContext(), PostDetailActivity.class);
         i.putExtra(ApplicationKeys.POSTS, p);
-        Pair<View, String> p1 = Pair.create((View) holder.getIv_picture(), "user_picture");
-        Pair<View, String> p2 = Pair.create((View) holder.getTv_username(), "post_username");
-        Pair<View, String> p3 = Pair.create((View) holder.getIv_post_picture_overlay(), "post_picture_overlay");
-        Pair<View, String> p4 = Pair.create((View) holder.getTv_title(), "post_title");
-        Pair<View, String> p5 = Pair.create((View) holder.getTv_text(), "post_text");
-        Pair<View, String> p6 = Pair.create((View) holder.getPost_buttons(), "post_buttons");
-        Pair<View, String> p8 = Pair.create((View) holder.getTv_date(), "post_date");
+        Pair<View, String> p1 = Pair.create((View) holder.getIv_picture(), getString(R.string.transition_user_picture));
+        Pair<View, String> p2 = Pair.create((View) holder.getTv_username(), getString(R.string.transition_post_username));
+        Pair<View, String> p3 = Pair.create((View) holder.getIv_post_picture_overlay(), getString(R.string.transition_post_picture_overlay));
+        Pair<View, String> p4 = Pair.create((View) holder.getTv_title(), getString(R.string.transition_post_title));
+        Pair<View, String> p5 = Pair.create((View) holder.getTv_text(), getString(R.string.transition_post_text));
+        Pair<View, String> p6 = Pair.create((View) holder.getPost_buttons(), getString(R.string.transition_post_buttons));
+        Pair<View, String> p8 = Pair.create((View) holder.getTv_date(), getString(R.string.transition_post_date));
         ActivityOptionsCompat options;
 
         options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3,p4,p5,p6,p8);
@@ -151,7 +152,7 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
                     @Override
                     public void onConnectionError(VolleyError e) {
                         e.printStackTrace();
-                        printError(getView(), getView().findViewById(getView().getId()), "e100");
+                        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.BACKEND_CONNECTION_FAILED);
                     }
 
                     @Override
@@ -162,7 +163,7 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
                     @Override
                     public void onJSONException(JSONException e) {
                         e.printStackTrace();
-                        printError(getView(), getView().findViewById(getView().getId()), "e0");
+                        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.SOMETHING_WENT_WRONG);
                     }
                 });
             }
@@ -176,12 +177,11 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
 
     @Override
     public void onPostShare(PostAdapter.PostViewHolder holder, Post p) {
-        Log.e("POST","Share");
+
     }
 
     @Override
     public void onPostComment(PostAdapter.PostViewHolder holder, Post p) {
-        //Log.e("POST","Comment");
         onPostClicked(holder, p);
     }
 
@@ -212,7 +212,7 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     @Override
     public void onConnectionError(VolleyError e) {
         e.printStackTrace();
-        printError(getView(), getView().findViewById(getView().getId()), "e100");
+        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.BACKEND_CONNECTION_FAILED);
     }
 
     @Override
@@ -223,7 +223,7 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     @Override
     public void onJSONException(JSONException e) {
         e.printStackTrace();
-        printError(getView(), getView().findViewById(getView().getId()), "e0");
+        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.SOMETHING_WENT_WRONG);
     }
 
     @Override

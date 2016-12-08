@@ -35,4 +35,7 @@ public class BackendConfig {
     public static final String COMMENT_POST = HOST + HOME + "/posts/comment/";
     public static final String GET_LIKES = HOST + HOME + "/posts/likes/getAll/";
     public static final String LIKE_COMMENT = HOST + HOME + "/posts/comments/like/";
+
+
+    public static final String DATE_FORMAT="yyyy.MM.dd.HH.mm.ss";
 }

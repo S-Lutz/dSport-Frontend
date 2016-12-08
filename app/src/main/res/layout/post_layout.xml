@@ -20,14 +20,14 @@
                 android:maxHeight="104dp"
                 android:src="@drawable/default_profile"
                 android:scaleType="centerCrop"
-                android:transitionName="user_picture"
+                android:transitionName="@string/transition_user_picture"
                 android:id="@+id/post_picture"
                 android:adjustViewBounds="true"/>
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignTop="@+id/post_picture"
-                android:transitionName="post_picture_overlay"
+                android:transitionName="@string/transition_post_picture_overlay"
                 android:id="@+id/post_picture_overlay"
                 android:layout_alignParentLeft="true"
                 android:layout_alignRight="@+id/post_picture"
@@ -44,7 +44,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_margin="8dp"
                 android:textColor="#666666"
-                android:transitionName="post_username"
+                android:transitionName="@string/transition_post_username"
                 android:layout_alignRight="@+id/post_picture"
                 android:layout_alignBottom="@+id/post_picture"
                 android:gravity="bottom|left"
@@ -54,7 +54,7 @@
                 style="@style/header"
                 android:layout_below="@id/post_picture"
                 android:gravity="center"
-                android:transitionName="post_title"
+                android:transitionName="@string/transition_post_title"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:id="@+id/post_title"/>
 
@@ -71,7 +71,7 @@
             <android.support.v7.widget.AppCompatTextView
                 style="@style/body"
                 android:layout_below="@id/post_post_picture"
-                android:transitionName="post_text"
+                android:transitionName="@string/transition_post_text"
                 android:id="@+id/post_text"
                 />
             <LinearLayout
@@ -79,7 +79,7 @@
                 android:layout_height="48dp"
                 android:layout_below="@+id/post_text"
                 android:weightSum="3"
-                android:transitionName="post_buttons"
+                android:transitionName="@string/transition_post_buttons"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:id="@+id/post_option_container"
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/post_date"
-                android:transitionName="post_date"
+                android:transitionName="@string/transition_post_date"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_alignParentEnd="true"

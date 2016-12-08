@@ -1,35 +1,24 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.CommentAdapter;
 import com.omgproduction.dsport_application.adapters.LikeAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.controller.ApplicationController;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.controller.PostController;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
@@ -42,18 +31,11 @@ import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
-import com.omgproduction.dsport_application.utils.CameraManager;
 import com.omgproduction.dsport_application.utils.DateUtils;
 
 import org.json.JSONException;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
-import static android.R.attr.bitmap;
 
 public class PostDetailActivity extends AdvancedActivity implements OnResultListener<ArrayList<Comment>>, CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
 
@@ -137,7 +119,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
             @Override
             public void onConnectionError(VolleyError e) {
                 e.printStackTrace();
-                printError(R.id.post_detail_relative_layout, "e100");
+                printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
             }
 
             @Override
@@ -146,7 +128,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
             @Override
             public void onJSONException(JSONException e) {
                 e.printStackTrace();
-                printError(R.id.post_detail_relative_layout, "e0");
+                printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
             }
 
             @Override
@@ -185,7 +167,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
                     @Override
                     public void onConnectionError(VolleyError e) {
                         e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, "e100");
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
                     }
 
                     @Override
@@ -194,7 +176,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
                     @Override
                     public void onJSONException(JSONException e) {
                         e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, "e0");
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
                     }
                     @Override
                     public void onUserNotFound() {SessionController.getInstance().logout(PostDetailActivity.this);}
@@ -298,7 +280,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
 
                     @Override
                     public void onConnectionError(VolleyError e) {
-                        printError(R.id.activity_create_post, "e100", R.string.retry, new View.OnClickListener() {
+                        printError(R.id.activity_create_post, ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 onCreateCommentClick();
@@ -430,7 +412,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
                     @Override
                     public void onConnectionError(VolleyError e) {
                         e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, "e100");
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
                     }
 
                     @Override
@@ -439,7 +421,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
                     @Override
                     public void onJSONException(JSONException e) {
                         e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, "e0");
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
                     }
                 });
             }
@@ -470,7 +452,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
     @Override
     public void onConnectionError(VolleyError e) {
         e.printStackTrace();
-        printError(R.id.post_detail_relative_layout, "e100");
+        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
     }
 
     @Override
@@ -481,7 +463,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
     @Override
     public void onJSONException(JSONException e) {
         e.printStackTrace();
-        printError(R.id.post_detail_relative_layout, "e0");
+        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
     }
 
     @Override
@@ -509,7 +491,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
                     @Override
                     public void onConnectionError(VolleyError e) {
                         e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, "e100");
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
                     }
 
                     @Override
@@ -518,7 +500,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
                     @Override
                     public void onJSONException(JSONException e) {
                         e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, "e0");
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
                     }
                 });
             }
