@@ -4,15 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.controller.ApplicationController;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.io.Serializable;
-import java.lang.annotation.Target;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Florian on 17.11.2016.
@@ -21,8 +16,9 @@ import java.util.Locale;
 public class Post  implements Serializable {
 
     private String post_id,username , userid, picture, postPicture, text, created, likeCount, commentCount, shareCount, title;
+    private boolean liked;
 
-    public Post(String post_id, String username, String userid, String title, String picture, String postPicture, String text, String created, String likeCount, String commentCount, String shareCount) {
+    public Post(String post_id, String username, String userid, String title, String picture, String postPicture, String text, String created, String likeCount, String commentCount, String shareCount, boolean liked) {
         this.username = username;
         this.userid = userid;
         this.picture = picture;
@@ -34,6 +30,7 @@ public class Post  implements Serializable {
         this.shareCount = shareCount;
         this.title = title;
         this.post_id = post_id;
+        this.liked = liked;
     }
 
     public String getUsername() {
@@ -80,6 +77,14 @@ public class Post  implements Serializable {
         return post_id;
     }
 
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
     public Bitmap getBitmapPicture(Context context){
 
         if(picture.isEmpty()){
@@ -94,5 +99,22 @@ public class Post  implements Serializable {
             return null;
         }
         return BitmapUtils.getBitmapFromString(context,postPicture);
+    }
+
+    public String getLikeString() {
+        StringBuilder sb = new StringBuilder();
+        int likes = Integer.parseInt(getLikeCount());
+        if(isLiked()){
+            String youPlus = ApplicationController.getInstance().getApplicationContext().getResources().getString(R.string.you_plus);
+            sb.append(youPlus);
+            sb.append(" ");
+            likes = likes-1;
+        }
+        sb.append(likes);
+        return sb.toString();
+    }
+
+    public void setLikeCount(String likeCount) {
+        this.likeCount = likeCount;
     }
 }

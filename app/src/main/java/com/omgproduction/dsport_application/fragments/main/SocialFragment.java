@@ -21,12 +21,14 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.PostDetailActivity;
 import com.omgproduction.dsport_application.adapters.PostAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.config.NotificationKeys;
 import com.omgproduction.dsport_application.controller.PostController;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.NotificationReceiver;
@@ -58,6 +60,12 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        update();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -69,7 +77,6 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
         refresher = (SwipeRefreshLayout) view.findViewById(R.id.social_refresher);
         refresher.setOnRefreshListener(this);
 
-        update();
         return view;
     }
 
@@ -117,61 +124,49 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     public void onPostClicked(final PostAdapter.PostViewHolder holder, Post p){
         Intent i = new Intent(getContext(), PostDetailActivity.class);
         i.putExtra(ApplicationKeys.POSTS, p);
-        Pair<View, String> p1 = Pair.create((View) holder.getIv_picture(), "user_picture");
-        Pair<View, String> p2 = Pair.create((View) holder.getTv_username(), "post_username");
-        Pair<View, String> p3 = Pair.create((View) holder.getIv_post_picture_overlay(), "post_picture_overlay");
-        Pair<View, String> p4 = Pair.create((View) holder.getTv_title(), "post_title");
-        Pair<View, String> p5 = Pair.create((View) holder.getTv_text(), "post_text");
-        Pair<View, String> p6 = Pair.create((View) holder.getPost_buttons(), "post_buttons");
-        Pair<View, String> p7 = Pair.create((View) holder.getPost_layout(), "post_layout");
-        Pair<View, String> p8 = Pair.create((View) holder.getTv_date(), "post_date");
+        Pair<View, String> p1 = Pair.create((View) holder.getIv_picture(), getString(R.string.transition_user_picture));
+        Pair<View, String> p2 = Pair.create((View) holder.getTv_username(), getString(R.string.transition_post_username));
+        Pair<View, String> p3 = Pair.create((View) holder.getIv_post_picture_overlay(), getString(R.string.transition_post_picture_overlay));
+        Pair<View, String> p4 = Pair.create((View) holder.getTv_title(), getString(R.string.transition_post_title));
+        Pair<View, String> p5 = Pair.create((View) holder.getTv_text(), getString(R.string.transition_post_text));
+        Pair<View, String> p6 = Pair.create((View) holder.getPost_buttons(), getString(R.string.transition_post_buttons));
+        Pair<View, String> p8 = Pair.create((View) holder.getTv_date(), getString(R.string.transition_post_date));
         ActivityOptionsCompat options;
 
-        options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3,p4,p5,p6,p7,p8);
+        options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3,p4,p5,p6,p8);
 
         startActivity(i, options.toBundle());
     }
 
     @Override
-    public void onPostLike(PostAdapter.PostViewHolder holder, final Post p) {
+    public void onPostLike(final PostAdapter.PostViewHolder holder, final Post p) {
         Log.e("POST","Like");
         UserController.getInstance().getLocalUserID(getContext(), new OnResultAdapter<String>(){
             @Override
             public void onSuccess(String result) {
-                PostController.getInstance().likePost(result, p.getPost_id(), new OnResultAdapter<Void>(){
+                PostController.getInstance().likePost(result, p.getPost_id(), new OnResultAdapter<LikeResult>(){
                     @Override
-                    public void onStartQuery() {
-                        super.onStartQuery();
-                    }
-
-                    @Override
-                    public void onSuccess(Void result) {
-                        super.onSuccess(result);
+                    public void onSuccess(LikeResult result) {
+                        p.setLiked(result.isLiked());
+                        p.setLikeCount(result.getLikeCount());
+                        holder.getTv_likes().setText(p.getLikeString());
                     }
 
                     @Override
                     public void onConnectionError(VolleyError e) {
-                        super.onConnectionError(e);
+                        e.printStackTrace();
+                        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.BACKEND_CONNECTION_FAILED);
                     }
 
                     @Override
                     public void onBackendError(String errorCode) {
-                        super.onBackendError(errorCode);
+                        printError(getView(), getView().findViewById(getView().getId()), errorCode);
                     }
 
                     @Override
                     public void onJSONException(JSONException e) {
-                        super.onJSONException(e);
-                    }
-
-                    @Override
-                    public void onUserNotFound() {
-                        super.onUserNotFound();
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        super.onFinishQuery();
+                        e.printStackTrace();
+                        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.SOMETHING_WENT_WRONG);
                     }
                 });
             }
@@ -185,12 +180,11 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
 
     @Override
     public void onPostShare(PostAdapter.PostViewHolder holder, Post p) {
-        Log.e("POST","Share");
+
     }
 
     @Override
     public void onPostComment(PostAdapter.PostViewHolder holder, Post p) {
-        //Log.e("POST","Comment");
         onPostClicked(holder, p);
     }
 
@@ -221,7 +215,7 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     @Override
     public void onConnectionError(VolleyError e) {
         e.printStackTrace();
-        printError(getView(), getView().findViewById(getView().getId()), "e100");
+        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.BACKEND_CONNECTION_FAILED);
     }
 
     @Override
@@ -232,7 +226,7 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     @Override
     public void onJSONException(JSONException e) {
         e.printStackTrace();
-        printError(getView(), getView().findViewById(getView().getId()), "e0");
+        printError(getView(), getView().findViewById(getView().getId()), ErrorCodes.SOMETHING_WENT_WRONG);
     }
 
     @Override

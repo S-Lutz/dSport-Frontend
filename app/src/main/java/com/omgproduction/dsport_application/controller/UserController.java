@@ -34,7 +34,7 @@ public class UserController {
 
         listener.onStartQuery();
         String userID = Preferences.getInstance(context)
-                .getStringDetail(ApplicationKeys.USER_ID,"");
+                .getStringDetail(ApplicationKeys.USER_USER_ID,"");
 
         if(!userID.trim().isEmpty()){
             JSONRequest request = new JSONRequest(BackendConfig.EDIT_USER)
@@ -52,7 +52,7 @@ public class UserController {
                                 listener.onFinishQuery();
                                 try {
                                     String value = "";
-                                    if(!key.equals(ApplicationKeys.PASSWORD)){
+                                    if(!key.equals(ApplicationKeys.USER_PASSWORD)){
                                         value = ConnectionUtils.extractJSONValue(jsonObject).getString(key);
                                     }
                                     update(context,key,value);
@@ -65,7 +65,7 @@ public class UserController {
                             }
                         }
                     })
-                    .param(ApplicationKeys.USER_ID, userID)
+                    .param(ApplicationKeys.USER_USER_ID, userID)
                     .param(key,value);
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
@@ -80,11 +80,11 @@ public class UserController {
         listener.onStartQuery();
 
         String userID = Preferences.getInstance(context)
-                .getStringDetail(ApplicationKeys.USER_ID,"");
+                .getStringDetail(ApplicationKeys.USER_USER_ID,"");
 
         if(!userID.trim().isEmpty()){
             JSONRequest request = new JSONRequest(BackendConfig.GET_USER)
-                    .param(ApplicationKeys.USER_ID,userID)
+                    .param(ApplicationKeys.USER_USER_ID,userID)
                     .responseListener(new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
@@ -124,17 +124,17 @@ public class UserController {
     public void getLocalUser(final Context context, final OnResultListener<User> listener){
 
         listener.onStartQuery();
-        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,"");
+        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USER_ID,"");
         if(!userID.trim().isEmpty()){
             User user = new User(
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USERNAME,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.EMAIL,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.PICTURE,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.FIRSTNAME,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.LASTNAME,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.CREATED,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.AGB_VERSION,"")
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USER_ID,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USERNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_EMAIL,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_PICTURE,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_FIRSTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_LASTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_CREATED,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_AGBVERSION,"")
             );
             listener.onFinishQuery();
             listener.onSuccess(user);
@@ -148,7 +148,7 @@ public class UserController {
     public void getLocalUserID(final Context context, final OnResultListener<String> listener){
 
         listener.onStartQuery();
-        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,"");
+        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USER_ID,"");
         if(!userID.trim().isEmpty()){
             listener.onFinishQuery();
             listener.onSuccess(userID);

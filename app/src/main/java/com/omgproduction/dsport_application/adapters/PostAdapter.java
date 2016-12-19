@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.controller.ApplicationController;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.utils.DateUtils;
 
@@ -53,7 +54,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.tv_date.setText(DateUtils.convertString(holder.contextView.getContext(),post.getCreated()));
         holder.tv_shares.setText(post.getShareCount());
         holder.tv_comments.setText(post.getCommentCount());
-        holder.tv_likes.setText(post.getLikeCount());
+        holder.tv_likes.setText(post.getLikeString());
         holder.tv_text.setText(post.getText());
         holder.tv_username.setText(post.getUsername());
         holder.tv_title.setText(post.getTitle());

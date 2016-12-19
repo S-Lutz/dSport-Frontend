@@ -21,6 +21,7 @@ import android.view.animation.AnimationUtils;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.controller.SessionController;
@@ -40,9 +41,6 @@ public class ProfileActivity extends NavigationActivity{
     private FloatingActionButton fabEdit, fabGallery, fabCamera;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise, fabOpenBig;
     private boolean isEditFabOpen = false;
-    private static final int CAM_REQUEST = 1;
-    private static final int PIC_CROP = 2;
-    private static final int SELECT_PICTURE = 3;
 
 
     private boolean isUsernameShown = false;
@@ -221,10 +219,10 @@ public class ProfileActivity extends NavigationActivity{
         final String password2 = getTVText(R.id.profile_password_input2);
 
         if(password1.trim().isEmpty()){
-            printInputError(R.id.profile_password_input_layout,"e2");
+            printInputError(R.id.profile_password_input_layout, ErrorCodes.FIELD_EMPTY);
         }
         if(password2.trim().isEmpty()){
-            printInputError(R.id.profile_password_confirm_input_layout,"e2");
+            printInputError(R.id.profile_password_confirm_input_layout,ErrorCodes.FIELD_EMPTY);
         }
 
         if(password1.equals(password2)){
@@ -232,14 +230,14 @@ public class ProfileActivity extends NavigationActivity{
             removeInputError(R.id.profile_password_input_layout);
             removeInputError(R.id.profile_password_confirm_input_layout);
         }else{
-            printInputError(R.id.profile_password_input_layout,"e1");
-            printInputError(R.id.profile_password_confirm_input_layout,"e1");
+            printInputError(R.id.profile_password_input_layout,ErrorCodes.PASSWORD_MISSMATCH);
+            printInputError(R.id.profile_password_confirm_input_layout,ErrorCodes.PASSWORD_MISSMATCH);
         }
     }
 
     private void performEmailConfirm() {
         final String email = getTVText(R.id.profile_email_input);
-        final String currentEmail = Preferences.getInstance(this).getStringDetail(ApplicationKeys.EMAIL,"");
+        final String currentEmail = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_EMAIL,"");
         if(!currentEmail.trim().isEmpty()){
             if(!email.trim().isEmpty()){
                 if(!email.equals(currentEmail)){
@@ -247,13 +245,13 @@ public class ProfileActivity extends NavigationActivity{
                         saveEmail(email);
                         removeInputError(R.id.profile_email_input_layout);
                     }else{
-                        printInputError(R.id.profile_email_input_layout,"e3");
+                        printInputError(R.id.profile_email_input_layout,ErrorCodes.INVALID_EMAIl);
                     }
                 }else{
-                    printInputError(R.id.profile_email_input_layout,"e7");
+                    printInputError(R.id.profile_email_input_layout,ErrorCodes.NO_CANGES);
                 }
             }else{
-                printInputError(R.id.profile_email_input_layout,"e2");
+                printInputError(R.id.profile_email_input_layout,ErrorCodes.FIELD_EMPTY);
             }
         }else{
             //User not logged in
@@ -263,17 +261,17 @@ public class ProfileActivity extends NavigationActivity{
 
     private void performLastnameConfirm() {
         String lastname = getTVText(R.id.profile_lastname_input);
-        String currentLastname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.LASTNAME,"");
+        String currentLastname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_LASTNAME,"");
         if(!currentLastname.trim().isEmpty()){
             if(!lastname.trim().isEmpty()){
                 if(!lastname.equals(currentLastname)){
                     saveLastname(lastname);
                     removeInputError(R.id.profile_lastname_input_layout);
                 }else{
-                    printInputError(R.id.profile_lastname_input_layout,"e7");
+                    printInputError(R.id.profile_lastname_input_layout,ErrorCodes.NO_CANGES);
                 }
             }else{
-                printInputError(R.id.profile_lastname_input_layout,"e2");
+                printInputError(R.id.profile_lastname_input_layout,ErrorCodes.FIELD_EMPTY);
             }
         }else{
             //User not logged in
@@ -283,17 +281,17 @@ public class ProfileActivity extends NavigationActivity{
 
     private void performFirstnameConfirm() {
         final String firstname = getTVText(R.id.profile_firstname_input);
-        final String currentFirstname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.FIRSTNAME,"");
+        final String currentFirstname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_FIRSTNAME,"");
         if(!currentFirstname.trim().isEmpty()){
             if(!firstname.trim().isEmpty()){
                 if(!firstname.equals(currentFirstname)){
                     saveFirstname(firstname);
                     removeInputError(R.id.profile_firstname_input_layout);
                 }else{
-                    printInputError(R.id.profile_firstname_input_layout,"e7");
+                    printInputError(R.id.profile_firstname_input_layout,ErrorCodes.NO_CANGES);
                 }
             }else{
-                printInputError(R.id.profile_firstname_input_layout,"e2");
+                printInputError(R.id.profile_firstname_input_layout,ErrorCodes.FIELD_EMPTY);
             }
         }else{
             //User not logged in
@@ -303,17 +301,17 @@ public class ProfileActivity extends NavigationActivity{
 
     private void performUsernameConfirm() {
         final String username = getTVText(R.id.profile_username_input);
-        final String currentUsername = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USERNAME,"");
+        final String currentUsername = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_USERNAME,"");
         if(!currentUsername.trim().isEmpty()){
             if(!username.trim().isEmpty()){
                 if(!username.equals(currentUsername)){
                     saveUsername(username);
                     removeInputError(R.id.profile_username_input_layout);
                 }else{
-                    printInputError(R.id.profile_username_input_layout,"e7");
+                    printInputError(R.id.profile_username_input_layout,ErrorCodes.NO_CANGES);
                 }
             }else{
-                printInputError(R.id.profile_username_input_layout,"e2");
+                printInputError(R.id.profile_username_input_layout,ErrorCodes.FIELD_EMPTY);
             }
         }else{
             //User not logged in
@@ -363,7 +361,7 @@ public class ProfileActivity extends NavigationActivity{
 
 
     private void savePicture(final Bitmap thePic) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -376,7 +374,7 @@ public class ProfileActivity extends NavigationActivity{
 
             @Override
             public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         savePicture(thePic);
@@ -392,7 +390,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onJSONException(JSONException e) {
                 e.printStackTrace();
-                printError(R.id.profile_container,"e0");
+                printError(R.id.profile_container,ErrorCodes.SOMETHING_WENT_WRONG);
             }
 
             @Override
@@ -408,7 +406,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveEmail(final String email) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.EMAIL, email, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_EMAIL, email, new OnResultAdapter<String>() {
             @Override
             public void onStartQuery() {
                 removeInputError(R.id.profile_email_input_layout);
@@ -424,7 +422,7 @@ public class ProfileActivity extends NavigationActivity{
 
             @Override
             public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveEmail(email);
@@ -440,7 +438,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onJSONException(JSONException e) {
                 e.printStackTrace();
-                printError(R.id.profile_email_input_layout,"e0");
+                printError(R.id.profile_email_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
             }
 
             @Override
@@ -456,7 +454,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveFirstname(final String firstname) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.FIRSTNAME, firstname, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_FIRSTNAME, firstname, new OnResultAdapter<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -472,7 +470,7 @@ public class ProfileActivity extends NavigationActivity{
 
             @Override
             public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveFirstname(firstname);
@@ -488,7 +486,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onJSONException(JSONException e) {
                 e.printStackTrace();
-                printError(R.id.profile_firstname_input_layout,"e0");
+                printError(R.id.profile_firstname_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
             }
 
             @Override
@@ -504,7 +502,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveLastname(final String lastname) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.LASTNAME, lastname, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_LASTNAME, lastname, new OnResultAdapter<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -520,7 +518,7 @@ public class ProfileActivity extends NavigationActivity{
 
             @Override
             public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveLastname(lastname);
@@ -536,7 +534,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onJSONException(JSONException e) {
                 e.printStackTrace();
-                printError(R.id.profile_lastname_input_layout,"e0");
+                printError(R.id.profile_lastname_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
             }
 
             @Override
@@ -552,7 +550,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void savePassword(final String password) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.PASSWORD, password, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_PASSWORD, password, new OnResultAdapter<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -569,7 +567,7 @@ public class ProfileActivity extends NavigationActivity{
 
             @Override
             public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         savePassword(password);
@@ -602,7 +600,7 @@ public class ProfileActivity extends NavigationActivity{
     }
 
     private void saveUsername(final String username) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USERNAME, username, new OnResultAdapter<String>() {
+        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_USERNAME, username, new OnResultAdapter<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -618,7 +616,7 @@ public class ProfileActivity extends NavigationActivity{
 
             @Override
             public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveUsername(username);
@@ -634,7 +632,7 @@ public class ProfileActivity extends NavigationActivity{
             @Override
             public void onJSONException(JSONException e) {
                 e.printStackTrace();
-                printError(R.id.profile_username_input_layout,"e0");
+                printError(R.id.profile_username_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
             }
 
             @Override
@@ -650,42 +648,19 @@ public class ProfileActivity extends NavigationActivity{
 
     }
 
-    private void performCrop(Uri uri){
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(uri, "image/*");
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1024);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, PIC_CROP);
-        }
-        catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.profile_container,"e6");
-        }
-    }
-
     private void performFabGalleryClick() {
         performFabClick();
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.select_picture)), SELECT_PICTURE);
+        openGallery();
     }
 
     private void performFabCameraClick() {
         performFabClick();
-        try{
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
-        }catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.profile_container,"e5");
-        }
+        openCamera();
+    }
+
+    @Override
+    protected void onBitmapResult(Bitmap bitmap) {
+        savePicture(bitmap);
     }
 
     @Override
@@ -695,28 +670,6 @@ public class ProfileActivity extends NavigationActivity{
         }else{
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            final Bundle extras = data.getExtras();
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
-
-                //TODO FIX QUALITY OF BITMAP
-                //temporaryOwnCrop(data.getData());
-                performCrop(data.getData());
-            }else if(requestCode == PIC_CROP){
-                //TODO FIX QUALITY OF BITMAP
-                Bitmap thePic = extras.getParcelable("data");
-                Log.e("PIC",String.valueOf(thePic.getHeight()));
-                Log.e("PIC",String.valueOf(thePic.getWidth()));
-                savePicture(thePic);
-            }
-        }
-
-
     }
 
     private void performFabClick() {
