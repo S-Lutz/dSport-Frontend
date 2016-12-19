@@ -6,6 +6,7 @@ package com.omgproduction.dsport_application.config;
 
 public class BackendConfig {
     public static final String HOST = "http://www.daily-sport.de:9000";
+    //public static final String HOST = "http://5.189.141.187:9001";
     public static final String HOME = "/dsport";
     public static final String LOGIN = HOST+HOME+"/users/login/";
     public static final String REGISTER = HOST+HOME+"/users/signup/";
@@ -28,4 +29,13 @@ public class BackendConfig {
     public static final String GET_AGB = HOST+HOME+"/agb/get/";
     public static final String GET_PINBOARD = HOST+HOME+"/posts/getPinboard/";
     public static final String GET_POST_DETAIL = HOST+HOME+"/posts/getDetail/";
+    public static final String GET_COMMENTS = HOST + HOME + "/posts/comments/getAll/";
+    public static final String LIKE_POST = HOST + HOME + "/posts/like/";
+    public static final String SHARE_POST = HOST + HOME + "/posts/share/";
+    public static final String COMMENT_POST = HOST + HOME + "/posts/comment/";
+    public static final String GET_LIKES = HOST + HOME + "/posts/likes/getAll/";
+    public static final String LIKE_COMMENT = HOST + HOME + "/posts/comments/like/";
+
+
+    public static final String DATE_FORMAT="yyyy.MM.dd.HH.mm.ss";
 }

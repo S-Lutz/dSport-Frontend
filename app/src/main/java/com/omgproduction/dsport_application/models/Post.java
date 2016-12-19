@@ -2,20 +2,23 @@ package com.omgproduction.dsport_application.models;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.controller.ApplicationController;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
+
+import java.io.Serializable;
 
 /**
  * Created by Florian on 17.11.2016.
  */
 
-public class Post {
+public class Post  implements Serializable {
 
     private String post_id,username , userid, picture, postPicture, text, created, likeCount, commentCount, shareCount, title;
+    private boolean liked;
 
-    public Post(String post_id, String username, String userid, String title, String picture, String postPicture, String text, String created, String likeCount, String commentCount, String shareCount) {
+    public Post(String post_id, String username, String userid, String title, String picture, String postPicture, String text, String created, String likeCount, String commentCount, String shareCount, boolean liked) {
         this.username = username;
         this.userid = userid;
         this.picture = picture;
@@ -27,6 +30,7 @@ public class Post {
         this.shareCount = shareCount;
         this.title = title;
         this.post_id = post_id;
+        this.liked = liked;
     }
 
     public String getUsername() {
@@ -73,6 +77,14 @@ public class Post {
         return post_id;
     }
 
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
     public Bitmap getBitmapPicture(Context context){
 
         if(picture.isEmpty()){
@@ -87,5 +99,22 @@ public class Post {
             return null;
         }
         return BitmapUtils.getBitmapFromString(context,postPicture);
+    }
+
+    public String getLikeString() {
+        StringBuilder sb = new StringBuilder();
+        int likes = Integer.parseInt(getLikeCount());
+        if(isLiked()){
+            String youPlus = ApplicationController.getInstance().getApplicationContext().getResources().getString(R.string.you_plus);
+            sb.append(youPlus);
+            sb.append(" ");
+            likes = likes-1;
+        }
+        sb.append(likes);
+        return sb.toString();
+    }
+
+    public void setLikeCount(String likeCount) {
+        this.likeCount = likeCount;
     }
 }

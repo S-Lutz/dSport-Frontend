@@ -10,6 +10,7 @@ import android.widget.EditText;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
@@ -46,7 +47,7 @@ public class LoginActivity extends AdvancedActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(ApplicationKeys.USERNAME))!=null){
+        if((username = i.getStringExtra(ApplicationKeys.USER_USERNAME))!=null){
             ((EditText)findViewById(R.id.login_username)).setText(username);
         }
 
@@ -84,7 +85,7 @@ public class LoginActivity extends AdvancedActivity {
         //Check if Password is not Empty
         if(username.trim().isEmpty()
                 ||password.trim().isEmpty()){
-            printInputError(R.id.login_layout_username,"e2");
+            printInputError(R.id.login_layout_username, ErrorCodes.FIELD_EMPTY);
             return;
         }
 
@@ -93,7 +94,7 @@ public class LoginActivity extends AdvancedActivity {
         //Send request to Backend and wait for response
         SessionController.getInstance().loginUser(this,username, password, new OnResultAdapter<JSONObject>(){
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -101,7 +102,7 @@ public class LoginActivity extends AdvancedActivity {
             public void onSuccess(JSONObject jsonObject) {
                 SessionController.getInstance().saveLocalUser(context,jsonObject, new OnResultAdapter<User>(){
                     @Override
-                    public void onStart() {
+                    public void onStartQuery() {
                         showProgressBar(true);
                     }
 
@@ -111,7 +112,7 @@ public class LoginActivity extends AdvancedActivity {
                     }
 
                     @Override
-                    public void onFinish() {
+                    public void onFinishQuery() {
                         showProgressBar(false);
                     }
                 });
@@ -119,7 +120,7 @@ public class LoginActivity extends AdvancedActivity {
 
             @Override
             public void onConnectionError(VolleyError e) {
-                printError(R.id.login_layout,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.login_layout,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         loginUser();
@@ -132,12 +133,12 @@ public class LoginActivity extends AdvancedActivity {
                 //Check Errorcode (See it in error_codes.xml
                 switch (errorCode){
                     case "e303": printInputError(R.id.login_layout_password,errorCode); break;
-                    default: printError(R.id.login_layout,"e0");
+                    default: printError(R.id.login_layout,ErrorCodes.SOMETHING_WENT_WRONG);
                 }
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -152,7 +153,7 @@ public class LoginActivity extends AdvancedActivity {
 
     private void startRegistrationActivity(Context context){
         Intent i = new Intent(context, RegisterActivity.class);
-        i.putExtra(ApplicationKeys.USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
+        i.putExtra(ApplicationKeys.USER_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);

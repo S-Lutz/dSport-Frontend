@@ -16,15 +16,14 @@ import java.io.ByteArrayOutputStream;
 public class BitmapUtils {
 
 
-    public static String getStringFromBitmap(Bitmap bitmapPicture) {
-        final int COMPRESSION_QUALITY = 100;
-        String encodedImage;
-        ByteArrayOutputStream byteArrayBitmapStream = new ByteArrayOutputStream();
-        bitmapPicture.compress(Bitmap.CompressFormat.PNG, COMPRESSION_QUALITY,
-                byteArrayBitmapStream);
-        byte[] b = byteArrayBitmapStream.toByteArray();
-        encodedImage = Base64.encodeToString(b, Base64.DEFAULT);
-        return encodedImage;
+    public static String getStringFromBitmap(final Bitmap bitmapPicture) {
+
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmapPicture.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b=baos.toByteArray();
+        String temp=Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+
     }
 
     public static Bitmap getBitmapFromString(Context context, String stringPicture) {

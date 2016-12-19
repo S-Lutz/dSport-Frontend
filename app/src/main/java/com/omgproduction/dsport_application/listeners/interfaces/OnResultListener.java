@@ -15,7 +15,7 @@ public interface OnResultListener<T> {
     /**
      * This Method is called on Start of the Method... Its the first method which is called
      */
-    void onStart();
+    void onStartQuery();
 
     /**
      * This Method is called if the Query gets a good result
@@ -49,5 +49,5 @@ public interface OnResultListener<T> {
     /**
      * Called in EVERY Case the Method Finish... is Called before any other Method is called
      */
-    void onFinish();
+    void onFinishQuery();
 }

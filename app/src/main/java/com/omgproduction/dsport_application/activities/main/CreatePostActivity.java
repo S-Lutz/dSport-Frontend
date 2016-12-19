@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.controller.PostController;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
@@ -30,18 +31,14 @@ import org.w3c.dom.Text;
 public class CreatePostActivity extends AdvancedActivity {
 
     private String pinboardOwner;
-    private String postPicture;
 
     public static final int TEXT = 0;
     public static final int PICTURE = 1;
     public static final int GALLERY = 2;
     public static final String TYPE = "TYPE";
 
-    private static final int CAM_REQUEST = 1;
-    private static final int PIC_CROP = 2;
-    private static final int SELECT_PICTURE = 3;
-
     private int type;
+    private Bitmap postPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +47,12 @@ public class CreatePostActivity extends AdvancedActivity {
         setContentView(R.layout.activity_create_post);
         getIntentValues();
         findViewById(R.id.create_post_button).setOnClickListener(this);
+        findViewById(R.id.create_post_camera_button).setOnClickListener(this);
+        findViewById(R.id.create_post_gallery_button).setOnClickListener(this);
 
         UserController.getInstance().getLocalUser(this, new OnResultAdapter<User>() {
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -69,7 +68,7 @@ public class CreatePostActivity extends AdvancedActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -91,6 +90,12 @@ public class CreatePostActivity extends AdvancedActivity {
             case R.id.create_post_button:
                 savePost();
                 break;
+            case R.id.create_post_camera_button:
+                openCamera();
+                break;
+            case R.id.create_post_gallery_button:
+                openGallery();
+                break;
         }
     }
 
@@ -98,18 +103,17 @@ public class CreatePostActivity extends AdvancedActivity {
         final String text = ((EditText)findViewById(R.id.create_post_text)).getText().toString();
         final String title = ((EditText)findViewById(R.id.create_post_title)).getText().toString();
         String bmp;
-        try{
-            bmp = BitmapUtils.getStringFromBitmap(((BitmapDrawable)((ImageView)findViewById(R.id.create_post_post_picture)).getDrawable()).getBitmap());
-        }catch (NullPointerException e){
+        if(postPicture==null){
             bmp = "";
-            type = TEXT;
+        }else {
+            bmp = BitmapUtils.getStringFromBitmap(postPicture);
         }
         final String picture = bmp;
 
 
         UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 showProgressBar(true);
             }
 
@@ -118,7 +122,7 @@ public class CreatePostActivity extends AdvancedActivity {
                 pinboardOwner = (pinboardOwner==null)?user.getId():pinboardOwner;
                 PostController.getInstance().createPost(user.getId(), pinboardOwner,(type == TEXT)?"":picture,text,title, new OnResultAdapter<Void>(){
                     @Override
-                    public void onStart() {
+                    public void onStartQuery() {
                         showProgressBar(true);
                     }
 
@@ -130,7 +134,7 @@ public class CreatePostActivity extends AdvancedActivity {
 
                     @Override
                     public void onConnectionError(VolleyError e) {
-                        printError(R.id.activity_create_post, "e100", R.string.retry, new View.OnClickListener() {
+                        printError(R.id.activity_create_post, ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 savePost();
@@ -154,7 +158,7 @@ public class CreatePostActivity extends AdvancedActivity {
                     }
 
                     @Override
-                    public void onFinish() {
+                    public void onFinishQuery() {
                         showProgressBar(false);
                     }
                 });
@@ -167,81 +171,30 @@ public class CreatePostActivity extends AdvancedActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
     }
 
     public void getIntentValues() {
-        pinboardOwner = getIntent().getStringExtra(ApplicationKeys.OWNER_ID);
+        pinboardOwner = getIntent().getStringExtra(ApplicationKeys.POST_OWNER_ID);
         type = getIntent().getIntExtra(TYPE,TEXT);
 
         switch (type){
-            case TEXT:
-                postPicture = "";
-                break;
             case PICTURE:
-                capture();
+                openCamera();
                 break;
             case GALLERY:
-                gallery();
-        }
-    }
-    private void capture() {
-        try{
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
-        }catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.activity_create_post,"e5");
+                openGallery();
         }
     }
 
-    private void gallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.select_picture)), SELECT_PICTURE);
-    }
-    private void performCrop(Uri uri){
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(uri, "image/*");
-            cropIntent.putExtra("crop", "true");
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1080);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, PIC_CROP);
-        }
-        catch(ActivityNotFoundException e){
-            //display an error message
-            printError(R.id.activity_create_post,"e6");
-        }
-    }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            final Bundle extras = data.getExtras();
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
-
-                //TODO FIX QUALITY OF BITMAP
-                //temporaryOwnCrop(data.getData());
-                performCrop(data.getData());
-            }else if(requestCode == PIC_CROP){
-                //TODO FIX QUALITY OF BITMAP
-                Bitmap thePic = extras.getParcelable("data");
-                Log.e("PIC",String.valueOf(thePic.getHeight()));
-                Log.e("PIC",String.valueOf(thePic.getWidth()));
-                ((ImageView)findViewById(R.id.create_post_post_picture)).setImageBitmap(thePic);
-                findViewById(R.id.create_post_post_picture).setVisibility(View.VISIBLE);
-            }
-        }else{
-            onBackPressed();
-        }
+    protected void onBitmapResult(Bitmap bitmap) {
+        type = PICTURE;
+        postPicture = bitmap;
+        ((ImageView)findViewById(R.id.create_post_post_picture)).setImageBitmap(bitmap);
+        findViewById(R.id.create_post_post_picture).setVisibility(View.VISIBLE);
     }
 }

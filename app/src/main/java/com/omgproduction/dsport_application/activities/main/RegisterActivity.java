@@ -12,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.helper.WelcomeActivity;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
@@ -52,7 +53,7 @@ public class RegisterActivity extends AdvancedActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(ApplicationKeys.USERNAME))!=null){
+        if((username = i.getStringExtra(ApplicationKeys.USER_USERNAME))!=null){
             ((EditText)findViewById(R.id.register_username)).setText(username);
         }
     }
@@ -73,7 +74,7 @@ public class RegisterActivity extends AdvancedActivity {
 
     private void startLoginActivity(Context context){
         Intent i = new Intent(context, LoginActivity.class);
-        i.putExtra(ApplicationKeys.USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
+        i.putExtra(ApplicationKeys.USER_USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -98,48 +99,48 @@ public class RegisterActivity extends AdvancedActivity {
 
         //Check if Username is Empty. Show Error below the Input-Field
         if(username.trim().isEmpty()){
-            printInputError(R.id.register_layout_username,"e2");
+            printInputError(R.id.register_layout_username, ErrorCodes.FIELD_EMPTY);
             return;
         }
         //Check if Firstname is Empty. Show Error below the Input-Field
         if(firstname.trim().isEmpty()){
-            printInputError(R.id.register_layout_firstname,"e2");
+            printInputError(R.id.register_layout_firstname, ErrorCodes.FIELD_EMPTY);
             return;
         }
         //Check if Lastname is Empty. Show Error below the Input-Field
         if(lastname.trim().isEmpty()){
-            printInputError(R.id.register_layout_lastname,"e2");
+            printInputError(R.id.register_layout_lastname, ErrorCodes.FIELD_EMPTY);
             return;
         }
         //Check if Email is Empty. Show Error below the Input-Field
         if(email.trim().isEmpty()) {
-            printInputError(R.id.register_layout_email, "e2");
+            printInputError(R.id.register_layout_email,  ErrorCodes.FIELD_EMPTY);
             return;
         }
         //Check if Password 1 is Empty. Show Error below the Input-Field
         if(password_1.trim().isEmpty()){
-            printInputError(R.id.register_layout_password,"e2");
+            printInputError(R.id.register_layout_password, ErrorCodes.FIELD_EMPTY);
             return;
         }
         //Check if Password 2 is Empty. Show Error below the Input-Field
         if(password_2.trim().isEmpty()){
-            printInputError(R.id.register_layout_password_confirm,"e2");
+            printInputError(R.id.register_layout_password_confirm, ErrorCodes.FIELD_EMPTY);
             return;
         }
         //Check if Password 1 equals Password 2. Show Error below the Input-Field
         if(!password_1.equals(password_2)){
-            printInputError(R.id.register_layout_password,"e1");
-            printInputError(R.id.register_layout_password_confirm,"e1");
+            printInputError(R.id.register_layout_password, ErrorCodes.FIELD_EMPTY);
+            printInputError(R.id.register_layout_password_confirm, ErrorCodes.FIELD_EMPTY);
             return;
         }
         //Check if AGB is Accepted. Show Error in Snackbar
         if(!accepted){
-            printError(R.id.register_layout,"e4");
+            printError(R.id.register_layout,ErrorCodes.ACCEPT_AGB);
             return;
         }
         //Check if Email is valid. Show Error below the Input-Field
         if(!StringUtils.isValidEmail(email)){
-            printInputError(R.id.register_layout_email,"e3");
+            printInputError(R.id.register_layout_email,ErrorCodes.INVALID_EMAIl);
             return;
         }
 
@@ -149,7 +150,7 @@ public class RegisterActivity extends AdvancedActivity {
         //Process Registration with Backend-Server
         SessionController.getInstance().registerUser(username, firstname, lastname, email, password_1, new OnResultAdapter<String>(){
             @Override
-            public void onStart() {
+            public void onStartQuery() {
                 removeAllErrors();
             }
 
@@ -160,7 +161,7 @@ public class RegisterActivity extends AdvancedActivity {
 
             @Override
             public void onConnectionError(VolleyError e) {
-                printError(R.id.register_layout,"e100", R.string.retry, new View.OnClickListener() {
+                printError(R.id.register_layout,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //On Click Retry, retry Register
@@ -175,14 +176,14 @@ public class RegisterActivity extends AdvancedActivity {
                     case "e301": printInputError(R.id.register_layout_username,errorCode); break;
                     case "e302": printInputError(R.id.register_layout_email,errorCode); break;
                     //On any other Error print Universal-Error e0
-                    default: printError(R.id.register_layout,"e0");
+                    default: printError(R.id.register_layout,ErrorCodes.SOMETHING_WENT_WRONG);
                 }
             }
 
             @Override
             public void onJSONException(JSONException e) {
                 e.printStackTrace();
-                printError(R.id.register_layout,"e0");
+                printError(R.id.register_layout,ErrorCodes.SOMETHING_WENT_WRONG);
             }
 
             @Override
@@ -191,7 +192,7 @@ public class RegisterActivity extends AdvancedActivity {
             }
 
             @Override
-            public void onFinish() {
+            public void onFinishQuery() {
                 showProgressBar(false);
             }
         });
@@ -199,7 +200,7 @@ public class RegisterActivity extends AdvancedActivity {
 
     private void startWelcomeActivity(String username) {
         Intent i = new Intent(this, WelcomeActivity.class);
-        i.putExtra(ApplicationKeys.USERNAME,username);
+        i.putExtra(ApplicationKeys.USER_USERNAME,username);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

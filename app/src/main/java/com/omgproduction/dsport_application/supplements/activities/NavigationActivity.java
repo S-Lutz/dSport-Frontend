@@ -21,6 +21,9 @@ import com.omgproduction.dsport_application.activities.main.ProfileActivity;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
+import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.util.ArrayList;
@@ -126,11 +129,23 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
     }
 
     public void updateNavigationValues() {
-        View headerLayout =
+        final View headerLayout =
                 navigationView.getHeaderView(0);
-        ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(Preferences.getInstance(this).getStringDetail(ApplicationKeys.USERNAME,getString(R.string.empty)));
-        ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(Preferences.getInstance(this).getStringDetail(ApplicationKeys.EMAIL,getString(R.string.empty)));
-        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(this,Preferences.getInstance(this).getStringDetail(ApplicationKeys.PICTURE,getString(R.string.empty))));
+
+        UserController.getInstance().getLocalUser(this, new OnResultAdapter<User>(){
+            @Override
+            public void onSuccess(User user) {
+                ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(user.getUsername());
+                ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(user.getEmail());
+                ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(user.getBitmap(NavigationActivity.this));
+            }
+
+            @Override
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(NavigationActivity.this);
+            }
+        });
+
     }
 
     @Override

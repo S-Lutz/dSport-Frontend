@@ -32,16 +32,16 @@ public class UserController {
 
     public void saveUserDetail(final Context context, final String key, final String value, final OnResultListener<String> listener){
 
-        listener.onStart();
+        listener.onStartQuery();
         String userID = Preferences.getInstance(context)
-                .getStringDetail(ApplicationKeys.USER_ID,"");
+                .getStringDetail(ApplicationKeys.USER_USER_ID,"");
 
         if(!userID.trim().isEmpty()){
             JSONRequest request = new JSONRequest(BackendConfig.EDIT_USER)
                     .errorListener(new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            listener.onFinish();
+                            listener.onFinishQuery();
                             listener.onConnectionError(volleyError);
                         }
                     })
@@ -49,10 +49,10 @@ public class UserController {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
                             if(ConnectionUtils.Success(jsonObject)){
-                                listener.onFinish();
+                                listener.onFinishQuery();
                                 try {
                                     String value = "";
-                                    if(!key.equals(ApplicationKeys.PASSWORD)){
+                                    if(!key.equals(ApplicationKeys.USER_PASSWORD)){
                                         value = ConnectionUtils.extractJSONValue(jsonObject).getString(key);
                                     }
                                     update(context,key,value);
@@ -65,11 +65,11 @@ public class UserController {
                             }
                         }
                     })
-                    .param(ApplicationKeys.USER_ID, userID)
+                    .param(ApplicationKeys.USER_USER_ID, userID)
                     .param(key,value);
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
-            listener.onFinish();
+            listener.onFinishQuery();
             listener.onUserNotFound();
         }
 
@@ -77,18 +77,18 @@ public class UserController {
 
     public void getGlobalUser(final Context context, final OnResultListener<User> listener){
 
-        listener.onStart();
+        listener.onStartQuery();
 
         String userID = Preferences.getInstance(context)
-                .getStringDetail(ApplicationKeys.USER_ID,"");
+                .getStringDetail(ApplicationKeys.USER_USER_ID,"");
 
         if(!userID.trim().isEmpty()){
             JSONRequest request = new JSONRequest(BackendConfig.GET_USER)
-                    .param(ApplicationKeys.USER_ID,userID)
+                    .param(ApplicationKeys.USER_USER_ID,userID)
                     .responseListener(new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject jsonObject) {
-                            listener.onFinish();
+                            listener.onFinishQuery();
                             if(ConnectionUtils.Success(jsonObject)){
                                 JSONObject jsonUser = ConnectionUtils.extractJSONValue(jsonObject);
                                 User user = null;
@@ -108,14 +108,14 @@ public class UserController {
                     .errorListener(new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            listener.onFinish();
+                            listener.onFinishQuery();
                             listener.onConnectionError(volleyError);
                         }
                     });
 
             ApplicationController.getInstance().addToRequestQueue(request.build());
         }else{
-            listener.onFinish();
+            listener.onFinishQuery();
             listener.onUserNotFound();
         }
 
@@ -123,23 +123,37 @@ public class UserController {
 
     public void getLocalUser(final Context context, final OnResultListener<User> listener){
 
-        listener.onStart();
-        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,"");
+        listener.onStartQuery();
+        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USER_ID,"");
         if(!userID.trim().isEmpty()){
             User user = new User(
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_ID,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USERNAME,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.EMAIL,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.PICTURE,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.FIRSTNAME,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.LASTNAME,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.CREATED,""),
-                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.AGB_VERSION,"")
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USER_ID,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USERNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_EMAIL,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_PICTURE,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_FIRSTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_LASTNAME,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_CREATED,""),
+                    Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_AGBVERSION,"")
             );
-            listener.onFinish();
+            listener.onFinishQuery();
             listener.onSuccess(user);
         }else{
-            listener.onFinish();
+            listener.onFinishQuery();
+            listener.onUserNotFound();
+        }
+
+    }
+
+    public void getLocalUserID(final Context context, final OnResultListener<String> listener){
+
+        listener.onStartQuery();
+        String userID = Preferences.getInstance(context).getStringDetail(ApplicationKeys.USER_USER_ID,"");
+        if(!userID.trim().isEmpty()){
+            listener.onFinishQuery();
+            listener.onSuccess(userID);
+        }else{
+            listener.onFinishQuery();
             listener.onUserNotFound();
         }
 
