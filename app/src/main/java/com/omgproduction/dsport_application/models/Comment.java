@@ -3,6 +3,8 @@ package com.omgproduction.dsport_application.models;
 import android.content.Context;
 import android.graphics.Bitmap;
 
+import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.controller.ApplicationController;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.io.Serializable;
@@ -14,8 +16,9 @@ import java.io.Serializable;
 public class Comment implements Serializable{
 
     private String comment_id,username , userid, commentPicture, text, created, likeCount;
+    private boolean liked;
 
-    public Comment(String comment_id, String username, String userid, String commentPicture, String text, String created, String likeCount) {
+    public Comment(String comment_id, String username, String userid, String commentPicture, String text, String created, String likeCount, boolean liked) {
         this.username = username;
         this.userid = userid;
         this.commentPicture = commentPicture;
@@ -23,6 +26,7 @@ public class Comment implements Serializable{
         this.created = created;
         this.likeCount = likeCount;
         this.comment_id = comment_id;
+        this.liked = liked;
     }
 
     public String getUsername() {
@@ -59,5 +63,30 @@ public class Comment implements Serializable{
             return null;
         }
         return BitmapUtils.getBitmapFromString(context, commentPicture);
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public void setLikeCount(String likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public String getLikeString() {
+        StringBuilder sb = new StringBuilder();
+        int likes = Integer.parseInt(getLikeCount());
+        if(isLiked()){
+            String youPlus = ApplicationController.getInstance().getApplicationContext().getResources().getString(R.string.you_plus);
+            sb.append(youPlus);
+            sb.append(" ");
+            likes = likes-1;
+        }
+        sb.append(likes);
+        return sb.toString();
     }
 }

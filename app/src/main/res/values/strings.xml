@@ -61,4 +61,6 @@
     <string name="new_comment">New Comment</string>
     <string name="likes">Likes</string>
 
+    <string name="you_plus">You + </string>
+
 </resources>

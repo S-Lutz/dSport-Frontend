@@ -27,6 +27,7 @@ import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Like;
+import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
@@ -66,7 +67,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
 
         setText(R.id.post_detail_title,post.getTitle());
         setText(R.id.post_detail_comment_count,post.getCommentCount());
-        setText(R.id.post_detail_like_count,post.getLikeCount());
+        setText(R.id.post_detail_like_count,post.getLikeString());
         setText(R.id.post_detail_share_count,post.getShareCount());
         setText(R.id.post_detail_username,post.getUsername());
         setText(R.id.post_detail_text,post.getText());
@@ -104,38 +105,48 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
     }
 
     private void update() {
-        PostController.getInstance().getAllComments(PostDetailActivity.this, post.getPost_id(), PostDetailActivity.this);
-        PostController.getInstance().getPostDetail(post.getPost_id(), new OnResultAdapter<Post>(){
+        UserController.getInstance().getLocalUserID(this,new OnResultAdapter<String>(){
             @Override
-            public void onStartQuery() {
-                refresher.setRefreshing(true);
+            public void onSuccess(String localUserID) {
+                PostController.getInstance().getPostDetail(localUserID, post.getPost_id(), new OnResultAdapter<Post>(){
+                    @Override
+                    public void onStartQuery() {
+                        refresher.setRefreshing(true);
+                    }
+
+                    @Override
+                    public void onSuccess(Post result) {
+                        post = result;
+                        setPostValues(post);
+                    }
+                    @Override
+                    public void onConnectionError(VolleyError e) {
+                        e.printStackTrace();
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
+                    }
+
+                    @Override
+                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
+
+                    @Override
+                    public void onJSONException(JSONException e) {
+                        e.printStackTrace();
+                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
+                    }
+
+                    @Override
+                    public void onFinishQuery() {
+                        refresher.setRefreshing(false);
+                    }
+                });
             }
 
             @Override
-            public void onSuccess(Post result) {
-                post = result;
-                setPostValues(post);
-            }
-            @Override
-            public void onConnectionError(VolleyError e) {
-                e.printStackTrace();
-                printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
-            }
-
-            @Override
-            public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
-
-            @Override
-            public void onJSONException(JSONException e) {
-                e.printStackTrace();
-                printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
-            }
-
-            @Override
-            public void onFinishQuery() {
-                refresher.setRefreshing(false);
+            public void onUserNotFound() {
+                SessionController.getInstance().logout(PostDetailActivity.this);
             }
         });
+        PostController.getInstance().getAllComments(PostDetailActivity.this, post.getPost_id(), PostDetailActivity.this);
     }
 
     private void loadLikes(){
@@ -403,10 +414,11 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
         UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>(){
             @Override
             public void onSuccess(String result) {
-                PostController.getInstance().likePost(result, post.getPost_id(), new OnResultAdapter<Void>(){
+                PostController.getInstance().likePost(result, post.getPost_id(), new OnResultAdapter<LikeResult>(){
                     @Override
-                    public void onSuccess(Void result) {
-                        //TODO Vermeide mehrfach like
+                    public void onSuccess(LikeResult result) {
+                        post.setLiked(result.isLiked());
+                        post.setLikeCount(result.getLikeCount());
                         update();
                     }
                     @Override
@@ -476,16 +488,17 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
     }
 
     @Override
-    public void onLikeComment(final Comment comment) {
+    public void onLikeComment(final Comment comment, final CommentAdapter.CommentViewHolder holder) {
         UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>(){
             @Override
             public void onSuccess(String result) {
-                PostController.getInstance().likeComment(result, comment.getComment_id(), new OnResultAdapter<Void>(){
+                PostController.getInstance().likeComment(result, comment.getComment_id(), new OnResultAdapter<LikeResult>(){
 
                     @Override
-                    public void onSuccess(Void result) {
-                        //TODO Verhindere mehrfach Like
-                        update();
+                    public void onSuccess(LikeResult result) {
+                        comment.setLiked(result.isLiked());
+                        comment.setLikeCount(result.getLikeCount());
+                        holder.getTv_likes().setText(comment.getLikeString());
                     }
 
                     @Override

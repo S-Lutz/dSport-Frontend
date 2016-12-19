@@ -28,6 +28,7 @@ import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.NotificationReceiver;
@@ -138,15 +139,17 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     }
 
     @Override
-    public void onPostLike(PostAdapter.PostViewHolder holder, final Post p) {
+    public void onPostLike(final PostAdapter.PostViewHolder holder, final Post p) {
         Log.e("POST","Like");
         UserController.getInstance().getLocalUserID(getContext(), new OnResultAdapter<String>(){
             @Override
             public void onSuccess(String result) {
-                PostController.getInstance().likePost(result, p.getPost_id(), new OnResultAdapter<Void>(){
+                PostController.getInstance().likePost(result, p.getPost_id(), new OnResultAdapter<LikeResult>(){
                     @Override
-                    public void onSuccess(Void result) {
-                        update();
+                    public void onSuccess(LikeResult result) {
+                        p.setLiked(result.isLiked());
+                        p.setLikeCount(result.getLikeCount());
+                        holder.getTv_likes().setText(p.getLikeString());
                     }
 
                     @Override

@@ -49,6 +49,7 @@ public class ApplicationKeys {
     public static final String POST_OWNER_ID = "owner_id";
     public static final String POST_POST_ID = "post_id";
     public static final String POST_TITLE = "title";
+    public static final String POST_LIKED = "liked";
 
     public static final String COMMENTS = "comments";
     public static final String COMMENT_TEXT = "text";
@@ -56,6 +57,7 @@ public class ApplicationKeys {
     public static final String COMMENT_PICTURE = "comment_picture";
     public static final String COMMENT_ID = "comment_id";
     public static final String COMMENT_LIKECOUNT = "likecount";
+    public static final String COMMENT_LIKED = "liked";
 
     public static final String LIKES = "likes";
 

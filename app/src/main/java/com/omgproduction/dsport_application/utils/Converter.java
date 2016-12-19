@@ -1,8 +1,11 @@
 package com.omgproduction.dsport_application.utils;
 
+import android.app.IntentService;
+
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Like;
+import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
 
@@ -40,7 +43,8 @@ public class Converter {
                 jsonPost.getString(ApplicationKeys.POST_CREATED),
                 jsonPost.getString(ApplicationKeys.POST_LIKECOUNT),
                 jsonPost.getString(ApplicationKeys.POST_COMMENTCOUNT),
-                jsonPost.getString(ApplicationKeys.POST_SHARECOUNT)
+                jsonPost.getString(ApplicationKeys.POST_SHARECOUNT),
+                Integer.parseInt(jsonPost.getString(ApplicationKeys.POST_LIKED))==1
         );
         return post;
     }
@@ -61,7 +65,8 @@ public class Converter {
                 jsonComment.getString(ApplicationKeys.COMMENT_PICTURE),
                 jsonComment.getString(ApplicationKeys.COMMENT_TEXT),
                 jsonComment.getString(ApplicationKeys.COMMENT_CREATED),
-                jsonComment.getString(ApplicationKeys.COMMENT_LIKECOUNT)
+                jsonComment.getString(ApplicationKeys.COMMENT_LIKECOUNT),
+                Integer.parseInt(jsonComment.getString(ApplicationKeys.COMMENT_LIKED))==1
         );
         return comment;
     }
@@ -107,5 +112,19 @@ public class Converter {
                 jsonLike.getString(ApplicationKeys.USER_USER_ID),
                 jsonLike.getString(ApplicationKeys.USER_USERNAME));
         return like;
+    }
+
+    public static LikeResult convertPostLikeResult(JSONObject jsonLikeResult) throws JSONException {
+        LikeResult likeResult = new LikeResult(
+                Integer.parseInt(jsonLikeResult.getString(ApplicationKeys.POST_LIKED))==1,
+                jsonLikeResult.getString(ApplicationKeys.POST_LIKECOUNT));
+        return likeResult;
+    }
+
+    public static LikeResult convertCommentLikeResult(JSONObject jsonLikeResult) throws JSONException {
+        LikeResult likeResult = new LikeResult(
+                Integer.parseInt(jsonLikeResult.getString(ApplicationKeys.COMMENT_LIKED))==1,
+                jsonLikeResult.getString(ApplicationKeys.COMMENT_LIKECOUNT));
+        return likeResult;
     }
 }
