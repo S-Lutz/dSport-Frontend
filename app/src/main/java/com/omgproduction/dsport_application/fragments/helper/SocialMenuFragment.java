@@ -37,12 +37,14 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
         // Required empty public constructor
     }
 
+    public View inflateView(LayoutInflater inflater, ViewGroup container){
+        return inflater.inflate(R.layout.fragment_floating_menu_social,container,false);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_floating_menu_social,container,false);
-
+        View v = inflateView(inflater,container);
         camera = (FloatingActionButton) v.findViewById(R.id.social_fab_picture);
         gallery = (FloatingActionButton) v.findViewById(R.id.social_fab_gallery);
         exercise_unit = (FloatingActionButton) v.findViewById(R.id.social_fab_exercise_unit);
@@ -183,5 +185,57 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
 
     public boolean isOpened() {
         return opened;
+    }
+
+    public FloatingActionButton getCamera() {
+        return camera;
+    }
+
+    public void setCamera(FloatingActionButton camera) {
+        this.camera = camera;
+    }
+
+    public FloatingActionButton getGallery() {
+        return gallery;
+    }
+
+    public void setGallery(FloatingActionButton gallery) {
+        this.gallery = gallery;
+    }
+
+    public FloatingActionButton getExercise_unit() {
+        return exercise_unit;
+    }
+
+    public void setExercise_unit(FloatingActionButton exercise_unit) {
+        this.exercise_unit = exercise_unit;
+    }
+
+    public FloatingActionButton getEvent() {
+        return event;
+    }
+
+    public void setEvent(FloatingActionButton event) {
+        this.event = event;
+    }
+
+    public FloatingActionButton getText() {
+        return text;
+    }
+
+    public void setText(FloatingActionButton text) {
+        this.text = text;
+    }
+
+    public FloatingActionButton getRootFab() {
+        return rootFab;
+    }
+
+    public String getPinboardOwner() {
+        return pinboardOwner;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
     }
 }

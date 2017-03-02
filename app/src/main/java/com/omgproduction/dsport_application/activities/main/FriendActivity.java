@@ -2,38 +2,39 @@ package com.omgproduction.dsport_application.activities.main;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SearchViewCompat;
+import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
-import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
-import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
+import com.omgproduction.dsport_application.fragments.helper.FriendMenuFragment;
+import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.ChatFragment;
 import com.omgproduction.dsport_application.fragments.main.EventFragment;
 import com.omgproduction.dsport_application.fragments.main.ExerciseUnitFragment;
-import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.fragments.users.UserFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
+import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
 
-
-public class MainActivity extends NavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
+public class FriendActivity  extends NavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
-    private SocialMenuFragment socialMenuFragment;
+    private SearchUser friend;
+    private FriendMenuFragment friendMenuFragment;
 
     @Override
     protected int onSetContentView(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        friend = (SearchUser) getIntent().getSerializableExtra(ApplicationKeys.FRIEND_FRIEND);
 
         ((SearchView)findViewById(R.id.toolbar_search)).setOnQueryTextListener(this);
         buildTabViewer();
@@ -54,24 +57,13 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
 
         findViewById(R.id.options_fab).setOnClickListener(this);
 
-        socialMenuFragment = new SocialMenuFragment();
-        socialMenuFragment.setRootFab((FloatingActionButton) findViewById(R.id.options_fab));
-
-        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
-            @Override
-            public void onSuccess(User result) {
-                socialMenuFragment.setPinboardOwner(result.getId());
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(MainActivity.this);
-            }
-        });
+        friendMenuFragment = new FriendMenuFragment();
+        friendMenuFragment.setRootFab((FloatingActionButton) findViewById(R.id.options_fab));
+        friendMenuFragment.setUser(friend);
 
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fab_menu_container, socialMenuFragment).commit();
+                .add(R.id.fab_menu_container, friendMenuFragment).commit();
 
     }
 
@@ -80,15 +72,11 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
         SocialFragment socialFragment = new SocialFragment();
-        ExerciseUnitFragment exerciseUnitFragment = new ExerciseUnitFragment();
-        EventFragment eventFragment = new EventFragment();
-        ChatFragment chatFragment = new ChatFragment();
+        UserFragment userFragment = new UserFragment();
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragments(socialFragment,getString(R.string.social));
-        viewPagerAdapter.addFragments(exerciseUnitFragment,getString(R.string.exercise_units));
-        viewPagerAdapter.addFragments(eventFragment,getString(R.string.events));
-        viewPagerAdapter.addFragments(chatFragment,getString(R.string.chats));
+        viewPagerAdapter.addFragments(socialFragment,getString(R.string.nav_pinboard));
+        viewPagerAdapter.addFragments(userFragment,getString(R.string.nav_profile));
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -105,7 +93,7 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
     }
 
     private void setTabIcons() {
-        TypedArray icons = getResources().obtainTypedArray(R.array.tab_icons);
+        TypedArray icons = getResources().obtainTypedArray(R.array.user_activity_icons);
         // get resource ID by index
         for (int l = 0; l < icons.length(); l++) {
             tabLayout.getTabAt(l).setText("");
@@ -115,7 +103,7 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
 
     @Override
     public boolean onBackPressedAfterNavigationClosed() {
-        if(socialMenuFragment.isOpened()){
+        if(friendMenuFragment.isOpened()){
             showFABMenu(false);
             return false;
         }else if (viewPager.getCurrentItem() == 0) {
@@ -135,24 +123,24 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.options_fab:
-                showFABMenu(!socialMenuFragment.isOpened());
+                showFABMenu(!friendMenuFragment.isOpened());
                 break;
         }
     }
 
     private void showFABMenu(boolean flag) {
         if(flag){
-            if(!socialMenuFragment.isOpened()){
+            if(!friendMenuFragment.isOpened()){
                 switch (viewPager.getCurrentItem()){
-                    case 0 : showFABMenu(socialMenuFragment,true);
+                    case 0 : showFABMenu(friendMenuFragment,true);
                         break;
                 }
             }
         }else{
-            if(socialMenuFragment.isOpened()) {
+            if(friendMenuFragment.isOpened()) {
                 switch (viewPager.getCurrentItem()) {
                     case 0:
-                        showFABMenu(socialMenuFragment, false);
+                        showFABMenu(friendMenuFragment, false);
                         break;
                 }
             }

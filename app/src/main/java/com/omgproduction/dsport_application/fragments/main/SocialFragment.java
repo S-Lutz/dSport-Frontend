@@ -238,4 +238,6 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
         refresher.setRefreshing(false);
     }
 
+
+
 }

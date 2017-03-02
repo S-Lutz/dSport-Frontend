@@ -1,16 +1,21 @@
 package com.omgproduction.dsport_application.utils;
 
-import android.app.IntentService;
-
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.holder.SearchResultHolder;
 import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
+import com.omgproduction.dsport_application.models.SearchEvent;
+import com.omgproduction.dsport_application.models.SearchStudio;
+import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.models.User;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by Florian Herborn on 16.11.2016.
@@ -126,5 +131,49 @@ public class Converter {
                 Integer.parseInt(jsonLikeResult.getString(ApplicationKeys.COMMENT_LIKED))==1,
                 jsonLikeResult.getString(ApplicationKeys.COMMENT_LIKECOUNT));
         return likeResult;
+    }
+
+    public static SearchResultHolder convertSearchResult(JSONObject jsonObject) throws JSONException  {
+        JSONArray userList = jsonObject.getJSONArray(ApplicationKeys.USERS);
+        JSONArray eventList = jsonObject.getJSONArray(ApplicationKeys.EVENTS);
+        JSONArray studioList = jsonObject.getJSONArray(ApplicationKeys.STUDIOS);
+
+        ArrayList<SearchUser> users = new ArrayList<>();
+        for(int i = 0; i< userList.length(); i++){
+            users.add(convertSearchUser(userList.getJSONObject(i)));
+        }
+        ArrayList<SearchEvent> events = new ArrayList<>();
+        for(int i = 0; i< eventList.length(); i++){
+            events.add(convertSearchEvent(eventList.getJSONObject(i)));
+        }
+        ArrayList<SearchStudio> studios = new ArrayList<>();
+        for(int i = 0; i< studioList.length(); i++){
+            studios.add(convertSearchStudio(studioList.getJSONObject(i)));
+        }
+
+        return new SearchResultHolder(users,events,studios);
+    }
+
+    private static SearchStudio convertSearchStudio(JSONObject jsonSearchStudio)  throws JSONException  {
+        return new SearchStudio();
+    }
+
+    private static SearchEvent convertSearchEvent(JSONObject jsonSearchEvent)  throws JSONException  {
+        return new SearchEvent();
+    }
+
+    private static SearchUser convertSearchUser(JSONObject jsonSearchUser)  throws JSONException {
+        SearchUser user = new SearchUser(
+                jsonSearchUser.getString(ApplicationKeys.USER_USER_ID),
+                jsonSearchUser.getString(ApplicationKeys.USER_USERNAME),
+                jsonSearchUser.getString(ApplicationKeys.USER_PICTURE),
+                jsonSearchUser.getString(ApplicationKeys.USER_FIRSTNAME),
+                jsonSearchUser.getString(ApplicationKeys.USER_LASTNAME),
+                Integer.parseInt(jsonSearchUser.getString(ApplicationKeys.FRIEND_FRIEND))==1,
+                Integer.parseInt(jsonSearchUser.getString(ApplicationKeys.FRIEND_REQUEST_RECEIVED))==1,
+                Integer.parseInt(jsonSearchUser.getString(ApplicationKeys.FRIEND_REQUEST_SENDED))==1
+
+        );
+        return user;
     }
 }

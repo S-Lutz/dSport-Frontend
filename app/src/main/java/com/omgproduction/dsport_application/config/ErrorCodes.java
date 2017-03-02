@@ -21,6 +21,7 @@ public class ErrorCodes {
     public static final String EMAIL_ALREADY_EXISTS = "e302";
     public static final String USERNAME_OR_PASSWORD_WRONG = "e303";
     public static final String USER_NOT_FOUND = "e304";
+    public static final String NOT_A_FRIEND = "e305";
 
     public static final String BACKEND_SOMETHING_WENT_WRONG = "e599";
 }
