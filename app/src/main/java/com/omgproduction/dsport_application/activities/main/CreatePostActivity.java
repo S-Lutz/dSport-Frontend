@@ -1,13 +1,7 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,15 +14,11 @@ import com.omgproduction.dsport_application.controller.PostController;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
-import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
-import org.json.JSONException;
-import org.w3c.dom.Text;
-
-public class CreatePostActivity extends AdvancedActivity {
+public class CreatePostActivity extends AbstractFragmentActivity {
 
     private String pinboardOwner;
 
@@ -44,7 +34,7 @@ public class CreatePostActivity extends AdvancedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_create_post);
+        setContentView(R.layout.layout_activity_create_post);
         getIntentValues();
         findViewById(R.id.create_post_button).setOnClickListener(this);
         findViewById(R.id.create_post_camera_button).setOnClickListener(this);

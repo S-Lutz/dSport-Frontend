@@ -1,18 +1,13 @@
 package com.omgproduction.dsport_application.utils;
 
 import android.content.Context;
-import android.util.Log;
 
-import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.config.BackendConfig;
+import com.omgproduction.dsport_application.config.Routes;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -27,7 +22,7 @@ public class DateUtils {
             Calendar currentCalendar = Calendar.getInstance();
             currentCalendar.setTime(currentDate);
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat(BackendConfig.DATE_FORMAT);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Routes.DATE_FORMAT);
             Date postDate = dateFormat.parse(dateString);
             Calendar postCalendar = Calendar.getInstance();
             postCalendar.setTime(postDate);
@@ -47,7 +42,7 @@ public class DateUtils {
             currentCalendar.setTime(currentDate);
 
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat(BackendConfig.DATE_FORMAT);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(Routes.DATE_FORMAT);
             Date postDate = dateFormat.parse(dateString);
             Calendar postCalendar = Calendar.getInstance();
             postCalendar.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));

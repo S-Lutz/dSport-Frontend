@@ -22,7 +22,7 @@ import com.omgproduction.dsport_application.R;
  * Created by Florian on 06.11.2016.
  */
 
-public abstract class AdvancedAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     protected SwipeRefreshLayout refresher;
     private static final int CAM_REQUEST = 1;

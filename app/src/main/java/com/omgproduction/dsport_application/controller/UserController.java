@@ -7,7 +7,7 @@ import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.BackendConfig;
+import com.omgproduction.dsport_application.config.Routes;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.ConnectionUtils;
@@ -37,7 +37,7 @@ public class UserController {
                 .getStringDetail(ApplicationKeys.USER_USER_ID,"");
 
         if(!userID.trim().isEmpty()){
-            JSONRequest request = new JSONRequest(BackendConfig.EDIT_USER)
+            JSONRequest request = new JSONRequest(Routes.EDIT_USER)
                     .errorListener(new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
@@ -83,7 +83,7 @@ public class UserController {
                 .getStringDetail(ApplicationKeys.USER_USER_ID,"");
 
         if(!userID.trim().isEmpty()){
-            JSONRequest request = new JSONRequest(BackendConfig.GET_USER)
+            JSONRequest request = new JSONRequest(Routes.GET_USER)
                     .param(ApplicationKeys.USER_USER_ID,userID)
                     .responseListener(new Response.Listener<JSONObject>() {
                         @Override

@@ -20,10 +20,10 @@ import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 
-public class MainActivity extends NavigationActivity implements TabLayout.OnTabSelectedListener{
+public class MainActivity extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -32,7 +32,7 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
 
     @Override
     protected int onSetContentView(Bundle savedInstanceState) {
-        return R.layout.activity_main;
+        return R.layout.layout_activity_main;
     }
 
     @Override

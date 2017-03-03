@@ -1,9 +1,7 @@
 package com.omgproduction.dsport_application.adapters;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.controller.ApplicationController;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.utils.DateUtils;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -43,7 +38,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_layout,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_post,parent,false);
         PostViewHolder viewHolder = new PostViewHolder(view);
         return viewHolder;
     }

@@ -1,17 +1,11 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +22,7 @@ import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
 import com.omgproduction.dsport_application.utils.Transitions;
@@ -36,7 +30,7 @@ import com.omgproduction.dsport_application.utils.Transitions;
 import org.json.JSONException;
 
 
-public class ProfileActivity extends NavigationActivity{
+public class ProfileActivity extends AbstractNavigationActivity {
 
     private FloatingActionButton fabEdit, fabGallery, fabCamera;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise, fabOpenBig;
@@ -52,7 +46,7 @@ public class ProfileActivity extends NavigationActivity{
     @Override
     protected int onSetContentView(Bundle savedInstanceState) {
 
-        return R.layout.activity_profile;
+        return R.layout.layout_activity_profile;
     }
 
     @Override

@@ -14,7 +14,7 @@ import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 
 import org.json.JSONObject;
 
@@ -25,7 +25,7 @@ import org.json.JSONObject;
  * Activity to Login the User
  * Login with username and Password
  */
-public class LoginActivity extends AdvancedActivity {
+public class LoginActivity extends AbstractFragmentActivity {
 
     //Activity-Context
     private Context context;
@@ -33,7 +33,7 @@ public class LoginActivity extends AdvancedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.layout_activity_login);
 
         setRefresher((SwipeRefreshLayout)findViewById(R.id.login_refresher));
 

@@ -32,7 +32,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
 
     @Override
     public LikeAdapter.LikeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.like_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_like, parent, false);
         LikeAdapter.LikeViewHolder viewHolder = new LikeAdapter.LikeViewHolder(view);
         return viewHolder;
     }

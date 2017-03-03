@@ -41,7 +41,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_floating_menu_social,container,false);
+        View v = inflater.inflate(R.layout.layout_fragment_floating_menu_social,container,false);
 
         camera = (FloatingActionButton) v.findViewById(R.id.social_fab_picture);
         gallery = (FloatingActionButton) v.findViewById(R.id.social_fab_gallery);

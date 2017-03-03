@@ -39,7 +39,7 @@ import static java.security.AccessController.getContext;
 /**
  * Created by Florian on 21.10.2016.
  */
-public abstract class AdvancedActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public abstract class AbstractFragmentActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     protected SwipeRefreshLayout refresher;
     private static final int CAMERA_REQUEST_CODE = 1;

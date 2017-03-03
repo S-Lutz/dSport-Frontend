@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Keep;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -32,8 +31,7 @@ import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.NotificationReceiver;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedFragment;
-import com.omgproduction.dsport_application.utils.Converter;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragment;
 
 import org.json.JSONException;
 
@@ -41,7 +39,7 @@ import java.util.ArrayList;
 
 
 
-public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayout.OnRefreshListener, PostAdapter.OnPostClickedListener, OnResultListener<ArrayList<Post>>{
+public class SocialFragment extends AbstractFragment implements SwipeRefreshLayout.OnRefreshListener, PostAdapter.OnPostClickedListener, OnResultListener<ArrayList<Post>>{
 
     private RecyclerView postsRecyler;
     private PostAdapter adapter;
@@ -73,7 +71,7 @@ public class SocialFragment extends AdvancedFragment implements SwipeRefreshLayo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_social, container, false);
+        final View view = inflater.inflate(R.layout.layout_fragment_social, container, false);
         refresher = (SwipeRefreshLayout) view.findViewById(R.id.social_refresher);
         refresher.setOnRefreshListener(this);
 

@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedFragment;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragment;
 
-public class ChatFragment extends AdvancedFragment{
+public class ChatFragment extends AbstractFragment {
     public ChatFragment() {
         // Required empty public constructor
     }
@@ -16,7 +16,7 @@ public class ChatFragment extends AdvancedFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_chat, container, false);
+        return inflater.inflate(R.layout.layout_fragment_chat, container, false);
     }
 
 

@@ -18,13 +18,10 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.MainActivity;
 import com.omgproduction.dsport_application.activities.main.PinboardActivity;
 import com.omgproduction.dsport_application.activities.main.ProfileActivity;
-import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.util.ArrayList;
 
@@ -32,7 +29,7 @@ import java.util.ArrayList;
  * Created by Florian on 06.11.2016.
  */
 
-public abstract class NavigationActivity extends AdvancedAppCompatActivity
+public abstract class AbstractNavigationActivity extends AbstractAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener  {
 
     protected Context context;
@@ -137,12 +134,12 @@ public abstract class NavigationActivity extends AdvancedAppCompatActivity
             public void onSuccess(User user) {
                 ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(user.getUsername());
                 ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(user.getEmail());
-                ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(user.getBitmap(NavigationActivity.this));
+                ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(user.getBitmap(AbstractNavigationActivity.this));
             }
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(NavigationActivity.this);
+                SessionController.getInstance().logout(AbstractNavigationActivity.this);
             }
         });
 

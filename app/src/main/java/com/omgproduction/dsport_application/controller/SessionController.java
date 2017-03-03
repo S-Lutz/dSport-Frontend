@@ -2,7 +2,6 @@ package com.omgproduction.dsport_application.controller;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -10,7 +9,7 @@ import com.omgproduction.dsport_application.activities.main.LoginActivity;
 import com.omgproduction.dsport_application.builder.JSONRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.BackendConfig;
+import com.omgproduction.dsport_application.config.Routes;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
 import com.omgproduction.dsport_application.models.User;
@@ -45,7 +44,7 @@ public class SessionController {
      */
     public void registerUser(String username, String firstname, String lastname, String email, String password, final OnResultListener<String> onResultListener) {
 
-        JSONRequest requestBuilder = new JSONRequest(BackendConfig.REGISTER)
+        JSONRequest requestBuilder = new JSONRequest(Routes.REGISTER)
                 .param(ApplicationKeys.USER_USERNAME, username)
                 .param(ApplicationKeys.USER_FIRSTNAME, firstname)
                 .param(ApplicationKeys.USER_LASTNAME, lastname)
@@ -91,7 +90,7 @@ public class SessionController {
         //Log.e("TOKEN","LOAD-LOCAL: "+token);
 
         onResultListener.onStartQuery();
-        JSONRequest requestBuilder = new JSONRequest(BackendConfig.LOGIN)
+        JSONRequest requestBuilder = new JSONRequest(Routes.LOGIN)
                 .param(ApplicationKeys.USER_USERNAME, username)
                 .param(ApplicationKeys.USER_PASSWORD, password)
                 .param(ApplicationKeys.TOKEN, token)
@@ -203,7 +202,7 @@ public class SessionController {
         //Log.e("TOKEN","DISCARD: "+token);
 
         onResultListener.onStartQuery();
-        JSONRequest requestBuilder = new JSONRequest(BackendConfig.DISCARD_TOKEN)
+        JSONRequest requestBuilder = new JSONRequest(Routes.DISCARD_TOKEN)
                 .param(ApplicationKeys.TOKEN, token)
                 .errorListener(new Response.ErrorListener() {
                     @Override

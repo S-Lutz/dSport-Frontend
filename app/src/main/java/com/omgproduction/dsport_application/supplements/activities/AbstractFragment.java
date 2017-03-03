@@ -14,7 +14,7 @@ import com.omgproduction.dsport_application.R;
  * Created by Florian on 17.11.2016.
  */
 
-public abstract class AdvancedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
+public abstract class AbstractFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
 
     private SwipeRefreshLayout refresher;
 

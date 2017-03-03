@@ -15,7 +15,7 @@ import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.controller.SessionController;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.StringUtils;
 
 import org.json.JSONException;
@@ -34,7 +34,7 @@ import org.json.JSONException;
  * Password_confirm
  * Accept AGB
  */
-public class RegisterActivity extends AdvancedActivity {
+public class RegisterActivity extends AbstractFragmentActivity {
 
     //Activity Context
     private Context context;
@@ -42,7 +42,7 @@ public class RegisterActivity extends AdvancedActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.layout_activity_register);
 
         setRefresher((SwipeRefreshLayout)findViewById(R.id.register_refresher));
 

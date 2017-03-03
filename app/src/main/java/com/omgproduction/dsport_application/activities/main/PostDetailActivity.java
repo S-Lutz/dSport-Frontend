@@ -30,7 +30,7 @@ import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.DateUtils;
 
@@ -38,7 +38,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class PostDetailActivity extends AdvancedActivity implements OnResultListener<ArrayList<Comment>>, CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
+public class PostDetailActivity extends AbstractFragmentActivity implements OnResultListener<ArrayList<Comment>>, CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
 
     private RecyclerView commentsRecycler, likeRecycler;
     private CommentAdapter commentAdapter;
@@ -53,7 +53,7 @@ public class PostDetailActivity extends AdvancedActivity implements OnResultList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_detail);
+        setContentView(R.layout.layout_activity_post_detail);
         setRefresher((SwipeRefreshLayout) findViewById(R.id.post_detail_refresher));
 
 

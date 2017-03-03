@@ -12,17 +12,16 @@ import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
 import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedActivity;
-import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 
-public class PinboardActivity extends NavigationActivity {
+public class PinboardActivity extends AbstractNavigationActivity {
 
     private SocialMenuFragment socialMenuFragment;
 
     @Override
     protected int onSetContentView(Bundle savedInstanceState) {
-        return R.layout.activity_pinboard;
+        return R.layout.layout_activity_pinboard;
     }
 
     @Override
