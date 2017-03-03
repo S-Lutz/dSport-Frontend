@@ -22,11 +22,11 @@ import com.omgproduction.dsport_application.adapters.PostAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.config.NotificationKeys;
-import com.omgproduction.dsport_application.controller.PostController;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
-import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.services.PostService;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
+import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
 import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
@@ -39,7 +39,7 @@ import java.util.ArrayList;
 
 
 
-public class SocialFragment extends AbstractFragment implements SwipeRefreshLayout.OnRefreshListener, PostAdapter.OnPostClickedListener, OnResultListener<ArrayList<Post>>{
+public class SocialFragment extends AbstractFragment implements SwipeRefreshLayout.OnRefreshListener, PostAdapter.OnPostClickedListener, IRequestFuture<ArrayList<Post>> {
 
     private RecyclerView postsRecyler;
     private PostAdapter adapter;
@@ -84,7 +84,7 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
     }
 
     private void update() {
-        UserController.getInstance().getLocalUser(getContext(), new OnResultAdapter<User>() {
+        UserService.getInstance().getLocalUser(getContext(), new RequestFuture<User>() {
             @Override
             public void onStartQuery() {
                 refresher.setRefreshing(true);
@@ -96,10 +96,10 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
                     case ALL:
                         NotificationManager notificationManager = (NotificationManager)getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                         notificationManager.cancel(NotificationKeys.NEW_POSTS,NotificationReceiver.NEW_POSTS_ID);
-                        PostController.getInstance().getAllPosts(getContext(), user.getId(), SocialFragment.this);
+                        PostService.getInstance().getAllPosts(getContext(), user.getId(), SocialFragment.this);
                         break;
                     case PRIVATE:
-                        PostController.getInstance().getPinboard(getContext(), user.getId(), user.getId(), SocialFragment.this);
+                        PostService.getInstance().getPinboard(getContext(), user.getId(), user.getId(), SocialFragment.this);
                         break;
                 }
 
@@ -107,7 +107,7 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(getContext());
+                SessionService.getInstance().logout(getContext());
             }
         });
 
@@ -121,7 +121,7 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
     @Override
     public void onPostClicked(final PostAdapter.PostViewHolder holder, Post p){
         Intent i = new Intent(getContext(), PostDetailActivity.class);
-        i.putExtra(ApplicationKeys.POSTS, p);
+        i.putExtra(ApplicationKeys.APPLICATION_POSTS, p);
         Pair<View, String> p1 = Pair.create((View) holder.getIv_picture(), getString(R.string.transition_user_picture));
         Pair<View, String> p2 = Pair.create((View) holder.getTv_username(), getString(R.string.transition_post_username));
         Pair<View, String> p3 = Pair.create((View) holder.getIv_post_picture_overlay(), getString(R.string.transition_post_picture_overlay));
@@ -139,10 +139,10 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
     @Override
     public void onPostLike(final PostAdapter.PostViewHolder holder, final Post p) {
         Log.e("POST","Like");
-        UserController.getInstance().getLocalUserID(getContext(), new OnResultAdapter<String>(){
+        UserService.getInstance().getLocalUserID(getContext(), new RequestFuture<String>(){
             @Override
             public void onSuccess(String result) {
-                PostController.getInstance().likePost(result, p.getPost_id(), new OnResultAdapter<LikeResult>(){
+                PostService.getInstance().likePost(result, p.getPost_id(), new RequestFuture<LikeResult>(){
                     @Override
                     public void onSuccess(LikeResult result) {
                         p.setLiked(result.isLiked());
@@ -157,7 +157,7 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
                     }
 
                     @Override
-                    public void onBackendError(String errorCode) {
+                    public void onFailure(String errorCode) {
                         printError(getView(), getView().findViewById(getView().getId()), errorCode);
                     }
 
@@ -171,7 +171,7 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(getContext());
+                SessionService.getInstance().logout(getContext());
             }
         });
     }
@@ -217,7 +217,7 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
     }
 
     @Override
-    public void onBackendError(String errorCode) {
+    public void onFailure(String errorCode) {
         printError(getView(), getView().findViewById(getView().getId()), errorCode);
     }
 
@@ -229,7 +229,7 @@ public class SocialFragment extends AbstractFragment implements SwipeRefreshLayo
 
     @Override
     public void onUserNotFound() {
-        SessionController.getInstance().logout(getContext());
+        SessionService.getInstance().logout(getContext());
     }
     @Override
     public void onFinishQuery() {

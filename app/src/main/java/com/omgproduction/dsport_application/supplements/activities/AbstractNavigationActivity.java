@@ -18,9 +18,9 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.MainActivity;
 import com.omgproduction.dsport_application.activities.main.PinboardActivity;
 import com.omgproduction.dsport_application.activities.main.ProfileActivity;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 
 import java.util.ArrayList;
@@ -129,7 +129,7 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
         final View headerLayout =
                 navigationView.getHeaderView(0);
 
-        UserController.getInstance().getLocalUser(this, new OnResultAdapter<User>(){
+        UserService.getInstance().getLocalUser(this, new RequestFuture<User>(){
             @Override
             public void onSuccess(User user) {
                 ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(user.getUsername());
@@ -139,7 +139,7 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(AbstractNavigationActivity.this);
+                SessionService.getInstance().logout(AbstractNavigationActivity.this);
             }
         });
 
@@ -179,7 +179,7 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
     }
 
     protected void logoutUser(){
-        SessionController.getInstance().logout(this);
+        SessionService.getInstance().logout(this);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

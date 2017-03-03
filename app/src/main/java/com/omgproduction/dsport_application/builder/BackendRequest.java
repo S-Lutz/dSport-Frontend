@@ -18,9 +18,9 @@ import java.util.Map;
 /**
  * Created by Florian on 21.10.2016.
  */
-public class JSONRequest implements Response.Listener<JSONObject>, Response.ErrorListener{
+public class BackendRequest implements Response.Listener<JSONObject>, Response.ErrorListener{
 
-    private static String TAG = JSONRequest.class.getSimpleName();
+    private static String TAG = BackendRequest.class.getSimpleName();
 
     private JsonObjectRequest request;
 
@@ -31,26 +31,26 @@ public class JSONRequest implements Response.Listener<JSONObject>, Response.Erro
     private Response.ErrorListener errorListener;
     private String content_type = "application/json";
 
-    public JSONRequest(String url) {
+    public BackendRequest(String url) {
         this.url = url;
     }
 
-    public JSONRequest method(int method) {
+    public BackendRequest method(int method) {
         this.method = method;
         return this;
     }
 
-    public JSONRequest jsonObject(JSONObject jsonObject) {
+    public BackendRequest jsonObject(JSONObject jsonObject) {
         this.jsonObject = jsonObject;
         return this;
     }
 
-    public JSONRequest contentType(String content_type){
+    public BackendRequest contentType(String content_type){
         this.content_type = content_type;
         return this;
     }
 
-    public JSONRequest param(String key, Object value){
+    public BackendRequest param(String key, Object value){
         try {
             jsonObject.put(key,value);
         } catch (JSONException e) {
@@ -59,12 +59,12 @@ public class JSONRequest implements Response.Listener<JSONObject>, Response.Erro
         return this;
     }
 
-    public JSONRequest responseListener(Response.Listener<JSONObject> responseListener) {
+    public BackendRequest responseListener(Response.Listener<JSONObject> responseListener) {
         this.responseListener = responseListener;
         return this;
     }
 
-    public JSONRequest errorListener(Response.ErrorListener errorListener) {
+    public BackendRequest errorListener(Response.ErrorListener errorListener) {
         this.errorListener = errorListener;
         return this;
     }

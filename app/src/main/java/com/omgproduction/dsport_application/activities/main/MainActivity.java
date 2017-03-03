@@ -8,8 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.fragments.main.ChatFragment;
@@ -18,7 +18,7 @@ import com.omgproduction.dsport_application.fragments.main.ExerciseUnitFragment;
 import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
@@ -50,7 +50,7 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
         socialMenuFragment = new SocialMenuFragment();
         socialMenuFragment.setRootFab((FloatingActionButton) findViewById(R.id.options_fab));
 
-        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
+        UserService.getInstance().getLocalUser(this,new RequestFuture<User>(){
             @Override
             public void onSuccess(User result) {
                 socialMenuFragment.setPinboardOwner(result.getId());
@@ -58,7 +58,7 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(MainActivity.this);
+                SessionService.getInstance().logout(MainActivity.this);
             }
         });
 

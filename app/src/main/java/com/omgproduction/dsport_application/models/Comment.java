@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.controller.ApplicationController;
+import com.omgproduction.dsport_application.controller.App;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.io.Serializable;
@@ -81,7 +81,7 @@ public class Comment implements Serializable{
         StringBuilder sb = new StringBuilder();
         int likes = Integer.parseInt(getLikeCount());
         if(isLiked()){
-            String youPlus = ApplicationController.getInstance().getApplicationContext().getResources().getString(R.string.you_plus);
+            String youPlus = App.getInstance().getApplicationContext().getResources().getString(R.string.you_plus);
             sb.append(youPlus);
             sb.append(" ");
             likes = likes-1;

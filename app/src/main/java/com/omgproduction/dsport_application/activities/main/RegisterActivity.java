@@ -13,8 +13,8 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.helper.WelcomeActivity;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.StringUtils;
 
@@ -53,7 +53,7 @@ public class RegisterActivity extends AbstractFragmentActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(ApplicationKeys.USER_USERNAME))!=null){
+        if((username = i.getStringExtra(ApplicationKeys.APPLICATION_USER_USERNAME))!=null){
             ((EditText)findViewById(R.id.register_username)).setText(username);
         }
     }
@@ -74,7 +74,7 @@ public class RegisterActivity extends AbstractFragmentActivity {
 
     private void startLoginActivity(Context context){
         Intent i = new Intent(context, LoginActivity.class);
-        i.putExtra(ApplicationKeys.USER_USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
+        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -148,7 +148,7 @@ public class RegisterActivity extends AbstractFragmentActivity {
         showProgressBar(true);
 
         //Process Registration with Backend-Server
-        SessionController.getInstance().registerUser(username, firstname, lastname, email, password_1, new OnResultAdapter<String>(){
+        SessionService.getInstance().registerUser(username, firstname, lastname, email, password_1, new RequestFuture<String>(){
             @Override
             public void onStartQuery() {
                 removeAllErrors();
@@ -171,7 +171,7 @@ public class RegisterActivity extends AbstractFragmentActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 switch (errorCode){
                     case "e301": printInputError(R.id.register_layout_username,errorCode); break;
                     case "e302": printInputError(R.id.register_layout_email,errorCode); break;
@@ -200,7 +200,7 @@ public class RegisterActivity extends AbstractFragmentActivity {
 
     private void startWelcomeActivity(String username) {
         Intent i = new Intent(this, WelcomeActivity.class);
-        i.putExtra(ApplicationKeys.USER_USERNAME,username);
+        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,username);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

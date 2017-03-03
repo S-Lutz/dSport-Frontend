@@ -13,15 +13,9 @@ public class Preferences {
     private int PRIVATE_MODE = 0;
     public static final String PREF_NAME = "dsport";
 
-    private Preferences(){};
-
-    private Preferences(Context context) {
+    public Preferences(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = sharedPreferences.edit();
-    }
-
-    public static Preferences getInstance(Context context){
-        return new Preferences(context);
     }
 
     public Preferences putString(String key, String value){

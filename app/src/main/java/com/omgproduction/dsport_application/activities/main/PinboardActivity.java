@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
@@ -50,7 +50,7 @@ public class PinboardActivity extends AbstractNavigationActivity {
     }
 
     private void loadData() {
-        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
+        UserService.getInstance().getLocalUser(this,new RequestFuture<User>(){
             @Override
             public void onSuccess(User user) {
                 //setPic(R.id.profile_pic, user.getBitmap(PinboardActivity.this));
@@ -59,7 +59,7 @@ public class PinboardActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(PinboardActivity.this);
+                SessionService.getInstance().logout(PinboardActivity.this);
             }
         });
 

@@ -19,12 +19,12 @@ import com.omgproduction.dsport_application.adapters.CommentAdapter;
 import com.omgproduction.dsport_application.adapters.LikeAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.controller.PostController;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.services.PostService;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
-import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
+import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
@@ -38,7 +38,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class PostDetailActivity extends AbstractFragmentActivity implements OnResultListener<ArrayList<Comment>>, CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
+public class PostDetailActivity extends AbstractFragmentActivity implements IRequestFuture<ArrayList<Comment>>, CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
 
     private RecyclerView commentsRecycler, likeRecycler;
     private CommentAdapter commentAdapter;
@@ -57,7 +57,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
         setRefresher((SwipeRefreshLayout) findViewById(R.id.post_detail_refresher));
 
 
-        setPostValues((Post) getIntent().getSerializableExtra(ApplicationKeys.POSTS));
+        setPostValues((Post) getIntent().getSerializableExtra(ApplicationKeys.APPLICATION_POSTS));
         showComments(true);
         update();
     }
@@ -105,10 +105,10 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     }
 
     private void update() {
-        UserController.getInstance().getLocalUserID(this,new OnResultAdapter<String>(){
+        UserService.getInstance().getLocalUserID(this,new RequestFuture<String>(){
             @Override
             public void onSuccess(String localUserID) {
-                PostController.getInstance().getPostDetail(localUserID, post.getPost_id(), new OnResultAdapter<Post>(){
+                PostService.getInstance().getPostDetail(localUserID, post.getPost_id(), new RequestFuture<Post>(){
                     @Override
                     public void onStartQuery() {
                         refresher.setRefreshing(true);
@@ -126,7 +126,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
                     }
 
                     @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
+                    public void onFailure(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
 
                     @Override
                     public void onJSONException(JSONException e) {
@@ -143,15 +143,15 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+                SessionService.getInstance().logout(PostDetailActivity.this);
             }
         });
-        PostController.getInstance().getAllComments(PostDetailActivity.this, post.getPost_id(), PostDetailActivity.this);
+        PostService.getInstance().getAllComments(PostDetailActivity.this, post.getPost_id(), PostDetailActivity.this);
     }
 
     private void loadLikes(){
 
-        UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>() {
+        UserService.getInstance().getLocalUserID(this, new RequestFuture<String>() {
             @Override
             public void onStartQuery() {
                 refresher.setRefreshing(true);
@@ -159,7 +159,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
             @Override
             public void onSuccess(String user) {
-                PostController.getInstance().getAllLikes(PostDetailActivity.this, post.getPost_id(), new OnResultAdapter<ArrayList<Like>>(){
+                PostService.getInstance().getAllLikes(PostDetailActivity.this, post.getPost_id(), new RequestFuture<ArrayList<Like>>(){
                     @Override
                     public void onStartQuery() {
                         refresher.setRefreshing(true);
@@ -182,7 +182,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
                     }
 
                     @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
+                    public void onFailure(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
 
                     @Override
                     public void onJSONException(JSONException e) {
@@ -190,7 +190,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
                         printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
                     }
                     @Override
-                    public void onUserNotFound() {SessionController.getInstance().logout(PostDetailActivity.this);}
+                    public void onUserNotFound() {
+                        SessionService.getInstance().logout(PostDetailActivity.this);}
 
                     @Override
                     public void onFinishQuery() {
@@ -201,7 +202,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+                SessionService.getInstance().logout(PostDetailActivity.this);
             }
         });
     }
@@ -269,7 +270,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
         final String picture = bmp;
 
 
-        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
+        UserService.getInstance().getLocalUser(this,new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
                 refresher.setRefreshing(true);
@@ -277,7 +278,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
             @Override
             public void onSuccess(User user) {
-                PostController.getInstance().createComment(user.getId(), post.getPost_id(),picture,text, new OnResultAdapter<Void>(){
+                PostService.getInstance().createComment(user.getId(), post.getPost_id(),picture,text, new RequestFuture<Void>(){
                     @Override
                     public void onStartQuery() {
                         refresher.setRefreshing(true);
@@ -300,7 +301,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
                     }
 
                     @Override
-                    public void onBackendError(String errorCode) {
+                    public void onFailure(String errorCode) {
                         printError(R.id.activity_create_post, errorCode, R.string.retry, new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -311,7 +312,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
                     @Override
                     public void onUserNotFound() {
-                        SessionController.getInstance().logout(PostDetailActivity.this);
+                        SessionService.getInstance().logout(PostDetailActivity.this);
                     }
 
                     @Override
@@ -324,7 +325,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+                SessionService.getInstance().logout(PostDetailActivity.this);
             }
 
             @Override
@@ -411,10 +412,10 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     }
 
     private void onLikePost() {
-        UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>(){
+        UserService.getInstance().getLocalUserID(this, new RequestFuture<String>(){
             @Override
             public void onSuccess(String result) {
-                PostController.getInstance().likePost(result, post.getPost_id(), new OnResultAdapter<LikeResult>(){
+                PostService.getInstance().likePost(result, post.getPost_id(), new RequestFuture<LikeResult>(){
                     @Override
                     public void onSuccess(LikeResult result) {
                         post.setLiked(result.isLiked());
@@ -428,7 +429,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
                     }
 
                     @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
+                    public void onFailure(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
 
                     @Override
                     public void onJSONException(JSONException e) {
@@ -440,7 +441,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+                SessionService.getInstance().logout(PostDetailActivity.this);
             }
         });
     }
@@ -468,7 +469,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     }
 
     @Override
-    public void onBackendError(String errorCode) {
+    public void onFailure(String errorCode) {
         printError(R.id.post_detail_relative_layout, errorCode);
     }
 
@@ -480,7 +481,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
     @Override
     public void onUserNotFound() {
-        SessionController.getInstance().logout(this);
+        SessionService.getInstance().logout(this);
     }
     @Override
     public void onFinishQuery() {
@@ -489,10 +490,10 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
     @Override
     public void onLikeComment(final Comment comment, final CommentAdapter.CommentViewHolder holder) {
-        UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>(){
+        UserService.getInstance().getLocalUserID(this, new RequestFuture<String>(){
             @Override
             public void onSuccess(String result) {
-                PostController.getInstance().likeComment(result, comment.getComment_id(), new OnResultAdapter<LikeResult>(){
+                PostService.getInstance().likeComment(result, comment.getComment_id(), new RequestFuture<LikeResult>(){
 
                     @Override
                     public void onSuccess(LikeResult result) {
@@ -508,7 +509,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
                     }
 
                     @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
+                    public void onFailure(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
 
                     @Override
                     public void onJSONException(JSONException e) {
@@ -520,7 +521,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+                SessionService.getInstance().logout(PostDetailActivity.this);
             }
         });
     }

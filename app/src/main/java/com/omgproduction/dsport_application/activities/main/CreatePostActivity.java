@@ -1,5 +1,6 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -9,59 +10,42 @@ import android.widget.ImageView;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.CreatePostStartValues;
 import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.controller.PostController;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.services.PostService;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
-public class CreatePostActivity extends AbstractFragmentActivity {
+public class CreatePostActivity extends AbstractFragmentActivity implements CreatePostStartValues {
 
     private String pinboardOwner;
-
-    public static final int TEXT = 0;
-    public static final int PICTURE = 1;
-    public static final int GALLERY = 2;
-    public static final String TYPE = "TYPE";
 
     private int type;
     private Bitmap postPicture;
 
+    private UserService userService;
+    private PostService postService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.layout_activity_create_post);
-        getIntentValues();
+
+        preparePostData();
+
         findViewById(R.id.create_post_button).setOnClickListener(this);
         findViewById(R.id.create_post_camera_button).setOnClickListener(this);
         findViewById(R.id.create_post_gallery_button).setOnClickListener(this);
 
-        UserController.getInstance().getLocalUser(this, new OnResultAdapter<User>() {
-            @Override
-            public void onStartQuery() {
-                showProgressBar(true);
-            }
+        userService = new UserService(this);
+        postService = new PostService(this);
 
-            @Override
-            public void onSuccess(User user) {
-                setPic(R.id.create_post_picture, user.getBitmap(CreatePostActivity.this));
-                setText(R.id.create_post_username, user.getUsername());
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(CreatePostActivity.this);
-            }
-
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
+        setPic(R.id.create_post_picture, userService.getLocalUser().getBitmap(CreatePostActivity.this));
+        setText(R.id.create_post_username, userService.getLocalUser().getUsername());
     }
 
     @Override
@@ -100,64 +84,28 @@ public class CreatePostActivity extends AbstractFragmentActivity {
         }
         final String picture = bmp;
 
-
-        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
+        User user = userService.getLocalUser();
+        pinboardOwner = (pinboardOwner==null)?user.getId():pinboardOwner;
+        postService.createPost(user.getId(), pinboardOwner,(type == TEXT)?"":picture,text,title, new RequestFuture<Void>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(User user) {
-                pinboardOwner = (pinboardOwner==null)?user.getId():pinboardOwner;
-                PostController.getInstance().createPost(user.getId(), pinboardOwner,(type == TEXT)?"":picture,text,title, new OnResultAdapter<Void>(){
-                    @Override
-                    public void onStartQuery() {
-                        showProgressBar(true);
-                    }
-
-                    @Override
-                    public void onSuccess(Void result) {
-                        CreatePostActivity.super.onBackPressed();
-                        CreatePostActivity.this.finish();
-                    }
-
-                    @Override
-                    public void onConnectionError(VolleyError e) {
-                        printError(R.id.activity_create_post, ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                savePost();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onBackendError(String errorCode) {
-                        printError(R.id.activity_create_post, errorCode, R.string.retry, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                savePost();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onUserNotFound() {
-                        SessionController.getInstance().logout(CreatePostActivity.this);
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        showProgressBar(false);
-                    }
-                });
-
+            public void onSuccess(Void result) {
+                CreatePostActivity.super.onBackPressed();
+                CreatePostActivity.this.finish();
             }
 
             @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(CreatePostActivity.this);
+            public void onFailure(String errorCode) {
+                printError(R.id.activity_create_post, errorCode, R.string.retry, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        savePost();
+                    }
+                });
             }
 
             @Override
@@ -167,8 +115,8 @@ public class CreatePostActivity extends AbstractFragmentActivity {
         });
     }
 
-    public void getIntentValues() {
-        pinboardOwner = getIntent().getStringExtra(ApplicationKeys.POST_OWNER_ID);
+    public void preparePostData() {
+        pinboardOwner = getIntent().getStringExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID);
         type = getIntent().getIntExtra(TYPE,TEXT);
 
         switch (type){

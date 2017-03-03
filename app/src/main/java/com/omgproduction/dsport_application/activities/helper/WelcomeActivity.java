@@ -13,7 +13,6 @@ import com.omgproduction.dsport_application.config.ApplicationKeys;
 public class WelcomeActivity extends Activity {
 
     String username;
-    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +21,7 @@ public class WelcomeActivity extends Activity {
 
 
         Intent i = getIntent();
-        username = i.getStringExtra(ApplicationKeys.USER_USERNAME);
+        username = i.getStringExtra(ApplicationKeys.APPLICATION_USER_USERNAME);
         Resources res = getResources();
         String text = res.getQuantityString(R.plurals.welcome_messages, 1, username);
 
@@ -34,7 +33,7 @@ public class WelcomeActivity extends Activity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra(ApplicationKeys.USER_USERNAME,username);
+        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,username);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

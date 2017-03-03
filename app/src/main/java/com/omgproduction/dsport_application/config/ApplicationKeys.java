@@ -4,66 +4,57 @@ package com.omgproduction.dsport_application.config;
  * Created by Florian on 17.11.2016.
  */
 
-public class ApplicationKeys {
-    public static final String IS_LOGIN = "IsLoggedIn";
-
-    public static final String CONTENT_TYPE = "Content-Type";
-
-    public static final String ERROR = "error";
-    public static final String OK = "OK";
-    public static final String VALUE = "value";
-
-    public static final String TOKEN = "token";
-    public static final String NOTIFICATION = "notification";
+public interface ApplicationKeys {
+    String APPLICATION_IS_LOGIN = "IsLoggedIn";
 
 
-    public static final String USER_USER_ID = "user_id";
-    public static final String USER_USERNAME = "username";
-    public static final String USER_FIRSTNAME = "firstname";
-    public static final String USER_LASTNAME = "lastname";
-    public static final String USER_EMAIL = "email";
-    public static final String USER_PASSWORD = "password";
-    public static final String USER_CREATED = "created";
-    public static final String USER_AGBVERSION = "agbversion";
-    public static final String USER_AGB_ACCEPTED = "agb_accepted";
-    public static final String USER_HASH = "hash";
-    public static final String USER_PICTURE = "picture";
+    String APPLICATION_USER_USER_ID = "user_id";
+    String APPLICATION_USER_USERNAME = "username";
+    String APPLICATION_USER_FIRSTNAME = "firstname";
+    String APPLICATION_USER_LASTNAME = "lastname";
+    String APPLICATION_USER_EMAIL = "email";
+    String APPLICATION_USER_PASSWORD = "password";
+    String APPLICATION_USER_CREATED = "created";
+    String APPLICATION_USER_AGBVERSION = "agbversion";
+    String APPLICATION_USER_AGB_ACCEPTED = "agb_accepted";
+    String APPLICATION_USER_HASH = "hash";
+    String APPLICATION_USER_PICTURE = "picture";
 
 
-    public static final String TABLE_UNREGISTERED_USER = "Unregistered_user";
-    public static final String TABLE_USER = "User";
-    public static final String TABLE_CONNECTION = "Connection";
+    String APPLICATION_TABLE_UNREGISTERED_USER = "Unregistered_user";
+    String APPLICATION_TABLE_USER = "User";
+    String APPLICATION_TABLE_CONNECTION = "Connection";
 
-    public static final String UNIT_WEIGHT = "";
-    public static final String UNIT_SETS = "";
-    public static final String UNIT_REPEATS = "";
+    String APPLICATION_UNIT_WEIGHT = "";
+    String APPLICATION_UNIT_SETS = "";
+    String APPLICATION_UNIT_REPEATS = "";
 
 
-    public static final String POSTS = "posts";
-    public static final String POST_TEXT = "text";
-    public static final String POST_CREATED = "created";
-    public static final String POST_PICTURE = "post_picture";
-    public static final String POST_LIKECOUNT = "likecount";
-    public static final String POST_COMMENTCOUNT = "commentcount";
-    public static final String POST_SHARECOUNT = "sharecount";
-    public static final String POST_OWNER_ID = "owner_id";
-    public static final String POST_POST_ID = "post_id";
-    public static final String POST_TITLE = "title";
-    public static final String POST_LIKED = "liked";
+    String APPLICATION_POSTS = "posts";
+    String APPLICATION_POST_TEXT = "text";
+    String APPLICATION_POST_CREATED = "created";
+    String APPLICATION_POST_PICTURE = "post_picture";
+    String APPLICATION_POST_LIKECOUNT = "likecount";
+    String APPLICATION_POST_COMMENTCOUNT = "commentcount";
+    String APPLICATION_POST_SHARECOUNT = "sharecount";
+    String APPLICATION_POST_OWNER_ID = "owner_id";
+    String APPLICATION_POST_POST_ID = "post_id";
+    String APPLICATION_POST_TITLE = "title";
+    String APPLICATION_POST_LIKED = "liked";
 
-    public static final String COMMENTS = "comments";
-    public static final String COMMENT_TEXT = "text";
-    public static final String COMMENT_CREATED = "created";
-    public static final String COMMENT_PICTURE = "comment_picture";
-    public static final String COMMENT_ID = "comment_id";
-    public static final String COMMENT_LIKECOUNT = "likecount";
-    public static final String COMMENT_LIKED = "liked";
+    String APPLICATION_COMMENTS = "comments";
+    String APPLICATION_COMMENT_TEXT = "text";
+    String APPLICATION_COMMENT_CREATED = "created";
+    String APPLICATION_COMMENT_PICTURE = "comment_picture";
+    String APPLICATION_COMMENT_ID = "comment_id";
+    String APPLICATION_COMMENT_LIKECOUNT = "likecount";
+    String APPLICATION_COMMENT_LIKED = "liked";
 
-    public static final String LIKES = "likes";
+    String APPLICATION_LIKES = "likes";
 
-    public static final String CONNECTION_USER_ID = "user_id";
-    public static final String CONNECTION_TOKEN = "token";
+    String APPLICATION_CONNECTION_USER_ID = "user_id";
+    String APPLICATION_CONNECTION_TOKEN = "token";
 
-    public static final String NOTIFICATION_NEWPOST_TITLE = "Neuer Post";
-    public static final String NOTIFICATION_NEWPOST_MESSAGE = "Einer deiner Freunde hat einen neuen Post veröffentlicht";
+    String APPLICATION_NOTIFICATION_NEWPOST_TITLE = "Neuer Post";
+    String APPLICATION_NOTIFICATION_NEWPOST_MESSAGE = "Einer deiner Freunde hat einen neuen Post veröffentlicht";
 }

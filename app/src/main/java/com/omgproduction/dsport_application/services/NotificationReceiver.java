@@ -8,15 +8,12 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.RemoteMessage;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.MainActivity;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.NotificationKeys;
 import com.omgproduction.dsport_application.controller.ResourceController;
-import com.omgproduction.dsport_application.utils.ConnectionUtils;
+import com.omgproduction.dsport_application.utils.ResultWrapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 /**
  * Created by Florian on 19.10.2016.
@@ -33,8 +30,8 @@ public class NotificationReceiver extends com.google.firebase.messaging.Firebase
     private void showNotification(RemoteMessage message) {
         try {
             JSONObject json = new JSONObject(message.getNotification().getBody());
-            String notificationCode = ConnectionUtils.extractNotificationCode(json);
-            JSONObject value = ConnectionUtils.extractJSONValue(json);
+            String notificationCode = ResultWrapper.extractNotificationCode(json);
+            JSONObject value = ResultWrapper.extractValue(json);
             switch (notificationCode){
                 case NotificationKeys.NEW_POSTS:
                     newPosts(value);

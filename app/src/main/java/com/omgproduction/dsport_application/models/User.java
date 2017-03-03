@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
+import com.omgproduction.dsport_application.utils.StringUtils;
 
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ import java.io.Serializable;
  */
 
 public class User  implements Serializable {
-    private String id, username, email, picture, firstname, lastname, created, agbversion;
+    private String id, username, email, picture, firstname, lastname, created, agbversion, password = "";
 
     public User(String id, String username, String email, String picture, String firstname, String lastname, String created, String agbversion) {
         this.id = id;
@@ -25,6 +26,14 @@ public class User  implements Serializable {
         this.lastname = lastname;
         this.created = created;
         this.agbversion = agbversion;
+    }
+
+    public void setPassword(String password){
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public String getId() {

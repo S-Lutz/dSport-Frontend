@@ -11,7 +11,7 @@ import org.json.JSONException;
 /**
  * @param <T> Type of Result
  */
-public interface OnResultListener<T> {
+public interface IRequestFuture<T> {
     /**
      * This Method is called on Start of the Method... Its the first method which is called
      */
@@ -24,27 +24,10 @@ public interface OnResultListener<T> {
     void onSuccess(T result);
 
     /**
-     * This Method is called if some Connection-Error (Volley Error) occurs
-     * @param e The Volley Exception
-     */
-    void onConnectionError(VolleyError e);
-
-    /**
      * This Method is called if the Backend sent some ErrorCode
      * @param errorCode The Code the Backend sent
      */
-    void onBackendError(String errorCode);
-
-    /**
-     * This Method is called if some JSOMException occurs
-     * @param e
-     */
-    void onJSONException(JSONException e);
-
-    /**
-     * This Method is called if the local User isnt found... Normally you have to logout the Session here
-     */
-    void onUserNotFound();
+    void onFailure(String errorCode);
 
     /**
      * Called in EVERY Case the Method Finish... is Called before any other Method is called

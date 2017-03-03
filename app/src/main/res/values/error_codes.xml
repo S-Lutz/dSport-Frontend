@@ -4,7 +4,7 @@
     All ErrorCodes from Backend and Application
 
     Connection structure:
-        Request success:
+        Request isOk:
         {
             "error":"OK",
             "value":someVal

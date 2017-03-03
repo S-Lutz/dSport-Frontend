@@ -11,8 +11,8 @@ import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 
@@ -25,10 +25,10 @@ import org.json.JSONObject;
  * Activity to Login the User
  * Login with username and Password
  */
-public class LoginActivity extends AbstractFragmentActivity {
+public class LoginActivity extends AbstractFragmentActivity implements ApplicationKeys{
 
-    //Activity-Context
-    private Context context;
+
+    public SessionService sessionService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +37,9 @@ public class LoginActivity extends AbstractFragmentActivity {
 
         setRefresher((SwipeRefreshLayout)findViewById(R.id.login_refresher));
 
-        checkLogin();
+        sessionService = new SessionService(this);
 
-        context = this;
+        checkLogin();
 
         findViewById(R.id.registration_link).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
@@ -47,14 +47,14 @@ public class LoginActivity extends AbstractFragmentActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(ApplicationKeys.USER_USERNAME))!=null){
+        if((username = i.getStringExtra(APPLICATION_USER_USERNAME))!=null){
             ((EditText)findViewById(R.id.login_username)).setText(username);
         }
 
     }
 
     private void checkLogin() {
-        if(SessionController.getInstance().checkLogin(this)){
+        if(sessionService.checkLogin()){
             startMainActivity(this);
         }
     }
@@ -92,7 +92,7 @@ public class LoginActivity extends AbstractFragmentActivity {
 
         //Process login with Backend
         //Send request to Backend and wait for response
-        SessionController.getInstance().loginUser(this,username, password, new OnResultAdapter<JSONObject>(){
+        sessionService.loginUser(this,username, password, new RequestFuture<JSONObject>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -100,7 +100,7 @@ public class LoginActivity extends AbstractFragmentActivity {
 
             @Override
             public void onSuccess(JSONObject jsonObject) {
-                SessionController.getInstance().saveLocalUser(context,jsonObject, new OnResultAdapter<User>(){
+                SessionService.getInstance().saveLocalUser(context,jsonObject, new RequestFuture<User>(){
                     @Override
                     public void onStartQuery() {
                         showProgressBar(true);
@@ -129,7 +129,7 @@ public class LoginActivity extends AbstractFragmentActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 //Check Errorcode (See it in error_codes.xml
                 switch (errorCode){
                     case "e303": printInputError(R.id.login_layout_password,errorCode); break;
@@ -153,7 +153,7 @@ public class LoginActivity extends AbstractFragmentActivity {
 
     private void startRegistrationActivity(Context context){
         Intent i = new Intent(context, RegisterActivity.class);
-        i.putExtra(ApplicationKeys.USER_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
+        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);

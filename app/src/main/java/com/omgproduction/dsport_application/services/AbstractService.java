@@ -1,40 +1,31 @@
-package com.omgproduction.dsport_application.controller;
+package com.omgproduction.dsport_application.services;
 
-/**
- * Created by Florian on 17.10.2016.
- *
- * APPController to Control App-Specific Data
- *
- * This is the first Class which is running on App-Start
- */
-
-import android.app.Application;
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.omgproduction.dsport_application.config.ApplicationConfig;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ErrorCodes;
+import com.omgproduction.dsport_application.config.NotificationKeys;
+import com.omgproduction.dsport_application.config.Routes;
+import com.omgproduction.dsport_application.controller.App;
 
-public class ApplicationController extends Application {
-    //Activity-Tag for Log
-    public static final String TAG = ApplicationController.class.getSimpleName();
+/**
+ * Created by Florian on 03.03.2017.
+ */
+
+public abstract class AbstractService<T extends AbstractService> implements Routes, ApplicationKeys, ErrorCodes,NotificationKeys, ApplicationConfig {
+    protected final Context context;
     //Requestqueue to handle HTTP-Connections
-    private RequestQueue mRequestQueue;
-    //ApplicationController instance to instanciate form other classes
-    private static ApplicationController mInstance;
+    private static RequestQueue mRequestQueue;
+    //Activity-Tag for Log
+    public static final String TAG = AbstractService.class.getSimpleName();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mInstance = this;
-    }
-
-    /**
-     * Get an instance from this ApplicationController class to interact with it
-     * @return
-     */
-    public static synchronized ApplicationController getInstance() {
-        return mInstance;
+    public AbstractService(Context context){
+        this.context = context;
     }
 
     /**
@@ -43,7 +34,7 @@ public class ApplicationController extends Application {
      */
     public RequestQueue getRequestQueue() {
         if (mRequestQueue == null) {
-            mRequestQueue = Volley.newRequestQueue(getApplicationContext());
+            mRequestQueue = Volley.newRequestQueue(App.getContext());
         } return mRequestQueue;
     }
 
@@ -53,7 +44,7 @@ public class ApplicationController extends Application {
      * @param tag Tag to Iditify the Request later to get it or delete it
      * @param <T> Responsetyp of the Request
      */
-    public <T> void addToRequestQueue(Request<T> req, String tag) {
+    public <T> void executeRequest(Request<T> req, String tag) {
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         getRequestQueue().add(req);
     }
@@ -63,7 +54,7 @@ public class ApplicationController extends Application {
      * @param req HTTP-Request which shall be running
      * @param <T> Responsetyp of the Request
      */
-    public <T> void addToRequestQueue(Request<T>req) {
+    public <T> void executeRequest(Request<T> req) {
         req.setTag(TAG);
         getRequestQueue().add(req);
     }

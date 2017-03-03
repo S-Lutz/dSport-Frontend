@@ -18,9 +18,9 @@ import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.ErrorCodes;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
@@ -71,7 +71,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void loadLocalData() {
-        UserController.getInstance().getLocalUser(context,new OnResultAdapter<User>(){
+        UserService.getInstance().getLocalUser(context,new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -84,7 +84,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -130,7 +130,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void loadOnlineData() {
-        UserController.getInstance().getGlobalUser(this, new OnResultAdapter<User>() {
+        UserService.getInstance().getGlobalUser(this, new RequestFuture<User>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -151,7 +151,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onBackendError(String ErrorCode) {
+            public void onFailure(String ErrorCode) {
                 //TODO Errorhandling
             }
 
@@ -163,7 +163,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -231,7 +231,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
     private void performEmailConfirm() {
         final String email = getTVText(R.id.profile_email_input);
-        final String currentEmail = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_EMAIL,"");
+        final String currentEmail = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_EMAIL,"");
         if(!currentEmail.trim().isEmpty()){
             if(!email.trim().isEmpty()){
                 if(!email.equals(currentEmail)){
@@ -249,13 +249,13 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logout(this);
+            SessionService.getInstance().logout(this);
         }
     }
 
     private void performLastnameConfirm() {
         String lastname = getTVText(R.id.profile_lastname_input);
-        String currentLastname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_LASTNAME,"");
+        String currentLastname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_LASTNAME,"");
         if(!currentLastname.trim().isEmpty()){
             if(!lastname.trim().isEmpty()){
                 if(!lastname.equals(currentLastname)){
@@ -269,13 +269,13 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logout(this);
+            SessionService.getInstance().logout(this);
         }
     }
 
     private void performFirstnameConfirm() {
         final String firstname = getTVText(R.id.profile_firstname_input);
-        final String currentFirstname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_FIRSTNAME,"");
+        final String currentFirstname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_FIRSTNAME,"");
         if(!currentFirstname.trim().isEmpty()){
             if(!firstname.trim().isEmpty()){
                 if(!firstname.equals(currentFirstname)){
@@ -289,13 +289,13 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logout(this);
+            SessionService.getInstance().logout(this);
         }
     }
 
     private void performUsernameConfirm() {
         final String username = getTVText(R.id.profile_username_input);
-        final String currentUsername = Preferences.getInstance(this).getStringDetail(ApplicationKeys.USER_USERNAME,"");
+        final String currentUsername = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_USERNAME,"");
         if(!currentUsername.trim().isEmpty()){
             if(!username.trim().isEmpty()){
                 if(!username.equals(currentUsername)){
@@ -309,7 +309,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
         }else{
             //User not logged in
-            SessionController.getInstance().logout(this);
+            SessionService.getInstance().logout(this);
         }
     }
 
@@ -355,7 +355,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
 
     private void savePicture(final Bitmap thePic) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_PICTURE, BitmapUtils.getStringFromBitmap(thePic), new OnResultAdapter<String>() {
+        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_PICTURE, BitmapUtils.getStringFromBitmap(thePic), new RequestFuture<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -377,7 +377,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 printError(R.id.profile_container,errorCode);
             }
 
@@ -389,7 +389,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -400,7 +400,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveEmail(final String email) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_EMAIL, email, new OnResultAdapter<String>() {
+        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_EMAIL, email, new RequestFuture<String>() {
             @Override
             public void onStartQuery() {
                 removeInputError(R.id.profile_email_input_layout);
@@ -425,7 +425,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 printError(R.id.profile_email_input_layout,errorCode);
             }
 
@@ -437,7 +437,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -448,7 +448,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveFirstname(final String firstname) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_FIRSTNAME, firstname, new OnResultAdapter<String>() {
+        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_FIRSTNAME, firstname, new RequestFuture<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -473,7 +473,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 printError(R.id.profile_firstname_input_layout,errorCode);
             }
 
@@ -485,7 +485,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -496,7 +496,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveLastname(final String lastname) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_LASTNAME, lastname, new OnResultAdapter<String>() {
+        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_LASTNAME, lastname, new RequestFuture<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -521,7 +521,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 printError(R.id.profile_lastname_input_layout,errorCode);
             }
 
@@ -533,7 +533,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -544,7 +544,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void savePassword(final String password) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_PASSWORD, password, new OnResultAdapter<String>() {
+        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_PASSWORD, password, new RequestFuture<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -570,7 +570,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 printError(R.id.profile_password_input_layout,errorCode);
                 printError(R.id.profile_password_confirm_input_layout,errorCode);
             }
@@ -582,7 +582,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -594,7 +594,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveUsername(final String username) {
-        UserController.getInstance().saveUserDetail(this, ApplicationKeys.USER_USERNAME, username, new OnResultAdapter<String>() {
+        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_USERNAME, username, new RequestFuture<String>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -619,7 +619,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onBackendError(String errorCode) {
+            public void onFailure(String errorCode) {
                 printError(R.id.profile_username_input_layout,errorCode);
             }
 
@@ -631,7 +631,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onUserNotFound() {
-                SessionController.getInstance().logout(context);
+                SessionService.getInstance().logout(context);
             }
 
             @Override
