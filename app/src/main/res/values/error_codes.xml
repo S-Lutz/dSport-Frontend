@@ -6,13 +6,13 @@
     Connection structure:
         Request isOk:
         {
-            "error":"OK",
+            "error":"RESULT_OK_VALUE",
             "value":someVal
         }
 
         Request failed:
         {
-            "error":"ERROR",
+            "error":"RESULT_ERROR_KEY",
             "value":errorCode
         }
     -->

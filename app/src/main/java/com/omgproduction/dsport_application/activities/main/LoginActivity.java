@@ -4,19 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.services.SessionService;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
-
-import org.json.JSONObject;
 
 
 /**
@@ -25,19 +20,18 @@ import org.json.JSONObject;
  * Activity to Login the User
  * Login with username and Password
  */
-public class LoginActivity extends AbstractFragmentActivity implements ApplicationKeys{
+public class LoginActivity extends AbstractFragmentActivity {
 
 
-    public SessionService sessionService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_activity_login);
 
-        setRefresher((SwipeRefreshLayout)findViewById(R.id.login_refresher));
+        Log.e("LoginActivity", "started");
 
-        sessionService = new SessionService(this);
+        setRefresher((SwipeRefreshLayout)findViewById(R.id.login_refresher));
 
         checkLogin();
 
@@ -47,14 +41,15 @@ public class LoginActivity extends AbstractFragmentActivity implements Applicati
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(APPLICATION_USER_USERNAME))!=null){
+        if((username = i.getStringExtra(INTENT_USERNAME))!=null){
             ((EditText)findViewById(R.id.login_username)).setText(username);
         }
 
     }
 
     private void checkLogin() {
-        if(sessionService.checkLogin()){
+        User user = userService.getLocalUser();
+        if(userService.isAvailable(user)){
             startMainActivity(this);
         }
     }
@@ -85,56 +80,28 @@ public class LoginActivity extends AbstractFragmentActivity implements Applicati
         //Check if Password is not Empty
         if(username.trim().isEmpty()
                 ||password.trim().isEmpty()){
-            printInputError(R.id.login_layout_username, ErrorCodes.FIELD_EMPTY);
+            printInputError(R.id.login_layout_username, FIELD_EMPTY_ERROR);
             return;
         }
 
 
         //Process login with Backend
         //Send request to Backend and wait for response
-        sessionService.loginUser(this,username, password, new RequestFuture<JSONObject>(){
+        sessionService.validateUser(username, password, new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(JSONObject jsonObject) {
-                SessionService.getInstance().saveLocalUser(context,jsonObject, new RequestFuture<User>(){
-                    @Override
-                    public void onStartQuery() {
-                        showProgressBar(true);
-                    }
-
-                    @Override
-                    public void onSuccess(User result) {
-                        startMainActivity(context);
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        showProgressBar(false);
-                    }
-                });
-            }
-
-            @Override
-            public void onConnectionError(VolleyError e) {
-                printError(R.id.login_layout,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        loginUser();
-                    }
-                });
+            public void onSuccess(User user) {
+                userService.saveLocalUser(user);
+                startMainActivity(LoginActivity.this);
             }
 
             @Override
             public void onFailure(String errorCode) {
-                //Check Errorcode (See it in error_codes.xml
-                switch (errorCode){
-                    case "e303": printInputError(R.id.login_layout_password,errorCode); break;
-                    default: printError(R.id.login_layout,ErrorCodes.SOMETHING_WENT_WRONG);
-                }
+                printInputError(R.id.login_layout_password,errorCode);
             }
 
             @Override
@@ -153,7 +120,7 @@ public class LoginActivity extends AbstractFragmentActivity implements Applicati
 
     private void startRegistrationActivity(Context context){
         Intent i = new Intent(context, RegisterActivity.class);
-        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
+        i.putExtra(INTENT_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);
@@ -169,6 +136,6 @@ public class LoginActivity extends AbstractFragmentActivity implements Applicati
 
     @Override
     public void onRefresh() {
-
+        showProgressBar(false);
     }
 }

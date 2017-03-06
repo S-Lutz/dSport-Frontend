@@ -18,10 +18,12 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.MainActivity;
 import com.omgproduction.dsport_application.activities.main.PinboardActivity;
 import com.omgproduction.dsport_application.activities.main.ProfileActivity;
+import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.services.SessionService;
 import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ import java.util.ArrayList;
  */
 
 public abstract class AbstractNavigationActivity extends AbstractAppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener  {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     protected Context context;
     protected NavigationView navigationView;
@@ -39,7 +41,6 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
     public ArrayList<DrawerLayout.DrawerListener> drawerListeners = new ArrayList<>();
 
     private static int id = R.id.nav_main;
-
     /**
      * While onCreate you should set the Content View. This Method is called after super-onCreate like
      * setContentView(onSetContentView(savedInstanceState));
@@ -58,7 +59,7 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
     protected abstract boolean onBackPressedAfterNavigationClosed();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(onSetContentView(savedInstanceState));
 
@@ -129,19 +130,11 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
         final View headerLayout =
                 navigationView.getHeaderView(0);
 
-        UserService.getInstance().getLocalUser(this, new RequestFuture<User>(){
-            @Override
-            public void onSuccess(User user) {
-                ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(user.getUsername());
-                ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(user.getEmail());
-                ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(user.getBitmap(AbstractNavigationActivity.this));
-            }
+        User user = getLocalUser();
 
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(AbstractNavigationActivity.this);
-            }
-        });
+        ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(user.getUsername());
+        ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(user.getEmail());
+        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(context,user.getPicture()));
 
     }
 
@@ -176,10 +169,6 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
 
     protected void performProfileClick(){
         startActivity(new Intent(this, ProfileActivity.class));
-    }
-
-    protected void logoutUser(){
-        SessionService.getInstance().logout(this);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

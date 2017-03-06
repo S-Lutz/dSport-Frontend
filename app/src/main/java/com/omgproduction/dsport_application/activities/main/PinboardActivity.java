@@ -35,7 +35,7 @@ public class PinboardActivity extends AbstractNavigationActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         SocialFragment socialFragment = new SocialFragment();
@@ -50,18 +50,9 @@ public class PinboardActivity extends AbstractNavigationActivity {
     }
 
     private void loadData() {
-        UserService.getInstance().getLocalUser(this,new RequestFuture<User>(){
-            @Override
-            public void onSuccess(User user) {
-                //setPic(R.id.profile_pic, user.getBitmap(PinboardActivity.this));
-                socialMenuFragment.setPinboardOwner(user.getId());
-            }
 
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(PinboardActivity.this);
-            }
-        });
+        User user = getLocalUser();
+        socialMenuFragment.setPinboardOwner(user.getId());
 
     }
 

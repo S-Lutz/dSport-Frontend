@@ -22,10 +22,7 @@ public class WelcomeActivity extends Activity {
 
         Intent i = getIntent();
         username = i.getStringExtra(ApplicationKeys.APPLICATION_USER_USERNAME);
-        Resources res = getResources();
-        String text = res.getQuantityString(R.plurals.welcome_messages, 1, username);
-
-        ((TextView)findViewById(R.id.welcome_message)).setText(text);
+        ((TextView)findViewById(R.id.welcome_message)).setText(getResources().getQuantityString(R.plurals.welcome_messages, 1, username));
 
 
     }

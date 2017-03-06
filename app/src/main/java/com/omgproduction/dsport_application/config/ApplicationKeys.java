@@ -57,4 +57,6 @@ public interface ApplicationKeys {
 
     String APPLICATION_NOTIFICATION_NEWPOST_TITLE = "Neuer Post";
     String APPLICATION_NOTIFICATION_NEWPOST_MESSAGE = "Einer deiner Freunde hat einen neuen Post veröffentlicht";
+
+    String APPLICATION_TOKEN = "token";
 }

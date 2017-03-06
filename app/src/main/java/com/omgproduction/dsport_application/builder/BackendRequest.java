@@ -7,7 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.ResultKeys;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by Florian on 21.10.2016.
  */
-public class BackendRequest implements Response.Listener<JSONObject>, Response.ErrorListener{
+public class BackendRequest implements Response.Listener<JSONObject>, Response.ErrorListener, ResultKeys{
 
     private static String TAG = BackendRequest.class.getSimpleName();
 
@@ -70,12 +70,15 @@ public class BackendRequest implements Response.Listener<JSONObject>, Response.E
     }
 
     public JsonObjectRequest build(){
+
+        Log.e("BUILD REQUEST",url);
+
         request = new JsonObjectRequest(method,url, jsonObject,this, this){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
                 //Creating JSON Header
-                headers.put(ApplicationKeys.CONTENT_TYPE, content_type);
+                headers.put(RESULT_CONTENT_TYPE_KEY, content_type);
                 return headers;
             }
         };
@@ -93,7 +96,7 @@ public class BackendRequest implements Response.Listener<JSONObject>, Response.E
 
     @Override
     public void onResponse(JSONObject jsonObject) {
-        Log.i(TAG, "Response: "+jsonObject.toString());
+        Log.e(TAG, "Response: "+jsonObject.toString());
         if(responseListener!=null){
             responseListener.onResponse(jsonObject);
         }

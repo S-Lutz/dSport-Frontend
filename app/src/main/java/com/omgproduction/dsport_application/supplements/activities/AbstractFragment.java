@@ -1,22 +1,42 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Debug;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.IntentKeys;
+import com.omgproduction.dsport_application.config.LocalErrorCodes;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
 
 /**
  * Created by Florian on 17.11.2016.
  */
 
-public abstract class AbstractFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener{
+public abstract class AbstractFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, LocalErrorCodes, IntentKeys{
 
     private SwipeRefreshLayout refresher;
+
+    protected UserService userService;
+    protected SessionService sessionService;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sessionService = new SessionService(getContext());
+        userService = new UserService(getContext());
+
+    }
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
@@ -60,5 +80,21 @@ public abstract class AbstractFragment extends Fragment implements SwipeRefreshL
     @Override
     public void onClick(View v) {
 
+    }
+
+    protected User getLocalUser(){
+        User user = userService.getLocalUser();
+        if(userService.isAvailable(user)){
+            return user;
+        }
+        Log.e("Fragment", "USER NOT FOUND");
+        logoutUser();
+        return user;
+    }
+
+
+
+    protected void logoutUser(){
+        sessionService.logout();
     }
 }

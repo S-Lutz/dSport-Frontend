@@ -12,9 +12,10 @@ import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.models.Post;
-import com.omgproduction.dsport_application.utils.DateUtils;
+import com.omgproduction.dsport_application.utils.DateConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Florian on 17.11.2016.
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder>{
 
-    private ArrayList<Post> posts = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     public interface OnPostClickedListener{
         void onPostClicked(PostViewHolder holder, Post p);
@@ -33,7 +34,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     private final ArrayList<OnPostClickedListener> onPostClickedListeners = new ArrayList<>();
 
-    public PostAdapter(ArrayList<Post> posts) {
+    public PostAdapter(List<Post> posts) {
         this.posts = posts;
     }
     @Override
@@ -46,10 +47,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position) {
         Post post = posts.get(position);
-        holder.tv_date.setText(DateUtils.convertString(holder.contextView.getContext(),post.getCreated()));
+
+        DateConverter converter = new DateConverter();
+
+        holder.tv_date.setText(converter.convertString(post.getCreated()));
         holder.tv_shares.setText(post.getShareCount());
         holder.tv_comments.setText(post.getCommentCount());
-        holder.tv_likes.setText(post.getLikeString());
+        holder.tv_likes.setText(post.getLikeString(holder.contextView.getContext()));
         holder.tv_text.setText(post.getText());
         holder.tv_username.setText(post.getUsername());
         holder.tv_title.setText(post.getTitle());

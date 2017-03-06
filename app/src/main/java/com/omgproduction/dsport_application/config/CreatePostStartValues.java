@@ -5,8 +5,8 @@ package com.omgproduction.dsport_application.config;
  */
 
 public interface CreatePostStartValues {
-    int TEXT = 0;
-    int PICTURE = 1;
-    int GALLERY = 2;
-    String TYPE = "TYPE";
+    int CREATE_POST_TEXT_VALUE = 0;
+    int CREATE_POST_PICTURE_VALUE = 1;
+    int CREATE_POST_GALLERY_VALUE = 2;
+    String CREATE_POST_TYPE_KEY = "CREATE_POST_TYPE_KEY";
 }

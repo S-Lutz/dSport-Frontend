@@ -10,7 +10,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.IntentKeys;
+import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.io.File;
@@ -39,7 +46,7 @@ import static java.security.AccessController.getContext;
 /**
  * Created by Florian on 21.10.2016.
  */
-public abstract class AbstractFragmentActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public abstract class AbstractFragmentActivity extends FragmentActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LocalErrorCodes, IntentKeys{
 
     protected SwipeRefreshLayout refresher;
     private static final int CAMERA_REQUEST_CODE = 1;
@@ -48,6 +55,18 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
     private Uri mImageUri;
     private File imageFile;
     private String mCurrentPhotoPath;
+
+    protected UserService userService;
+    protected SessionService sessionService;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        userService = new UserService(this);
+        sessionService = new SessionService(this);
+
+    }
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
@@ -261,6 +280,20 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
 
     protected void onBitmapResult(Bitmap bitmap){
 
+    }
+
+    protected User getLocalUser(){
+        User user = userService.getLocalUser();
+        if(userService.isAvailable(user)){
+            return user;
+        }
+        Log.e("FragmentActivity", "USER NOT FOUND");
+        logoutUser();
+        return user;
+    }
+
+    protected void logoutUser(){
+        sessionService.logout();
     }
 
 

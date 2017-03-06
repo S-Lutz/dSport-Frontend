@@ -101,11 +101,11 @@ public class Post  implements Serializable {
         return BitmapUtils.getBitmapFromString(context,postPicture);
     }
 
-    public String getLikeString() {
+    public String getLikeString(Context context) {
         StringBuilder sb = new StringBuilder();
         int likes = Integer.parseInt(getLikeCount());
         if(isLiked()){
-            String youPlus = App.getInstance().getApplicationContext().getResources().getString(R.string.you_plus);
+            String youPlus = context.getResources().getString(R.string.you_plus);
             sb.append(youPlus);
             sb.append(" ");
             likes = likes-1;

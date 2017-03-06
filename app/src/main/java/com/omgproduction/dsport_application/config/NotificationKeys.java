@@ -5,5 +5,5 @@ package com.omgproduction.dsport_application.config;
  */
 
 public interface NotificationKeys {
-    String NEW_POSTS = "new_posts";
+    String NOTIFICATION_NEW_POSTS_KEY = "new_posts";
 }

@@ -149,7 +149,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
     private void onPictureClick() {
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.TYPE,CreatePostActivity.PICTURE);
+        intent.putExtra(CreatePostActivity.CREATE_POST_TYPE_KEY,CreatePostActivity.CREATE_POST_PICTURE_VALUE);
         intent.putExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
@@ -157,7 +157,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
     private void onGalleryClick() {
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.TYPE,CreatePostActivity.GALLERY);
+        intent.putExtra(CreatePostActivity.CREATE_POST_TYPE_KEY,CreatePostActivity.CREATE_POST_GALLERY_VALUE);
         intent.putExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
@@ -172,7 +172,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
     private void onTextClick() {
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.TYPE,CreatePostActivity.TEXT);
+        intent.putExtra(CreatePostActivity.CREATE_POST_TYPE_KEY,CreatePostActivity.CREATE_POST_TEXT_VALUE);
         intent.putExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }

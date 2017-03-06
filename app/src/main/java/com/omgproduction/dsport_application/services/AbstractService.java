@@ -8,7 +8,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.omgproduction.dsport_application.config.ApplicationConfig;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.ErrorCodes;
+import com.omgproduction.dsport_application.config.ConnectionErrorCodes;
+import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.config.NotificationKeys;
 import com.omgproduction.dsport_application.config.Routes;
 import com.omgproduction.dsport_application.controller.App;
@@ -17,7 +18,7 @@ import com.omgproduction.dsport_application.controller.App;
  * Created by Florian on 03.03.2017.
  */
 
-public abstract class AbstractService<T extends AbstractService> implements Routes, ApplicationKeys, ErrorCodes,NotificationKeys, ApplicationConfig {
+public abstract class AbstractService implements Routes, ApplicationKeys, ConnectionErrorCodes,NotificationKeys, ApplicationConfig {
     protected final Context context;
     //Requestqueue to handle HTTP-Connections
     private static RequestQueue mRequestQueue;

@@ -26,7 +26,7 @@ public class ResultWrapper implements ResultKeys{
 
     public boolean isOk(){
         try {
-            return jsonObject.getString(ERROR).equals(OK);
+            return jsonObject.getString(RESULT_ERROR_KEY).equals(RESULT_OK_VALUE);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
@@ -35,9 +35,26 @@ public class ResultWrapper implements ResultKeys{
 
     public <O> O  extractValue(Converter<JSONObject,O> converter){
         try {
-            return converter.convert(jsonObject.getJSONObject(VALUE));
+            return converter.convert(jsonObject.getJSONObject(RESULT_VALUE_VALUE));
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public JSONObject extractValue(){
+        try {
+                return jsonObject.getJSONObject(RESULT_VALUE_VALUE);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return null;
+        }
+    }
+
+    public String extractString(String name){
+        try {
+            return jsonObject.getJSONObject(RESULT_VALUE_VALUE).getString(name);
+        } catch (JSONException e) {
             return null;
         }
     }
@@ -46,9 +63,12 @@ public class ResultWrapper implements ResultKeys{
         try {
 
             List<O> resultList = new ArrayList<O>();
-            JSONArray jsonArray = jsonObject.getJSONObject(VALUE).getJSONArray(arrayName);
+            JSONArray jsonArray = jsonObject.getJSONObject(RESULT_VALUE_VALUE).getJSONArray(arrayName);
             for(int i = 0; i< jsonArray.length(); i++){
-                resultList.add(converter.convert(jsonArray.getJSONObject(i)));
+                O item = converter.convert(jsonArray.getJSONObject(i));
+                if(item!=null){
+                    resultList.add(item);
+                }
             }
 
             return resultList;
@@ -60,7 +80,7 @@ public class ResultWrapper implements ResultKeys{
 
     public String extractErrorCode(){
         try {
-            return jsonObject.getString(VALUE);
+            return jsonObject.getString(RESULT_VALUE_VALUE);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -69,7 +89,7 @@ public class ResultWrapper implements ResultKeys{
 
     public String extractNotificationCode(){
         try {
-            return jsonObject.getString(NOTIFICATION);
+            return jsonObject.getString(RESULT_NOTIFICATION_KEY);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;

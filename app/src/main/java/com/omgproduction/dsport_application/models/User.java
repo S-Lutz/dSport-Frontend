@@ -67,13 +67,4 @@ public class User  implements Serializable {
     public String getAgbversion() {
         return agbversion;
     }
-
-    public Bitmap getBitmap(Context context){
-
-        if(picture.isEmpty()){
-            return BitmapFactory.decodeResource(context.getResources(),
-                    R.drawable.logo);
-        }
-        return BitmapUtils.getBitmapFromString(context,picture);
-    }
 }

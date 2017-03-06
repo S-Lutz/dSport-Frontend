@@ -5,21 +5,20 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.services.SessionService;
-import com.omgproduction.dsport_application.services.UserService;
-import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
+import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.ChatFragment;
 import com.omgproduction.dsport_application.fragments.main.EventFragment;
 import com.omgproduction.dsport_application.fragments.main.ExerciseUnitFragment;
-import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
-import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
+import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 
@@ -36,8 +35,11 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.e("Main Activity", "started");
+
         buildTabViewer();
 
         preferFabs();
@@ -50,18 +52,9 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
         socialMenuFragment = new SocialMenuFragment();
         socialMenuFragment.setRootFab((FloatingActionButton) findViewById(R.id.options_fab));
 
-        UserService.getInstance().getLocalUser(this,new RequestFuture<User>(){
-            @Override
-            public void onSuccess(User result) {
-                socialMenuFragment.setPinboardOwner(result.getId());
-            }
+        User localUser = getLocalUser();
 
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(MainActivity.this);
-            }
-        });
-
+        socialMenuFragment.setPinboardOwner(localUser.getId());
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fab_menu_container, socialMenuFragment).commit();

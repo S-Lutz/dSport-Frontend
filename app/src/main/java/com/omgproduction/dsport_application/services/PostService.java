@@ -5,9 +5,6 @@ import android.content.Context;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.builder.BackendRequest;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.Routes;
-import com.omgproduction.dsport_application.controller.App;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Like;
@@ -16,17 +13,14 @@ import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.utils.ResultWrapper;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Florian on 21.10.2016.
  */
-public class PostService extends AbstractService<PostService>{
+public class PostService extends AbstractService{
 
     public PostService(Context context) {
         super(context);
@@ -34,8 +28,8 @@ public class PostService extends AbstractService<PostService>{
 
     public void getAllPosts(final String localUserID, final IRequestFuture<List<Post>> listener){
         listener.onStartQuery();
-        BackendRequest request = new BackendRequest(Routes.ROUTE_GET_POSTS)
-                .param(ApplicationKeys.APPLICATION_USER_USER_ID,localUserID)
+        BackendRequest request = new BackendRequest(ROUTE_GET_POSTS)
+                .param(APPLICATION_USER_USER_ID,localUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
@@ -45,7 +39,7 @@ public class PostService extends AbstractService<PostService>{
                             List<Post> posts = result.extractArray(ConverterFactory.createJsonToPostConverter(), APPLICATION_POSTS);
                             if(posts == null){
                                 listener.onFinishQuery();
-                                listener.onFailure(SOMETHING_WENT_WRONG);
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else {
                                 listener.onFinishQuery();
                                 listener.onSuccess(posts);
@@ -60,7 +54,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -71,7 +65,7 @@ public class PostService extends AbstractService<PostService>{
     public void getPinboard(final String localUserID, final String ownerUserID, final IRequestFuture<List<Post>> listener){
         listener.onStartQuery();
         //TODO GET PINBOARD
-        BackendRequest request = new BackendRequest(ROUTE_GET_POSTS)
+        BackendRequest request = new BackendRequest(ROUTE_GET_PINBOARD)
                 .param(APPLICATION_USER_USER_ID,localUserID)
                 .param(APPLICATION_POST_OWNER_ID,ownerUserID)
                 .responseListener(new Response.Listener<JSONObject>() {
@@ -85,7 +79,7 @@ public class PostService extends AbstractService<PostService>{
                             List<Post> posts = result.extractArray(ConverterFactory.createJsonToPostConverter(), APPLICATION_POSTS);
                             if(posts==null){
                                 listener.onFinishQuery();
-                                listener.onFailure(SOMETHING_WENT_WRONG);
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else {
                                 listener.onFinishQuery();
                                 listener.onSuccess(posts);
@@ -100,7 +94,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -134,7 +128,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -157,7 +151,7 @@ public class PostService extends AbstractService<PostService>{
                             List<Comment> comments = result.extractArray(ConverterFactory.createJsonToCommentConverter(), APPLICATION_COMMENTS);
                             if(comments==null){
                                 listener.onFinishQuery();
-                                listener.onFailure(SOMETHING_WENT_WRONG);
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else {
                                 listener.onFinishQuery();
                                 listener.onSuccess(comments);
@@ -172,7 +166,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -195,7 +189,7 @@ public class PostService extends AbstractService<PostService>{
 
                             if(likeResult==null){
                                 listener.onFinishQuery();
-                                listener.onFailure(SOMETHING_WENT_WRONG);
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else {
                                 listener.onFinishQuery();
                                 listener.onSuccess(likeResult);
@@ -210,7 +204,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -233,7 +227,7 @@ public class PostService extends AbstractService<PostService>{
                             LikeResult likeResult = result.extractValue(ConverterFactory.createJsonToCommentLikeResultConverter());
                             if(likeResult==null){
                                 listener.onFinishQuery();
-                                listener.onFailure(SOMETHING_WENT_WRONG);
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else{
                                 listener.onFinishQuery();
                                 listener.onSuccess(likeResult);
@@ -248,7 +242,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -269,9 +263,10 @@ public class PostService extends AbstractService<PostService>{
                         if(result.isOk()){
 
                             List<Like> likes = result.extractArray(ConverterFactory.createJsonToLikeConverter(), APPLICATION_LIKES);
+
                             if(likes == null){
                                 listener.onFinishQuery();
-                                listener.onFailure(SOMETHING_WENT_WRONG);
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else{
                                 listener.onFinishQuery();
                                 listener.onSuccess(likes);
@@ -286,7 +281,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -318,7 +313,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 
@@ -340,7 +335,7 @@ public class PostService extends AbstractService<PostService>{
                             Post post = result.extractValue(ConverterFactory.createJsonToPostConverter());
                             listener.onFinishQuery();
                             if(post==null){
-                                listener.onFailure(SOMETHING_WENT_WRONG);
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else {
                                 listener.onSuccess(post);
                             }
@@ -354,7 +349,7 @@ public class PostService extends AbstractService<PostService>{
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         listener.onFinishQuery();
-                        listener.onFailure(SOMETHING_WENT_WRONG);
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                     }
                 });
 

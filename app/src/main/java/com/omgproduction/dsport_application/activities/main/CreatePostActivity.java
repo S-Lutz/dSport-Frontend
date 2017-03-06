@@ -1,22 +1,17 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.CreatePostStartValues;
-import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.services.PostService;
-import com.omgproduction.dsport_application.services.SessionService;
-import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.PostService;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
@@ -27,11 +22,10 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
     private int type;
     private Bitmap postPicture;
 
-    private UserService userService;
     private PostService postService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_activity_create_post);
 
@@ -40,12 +34,12 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
         findViewById(R.id.create_post_button).setOnClickListener(this);
         findViewById(R.id.create_post_camera_button).setOnClickListener(this);
         findViewById(R.id.create_post_gallery_button).setOnClickListener(this);
-
-        userService = new UserService(this);
         postService = new PostService(this);
 
-        setPic(R.id.create_post_picture, userService.getLocalUser().getBitmap(CreatePostActivity.this));
-        setText(R.id.create_post_username, userService.getLocalUser().getUsername());
+        User user = getLocalUser();
+
+        setPic(R.id.create_post_picture, BitmapUtils.getBitmapFromString(CreatePostActivity.this,user.getPicture()));
+        setText(R.id.create_post_username, user.getUsername());
     }
 
     @Override
@@ -86,7 +80,7 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
 
         User user = userService.getLocalUser();
         pinboardOwner = (pinboardOwner==null)?user.getId():pinboardOwner;
-        postService.createPost(user.getId(), pinboardOwner,(type == TEXT)?"":picture,text,title, new RequestFuture<Void>(){
+        postService.createPost(user.getId(), pinboardOwner,(type == CREATE_POST_TEXT_VALUE)?"":picture,text,title, new RequestFuture<Void>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -117,20 +111,20 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
 
     public void preparePostData() {
         pinboardOwner = getIntent().getStringExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID);
-        type = getIntent().getIntExtra(TYPE,TEXT);
+        type = getIntent().getIntExtra(CREATE_POST_TYPE_KEY, CREATE_POST_TEXT_VALUE);
 
         switch (type){
-            case PICTURE:
+            case CREATE_POST_PICTURE_VALUE:
                 openCamera();
                 break;
-            case GALLERY:
+            case CREATE_POST_GALLERY_VALUE:
                 openGallery();
         }
     }
 
     @Override
     protected void onBitmapResult(Bitmap bitmap) {
-        type = PICTURE;
+        type = CREATE_POST_PICTURE_VALUE;
         postPicture = bitmap;
         ((ImageView)findViewById(R.id.create_post_post_picture)).setImageBitmap(bitmap);
         findViewById(R.id.create_post_post_picture).setVisibility(View.VISIBLE);

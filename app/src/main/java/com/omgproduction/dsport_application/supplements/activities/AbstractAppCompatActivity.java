@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,17 +20,31 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.LocalErrorCodes;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
 
 /**
  * Created by Florian on 06.11.2016.
  */
 
-public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LocalErrorCodes{
 
     protected SwipeRefreshLayout refresher;
     private static final int CAM_REQUEST = 1;
     private static final int PIC_CROP = 2;
     private static final int SELECT_PICTURE = 3;
+
+    protected SessionService sessionService;
+    protected UserService userService;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sessionService = new SessionService(this);
+        userService = new UserService(this);
+    }
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
@@ -182,5 +199,19 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
 
     protected void onBitmapResult(Bitmap bitmap){
 
+    }
+
+    protected User getLocalUser(){
+        User user = userService.getLocalUser();
+        if(userService.isAvailable(user)){
+            return user;
+        }
+        Log.e("CompatActivity", "USER NOT FOUND");
+        logoutUser();
+        return user;
+    }
+
+    protected void logoutUser(){
+        sessionService.logout();
     }
 }

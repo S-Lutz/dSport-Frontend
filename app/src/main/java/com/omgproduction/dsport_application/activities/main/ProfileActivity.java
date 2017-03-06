@@ -12,22 +12,15 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.ErrorCodes;
+import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
-import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.services.SessionService;
-import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
 import com.omgproduction.dsport_application.utils.Transitions;
-
-import org.json.JSONException;
 
 
 public class ProfileActivity extends AbstractNavigationActivity {
@@ -50,7 +43,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -65,38 +58,42 @@ public class ProfileActivity extends AbstractNavigationActivity {
         preferFloatingButtons();
         addActionListeners();
 
-
-        loadLocalData();
-        loadOnlineData();
+        update();
     }
 
-    private void loadLocalData() {
-        UserService.getInstance().getLocalUser(context,new RequestFuture<User>(){
+    private void update() {
+        User user = getLocalUser();
+
+        setUserValues(user);
+        userService.synchronizeLocalUser(user.getId(), new RequestFuture<User>() {
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
             }
 
             @Override
+            public void onSuccess(User user) {
+                setUserValues(user);
+            }
+
+            @Override
+            public void onFailure(String ErrorCode) {
+                //TODO Errorhandling
+            }
+
+            @Override
             public void onFinishQuery() {
                 showProgressBar(false);
             }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
-            }
-
-            @Override
-            public void onSuccess(User user) {
-                setText(R.id.profile_username_text,user.getUsername());
-                setText(R.id.profile_email_text,user.getEmail());
-                setText(R.id.profile_firstname_text,user.getFirstname());
-                setText(R.id.profile_lastname_text,user.getLastname());
-                setPic(R.id.profile_pic,user.getBitmap(context));
-            }
         });
+    }
 
+    public void setUserValues(User user){
+        setText(R.id.profile_username_text,user.getUsername());
+        setText(R.id.profile_email_text,user.getEmail());
+        setText(R.id.profile_firstname_text,user.getFirstname());
+        setText(R.id.profile_lastname_text,user.getLastname());
+        setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(context,user.getPicture()));
     }
 
     private void addActionListeners() {
@@ -127,51 +124,6 @@ public class ProfileActivity extends AbstractNavigationActivity {
         fabEdit.setOnClickListener(this);
         fabCamera.setOnClickListener(this);
         fabGallery.setOnClickListener(this);
-    }
-
-    private void loadOnlineData() {
-        UserService.getInstance().getGlobalUser(this, new RequestFuture<User>() {
-            @Override
-            public void onStartQuery() {
-                showProgressBar(true);
-            }
-
-            @Override
-            public void onSuccess(User user) {
-                setText(R.id.profile_username_text, user.getUsername());
-                setText(R.id.profile_email_text, user.getEmail());
-                setText(R.id.profile_firstname_text, user.getFirstname());
-                setText(R.id.profile_lastname_text, user.getLastname());
-                setPic(R.id.profile_pic,user.getBitmap(context));
-            }
-
-            @Override
-            public void onConnectionError(VolleyError error) {
-                error.printStackTrace();
-            }
-
-            @Override
-            public void onFailure(String ErrorCode) {
-                //TODO Errorhandling
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                //TODO Errorhandling
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
-            }
-
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
-
     }
 
     @Override
@@ -213,103 +165,89 @@ public class ProfileActivity extends AbstractNavigationActivity {
         final String password2 = getTVText(R.id.profile_password_input2);
 
         if(password1.trim().isEmpty()){
-            printInputError(R.id.profile_password_input_layout, ErrorCodes.FIELD_EMPTY);
+            printInputError(R.id.profile_password_input_layout, LocalErrorCodes.FIELD_EMPTY_ERROR);
         }
         if(password2.trim().isEmpty()){
-            printInputError(R.id.profile_password_confirm_input_layout,ErrorCodes.FIELD_EMPTY);
+            printInputError(R.id.profile_password_confirm_input_layout, LocalErrorCodes.FIELD_EMPTY_ERROR);
         }
 
         if(password1.equals(password2)){
-            savePassword(password1);
             removeInputError(R.id.profile_password_input_layout);
             removeInputError(R.id.profile_password_confirm_input_layout);
+            savePassword(password1);
         }else{
-            printInputError(R.id.profile_password_input_layout,ErrorCodes.PASSWORD_MISSMATCH);
-            printInputError(R.id.profile_password_confirm_input_layout,ErrorCodes.PASSWORD_MISSMATCH);
+            printInputError(R.id.profile_password_input_layout, LocalErrorCodes.PASSWORD_MISSMATCH_ERROR);
+            printInputError(R.id.profile_password_confirm_input_layout, LocalErrorCodes.PASSWORD_MISSMATCH_ERROR);
         }
     }
 
     private void performEmailConfirm() {
+        User user = getLocalUser();
+
         final String email = getTVText(R.id.profile_email_input);
-        final String currentEmail = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_EMAIL,"");
-        if(!currentEmail.trim().isEmpty()){
-            if(!email.trim().isEmpty()){
-                if(!email.equals(currentEmail)){
-                    if(StringUtils.isValidEmail(email)){
-                        saveEmail(email);
-                        removeInputError(R.id.profile_email_input_layout);
-                    }else{
-                        printInputError(R.id.profile_email_input_layout,ErrorCodes.INVALID_EMAIl);
-                    }
+        if(!email.trim().isEmpty()){
+            if(!email.equals(user.getEmail())){
+                if(StringUtils.isValidEmail(email)){
+                    removeInputError(R.id.profile_email_input_layout);
+                    saveEmail(email);
                 }else{
-                    printInputError(R.id.profile_email_input_layout,ErrorCodes.NO_CANGES);
+                    printInputError(R.id.profile_email_input_layout, LocalErrorCodes.INVALID_EMAIL_ERROR);
                 }
             }else{
-                printInputError(R.id.profile_email_input_layout,ErrorCodes.FIELD_EMPTY);
+                printInputError(R.id.profile_email_input_layout, LocalErrorCodes.NO_CANGES_ERROR);
             }
         }else{
-            //User not logged in
-            SessionService.getInstance().logout(this);
+            printInputError(R.id.profile_email_input_layout, LocalErrorCodes.FIELD_EMPTY_ERROR);
         }
     }
 
     private void performLastnameConfirm() {
+
+        User user = getLocalUser();
+
         String lastname = getTVText(R.id.profile_lastname_input);
-        String currentLastname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_LASTNAME,"");
-        if(!currentLastname.trim().isEmpty()){
-            if(!lastname.trim().isEmpty()){
-                if(!lastname.equals(currentLastname)){
-                    saveLastname(lastname);
-                    removeInputError(R.id.profile_lastname_input_layout);
-                }else{
-                    printInputError(R.id.profile_lastname_input_layout,ErrorCodes.NO_CANGES);
-                }
+        if(!lastname.trim().isEmpty()){
+            if(!lastname.equals(user.getLastname())){
+                saveLastname(lastname);
+                removeInputError(R.id.profile_lastname_input_layout);
             }else{
-                printInputError(R.id.profile_lastname_input_layout,ErrorCodes.FIELD_EMPTY);
+                printInputError(R.id.profile_lastname_input_layout, LocalErrorCodes.NO_CANGES_ERROR);
             }
         }else{
-            //User not logged in
-            SessionService.getInstance().logout(this);
+            printInputError(R.id.profile_lastname_input_layout, LocalErrorCodes.FIELD_EMPTY_ERROR);
         }
     }
 
     private void performFirstnameConfirm() {
+
+        User user = getLocalUser();
+
         final String firstname = getTVText(R.id.profile_firstname_input);
-        final String currentFirstname = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_FIRSTNAME,"");
-        if(!currentFirstname.trim().isEmpty()){
-            if(!firstname.trim().isEmpty()){
-                if(!firstname.equals(currentFirstname)){
-                    saveFirstname(firstname);
-                    removeInputError(R.id.profile_firstname_input_layout);
-                }else{
-                    printInputError(R.id.profile_firstname_input_layout,ErrorCodes.NO_CANGES);
-                }
+        if(!firstname.trim().isEmpty()){
+            if(!firstname.equals(user.getFirstname())){
+                saveFirstname(firstname);
+                removeInputError(R.id.profile_firstname_input_layout);
             }else{
-                printInputError(R.id.profile_firstname_input_layout,ErrorCodes.FIELD_EMPTY);
+                printInputError(R.id.profile_firstname_input_layout, LocalErrorCodes.NO_CANGES_ERROR);
             }
         }else{
-            //User not logged in
-            SessionService.getInstance().logout(this);
+            printInputError(R.id.profile_firstname_input_layout, LocalErrorCodes.FIELD_EMPTY_ERROR);
         }
     }
 
     private void performUsernameConfirm() {
+        User user = getLocalUser();
+
         final String username = getTVText(R.id.profile_username_input);
-        final String currentUsername = Preferences.getInstance(this).getStringDetail(ApplicationKeys.APPLICATION_USER_USERNAME,"");
-        if(!currentUsername.trim().isEmpty()){
-            if(!username.trim().isEmpty()){
-                if(!username.equals(currentUsername)){
-                    saveUsername(username);
-                    removeInputError(R.id.profile_username_input_layout);
-                }else{
-                    printInputError(R.id.profile_username_input_layout,ErrorCodes.NO_CANGES);
-                }
+        if(!username.trim().isEmpty()){
+            if(!username.equals(user.getUsername())){
+                saveUsername(username);
+                removeInputError(R.id.profile_username_input_layout);
             }else{
-                printInputError(R.id.profile_username_input_layout,ErrorCodes.FIELD_EMPTY);
+                printInputError(R.id.profile_username_input_layout, LocalErrorCodes.NO_CANGES_ERROR);
             }
         }else{
-            //User not logged in
-            SessionService.getInstance().logout(this);
+            printInputError(R.id.profile_username_input_layout, LocalErrorCodes.FIELD_EMPTY_ERROR);
         }
     }
 
@@ -355,41 +293,31 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
 
     private void savePicture(final Bitmap thePic) {
-        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_PICTURE, BitmapUtils.getStringFromBitmap(thePic), new RequestFuture<String>() {
+
+        User user = getLocalUser();
+
+        String bitmapString = BitmapUtils.getStringFromBitmap(thePic);
+
+        userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), bitmapString, user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
+
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(String picString) {
-                setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(context,picString));
+            public void onSuccess(User user) {
+                setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(context,user.getPicture()));
             }
 
             @Override
-            public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
+            public void onFailure(String errorCode) {
+                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         savePicture(thePic);
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_container,errorCode);
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                e.printStackTrace();
-                printError(R.id.profile_container,ErrorCodes.SOMETHING_WENT_WRONG);
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -400,7 +328,9 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveEmail(final String email) {
-        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_EMAIL, email, new RequestFuture<String>() {
+        User user = getLocalUser();
+
+        userService.saveUser(new User(user.getId(),user.getUsername(), email, user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
                 removeInputError(R.id.profile_email_input_layout);
@@ -408,36 +338,20 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onSuccess(String emailString) {
-                setText(R.id.profile_email_text,emailString);
+            public void onSuccess(User user) {
+                setText(R.id.profile_email_text,user.getEmail());
                 setText(R.id.profile_email_input,"");
                 showEmail(false);
             }
 
             @Override
-            public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
+            public void onFailure(String errorCode) {
+                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveEmail(email);
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_email_input_layout,errorCode);
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                e.printStackTrace();
-                printError(R.id.profile_email_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -448,44 +362,31 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveFirstname(final String firstname) {
-        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_FIRSTNAME, firstname, new RequestFuture<String>() {
+
+        User user = getLocalUser();
+
+        userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), firstname, user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
-                showProgressBar(true);
                 removeInputError(R.id.profile_firstname_input_layout);
+                showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(String firstnameString) {
-                setText(R.id.profile_firstname_text,firstnameString);
+            public void onSuccess(User user) {
+                setText(R.id.profile_firstname_text,user.getFirstname());
                 setText(R.id.profile_firstname_input,"");
                 showFirstname(false);
             }
 
             @Override
-            public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
+            public void onFailure(String errorCode) {
+                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveFirstname(firstname);
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_firstname_input_layout,errorCode);
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                e.printStackTrace();
-                printError(R.id.profile_firstname_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -496,44 +397,30 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveLastname(final String lastname) {
-        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_LASTNAME, lastname, new RequestFuture<String>() {
+        User user = getLocalUser();
+
+        userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), user.getFirstname(), lastname, user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
-                showProgressBar(true);
                 removeInputError(R.id.profile_lastname_input_layout);
+                showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(String lastnameString) {
-                setText(R.id.profile_lastname_text,lastnameString);
+            public void onSuccess(User user) {
+                setText(R.id.profile_lastname_text,user.getLastname());
                 setText(R.id.profile_lastname_input,"");
                 showLastname(false);
             }
 
             @Override
-            public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
+            public void onFailure(String errorCode) {
+                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveLastname(lastname);
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_lastname_input_layout,errorCode);
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                e.printStackTrace();
-                printError(R.id.profile_lastname_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -544,7 +431,11 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void savePassword(final String password) {
-        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_PASSWORD, password, new RequestFuture<String>() {
+        User user = getLocalUser();
+
+        user = new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion());
+        user.setPassword(password);
+        userService.saveUser(user, new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -553,36 +444,20 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(User user) {
                 showPassword(false);
                 setText(R.id.profile_password_input1,"");
                 setText(R.id.profile_password_input2,"");
             }
 
             @Override
-            public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
+            public void onFailure(String errorCode) {
+                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         savePassword(password);
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_password_input_layout,errorCode);
-                printError(R.id.profile_password_confirm_input_layout,errorCode);
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -594,44 +469,30 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     private void saveUsername(final String username) {
-        UserService.getInstance().saveUserDetail(this, ApplicationKeys.APPLICATION_USER_USERNAME, username, new RequestFuture<String>() {
+        User user = getLocalUser();
+
+        userService.saveUser(new User(user.getId(),username, user.getEmail(), user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
-                showProgressBar(true);
                 removeInputError(R.id.profile_username_input_layout);
+                showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(String usernameString) {
-                setText(R.id.profile_username_text,usernameString);
+            public void onSuccess(User user) {
+                setText(R.id.profile_username_text,user.getUsername());
                 setText(R.id.profile_username_input,"");
                 showUsername(false);
             }
 
             @Override
-            public void onConnectionError(VolleyError error) {
-                printError(R.id.profile_container,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
+            public void onFailure(String errorCode) {
+                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveUsername(username);
                     }
                 });
-            }
-
-            @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_username_input_layout,errorCode);
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                e.printStackTrace();
-                printError(R.id.profile_username_input_layout,ErrorCodes.SOMETHING_WENT_WRONG);
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionService.getInstance().logout(context);
             }
 
             @Override
@@ -829,6 +690,6 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
     @Override
     public void onRefresh() {
-        loadOnlineData();
+        update();
     }
 }

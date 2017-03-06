@@ -9,7 +9,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.MainActivity;
 import com.omgproduction.dsport_application.config.NotificationKeys;
-import com.omgproduction.dsport_application.controller.ResourceController;
+import com.omgproduction.dsport_application.controller.App;
 import com.omgproduction.dsport_application.utils.ResultWrapper;
 
 import org.json.JSONException;
@@ -30,10 +30,13 @@ public class NotificationReceiver extends com.google.firebase.messaging.Firebase
     private void showNotification(RemoteMessage message) {
         try {
             JSONObject json = new JSONObject(message.getNotification().getBody());
-            String notificationCode = ResultWrapper.extractNotificationCode(json);
-            JSONObject value = ResultWrapper.extractValue(json);
+            ResultWrapper bodyResult = new ResultWrapper(App.getContext(), json);
+
+            String notificationCode = bodyResult.extractNotificationCode();
+
+            JSONObject value = bodyResult.extractValue();
             switch (notificationCode){
-                case NotificationKeys.NEW_POSTS:
+                case NotificationKeys.NOTIFICATION_NEW_POSTS_KEY:
                     newPosts(value);
                     break;
             }
@@ -57,6 +60,6 @@ public class NotificationReceiver extends com.google.firebase.messaging.Firebase
                 .setContentText(getString(R.string.notification_text_new_posts));
 
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        manager.notify(NotificationKeys.NEW_POSTS,NEW_POSTS_ID,builder.build());
+        manager.notify(NotificationKeys.NOTIFICATION_NEW_POSTS_KEY,NEW_POSTS_ID,builder.build());
     }
 }

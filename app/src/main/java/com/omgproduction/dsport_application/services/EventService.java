@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by Florian on 21.10.2016.
  */
-public class EventService extends AbstractService<EventService>{
+public class EventService extends AbstractService{
     public EventService(Context context) {
         super(context);
     }
