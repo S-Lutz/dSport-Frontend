@@ -8,7 +8,7 @@ public interface ResultKeys {
     String RESULT_CONTENT_TYPE_KEY = "Content-Type";
 
     String RESULT_ERROR_KEY = "error";
-    String RESULT_OK_VALUE = "RESULT_OK_VALUE";
+    String RESULT_OK_VALUE = "OK";
     String RESULT_VALUE_VALUE = "value";
     String RESULT_NOTIFICATION_KEY = "notification";
 }

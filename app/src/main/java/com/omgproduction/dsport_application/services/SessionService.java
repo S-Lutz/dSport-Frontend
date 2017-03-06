@@ -139,7 +139,7 @@ public class SessionService extends AbstractService{
      */
     public boolean checkLogin() {
         return
-                new Preferences(context).getBooleanDetail(ApplicationKeys.APPLICATION_IS_LOGIN,false);
+                new Preferences(context).getBooleanDetail(APPLICATION_IS_LOGIN,false);
 
     }
 
@@ -153,15 +153,15 @@ public class SessionService extends AbstractService{
         discardToken(new RequestFuture<Void>());
 
         new Preferences(context)
-                .putBoolean(ApplicationKeys.APPLICATION_IS_LOGIN, false)
-                .putString(ApplicationKeys.APPLICATION_USER_USER_ID, "")
-                .putString(ApplicationKeys.APPLICATION_USER_USERNAME, "")
-                .putString(ApplicationKeys.APPLICATION_USER_EMAIL, "")
-                .putString(ApplicationKeys.APPLICATION_USER_FIRSTNAME, "")
-                .putString(ApplicationKeys.APPLICATION_USER_LASTNAME,  "")
-                .putString(ApplicationKeys.APPLICATION_USER_CREATED, "")
-                .putString(ApplicationKeys.APPLICATION_USER_AGBVERSION, "")
-                .putString(ApplicationKeys.APPLICATION_USER_PICTURE, "")
+                .putBoolean(APPLICATION_IS_LOGIN, false)
+                .putString(APPLICATION_USER_USER_ID, "")
+                .putString(APPLICATION_USER_USERNAME, "")
+                .putString(APPLICATION_USER_EMAIL, "")
+                .putString(APPLICATION_USER_FIRSTNAME, "")
+                .putString(APPLICATION_USER_LASTNAME,  "")
+                .putString(APPLICATION_USER_CREATED, "")
+                .putString(APPLICATION_USER_AGBVERSION, "")
+                .putString(APPLICATION_USER_PICTURE, "")
                 .commit();
 
         Intent i = new Intent(context, LoginActivity.class);

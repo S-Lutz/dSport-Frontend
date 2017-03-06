@@ -9,8 +9,9 @@ import android.widget.TextView;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.LoginActivity;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.IntentKeys;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends Activity implements IntentKeys{
 
     String username;
 
@@ -21,7 +22,7 @@ public class WelcomeActivity extends Activity {
 
 
         Intent i = getIntent();
-        username = i.getStringExtra(ApplicationKeys.APPLICATION_USER_USERNAME);
+        username = i.getStringExtra(INTENT_USERNAME);
         ((TextView)findViewById(R.id.welcome_message)).setText(getResources().getQuantityString(R.plurals.welcome_messages, 1, username));
 
 
@@ -30,7 +31,7 @@ public class WelcomeActivity extends Activity {
     @Override
     public void onBackPressed() {
         Intent i = new Intent(this, LoginActivity.class);
-        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,username);
+        i.putExtra(INTENT_USERNAME,username);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

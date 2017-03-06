@@ -67,7 +67,7 @@ public class RegisterActivity extends AbstractFragmentActivity implements Connec
 
     private void startLoginActivity(Context context){
         Intent i = new Intent(context, LoginActivity.class);
-        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
+        i.putExtra(INTENT_USERNAME,((EditText)findViewById(R.id.register_username)).getText().toString());
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -172,7 +172,7 @@ public class RegisterActivity extends AbstractFragmentActivity implements Connec
 
     private void startWelcomeActivity(String username) {
         Intent i = new Intent(this, WelcomeActivity.class);
-        i.putExtra(ApplicationKeys.APPLICATION_USER_USERNAME,username);
+        i.putExtra(INTENT_USERNAME,username);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

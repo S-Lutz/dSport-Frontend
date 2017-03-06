@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.IntentKeys;
 import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.SessionService;
@@ -29,7 +30,7 @@ import com.omgproduction.dsport_application.services.UserService;
  * Created by Florian on 06.11.2016.
  */
 
-public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LocalErrorCodes{
+public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LocalErrorCodes, IntentKeys{
 
     protected SwipeRefreshLayout refresher;
     private static final int CAM_REQUEST = 1;

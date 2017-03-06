@@ -176,7 +176,9 @@ public class SocialFragment extends AbstractFragment implements PostAdapter.OnPo
 
     @Override
     public void onFailure(String errorCode) {
-        printError(getView(), getView().findViewById(getView().getId()), errorCode);
+        if(getView()!=null){
+            printError(getView(), getView(), errorCode);
+        }
     }
 
     @Override

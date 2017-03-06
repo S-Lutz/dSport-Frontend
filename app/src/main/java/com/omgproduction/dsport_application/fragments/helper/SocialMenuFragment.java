@@ -20,13 +20,15 @@ import android.view.animation.DecelerateInterpolator;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.CreatePostActivity;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.config.CreatePostStartValues;
+import com.omgproduction.dsport_application.config.IntentKeys;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
 import com.omgproduction.dsport_application.utils.Transitions;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SocialMenuFragment extends Fragment implements FloatingMenu, View.OnClickListener{
+public class SocialMenuFragment extends Fragment implements FloatingMenu, View.OnClickListener, IntentKeys, CreatePostStartValues{
 
     private FloatingActionButton camera, gallery, exercise_unit, event, text;
     private FloatingActionButton rootFab;
@@ -149,16 +151,16 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
     private void onPictureClick() {
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.CREATE_POST_TYPE_KEY,CreatePostActivity.CREATE_POST_PICTURE_VALUE);
-        intent.putExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID,pinboardOwner);
+        intent.putExtra(CREATE_POST_TYPE_KEY,CREATE_POST_PICTURE_VALUE);
+        intent.putExtra(INTENT_POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
 
     private void onGalleryClick() {
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.CREATE_POST_TYPE_KEY,CreatePostActivity.CREATE_POST_GALLERY_VALUE);
-        intent.putExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID,pinboardOwner);
+        intent.putExtra(CREATE_POST_TYPE_KEY,CREATE_POST_GALLERY_VALUE);
+        intent.putExtra(INTENT_POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
 
@@ -172,8 +174,8 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
     private void onTextClick() {
         hide();
         Intent intent = new Intent(getContext(),CreatePostActivity.class);
-        intent.putExtra(CreatePostActivity.CREATE_POST_TYPE_KEY,CreatePostActivity.CREATE_POST_TEXT_VALUE);
-        intent.putExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID,pinboardOwner);
+        intent.putExtra(CREATE_POST_TYPE_KEY,CREATE_POST_TEXT_VALUE);
+        intent.putExtra(INTENT_POST_OWNER_ID,pinboardOwner);
         startActivity(intent);
     }
 

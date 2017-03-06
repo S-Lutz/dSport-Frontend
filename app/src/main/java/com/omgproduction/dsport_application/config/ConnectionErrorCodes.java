@@ -13,6 +13,7 @@ public interface ConnectionErrorCodes {
     String EMAIL_ALREADY_EXISTS_ERROR = "e302";
     String USERNAME_OR_PASSWORD_WRONG_ERROR = "e303";
     String USER_NOT_FOUND_ERROR = "e304";
+    String ACCESS_DENIED = "e305";
 
     String BACKEND_SOMETHING_WENT_WRONG_ERROR = "e599";
 }

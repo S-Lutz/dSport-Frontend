@@ -110,7 +110,7 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
     }
 
     public void preparePostData() {
-        pinboardOwner = getIntent().getStringExtra(ApplicationKeys.APPLICATION_POST_OWNER_ID);
+        pinboardOwner = getIntent().getStringExtra(INTENT_POST_OWNER_ID);
         type = getIntent().getIntExtra(CREATE_POST_TYPE_KEY, CREATE_POST_TEXT_VALUE);
 
         switch (type){
