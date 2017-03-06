@@ -4,15 +4,15 @@
     All ErrorCodes from Backend and Application
 
     Connection structure:
-        Request isOk:
+        Request success:
         {
-            "error":"RESULT_OK_VALUE",
+            "error":"OK",
             "value":someVal
         }
 
         Request failed:
         {
-            "error":"RESULT_ERROR_KEY",
+            "error":"ERROR",
             "value":errorCode
         }
     -->
@@ -48,8 +48,7 @@
     <string name="e303">Username or Password wrong!</string>
     <!-- If Database not contain a User with this Username or Password-->
     <string name="e304">User not found!</string>
-    <!-- If Database not contain a User with this Username or Password-->
-    <string name="e305">No Access!</string>
+    <string name="e305"> No Access, you are not a friend of this User!</string>
     <!-- Universal Error-->
     <string name="e599">Something went wrong!</string>
 </resources>

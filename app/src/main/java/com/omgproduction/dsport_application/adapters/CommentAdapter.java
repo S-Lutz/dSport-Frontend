@@ -53,7 +53,7 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.Comment
         holder.tv_text.setText(comment.getText());
         holder.tv_username.setText(comment.getUsername());
 
-        holder.contextView.setOnClickListener(new OnLikeClicked(comment, holder));
+        holder.tv_likes.setOnClickListener(new OnLikeClicked(comment, holder));
 
         Bitmap commentPicture = comment.getBitmapCommentPicture(holder.contextView.getContext());
         if(commentPicture!=null){

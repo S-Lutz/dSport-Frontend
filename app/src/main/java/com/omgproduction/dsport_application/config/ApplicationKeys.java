@@ -59,4 +59,22 @@ public interface ApplicationKeys {
     String APPLICATION_NOTIFICATION_NEWPOST_MESSAGE = "Einer deiner Freunde hat einen neuen Post veröffentlicht";
 
     String APPLICATION_TOKEN = "token";
+    public static final String USERS = "users";
+    public static final String EVENTS = "events";
+    public static final String STUDIOS = "studios";
+
+    public static final String LIKES = "likes";
+
+    public static final String FRIEND_FRIEND = "friend";
+    public static final String FRIEND_REQUEST_RECEIVED = "request_received";
+    public static final String FRIEND_REQUEST_SENDED = "request_sended";
+    public static final String FRIEND_ID = "friend_id";
+
+    public static final String CONNECTION_USER_ID = "user_id";
+    public static final String CONNECTION_TOKEN = "token";
+
+    public static final String NOTIFICATION_NEWPOST_TITLE = "Neuer Post";
+    public static final String NOTIFICATION_NEWPOST_MESSAGE = "Einer deiner Freunde hat einen neuen Post veröffentlicht";
+
+    public static final String QUERY = "query";
 }
