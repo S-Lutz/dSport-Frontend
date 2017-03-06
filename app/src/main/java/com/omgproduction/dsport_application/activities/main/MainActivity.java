@@ -6,15 +6,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SearchViewCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
@@ -23,13 +19,11 @@ import com.omgproduction.dsport_application.fragments.main.EventFragment;
 import com.omgproduction.dsport_application.fragments.main.ExerciseUnitFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
-import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 
-public class MainActivity extends NavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
+public class MainActivity extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -183,7 +177,7 @@ public class MainActivity extends NavigationActivity implements TabLayout.OnTabS
     @Override
     public boolean onQueryTextSubmit(String query) {
         Intent i = new Intent(this, SearchResultActivity.class);
-        i.putExtra(ApplicationKeys.QUERY, query);
+        i.putExtra(ApplicationKeys.APPLICATION_QUERY, query);
         startActivity(i);
         return false;
     }

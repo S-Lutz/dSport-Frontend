@@ -67,4 +67,6 @@ public interface Routes {
     String ROUTE_COMMENT_POST = ROUTE_HOST + ROUTE_HOME + "/posts/comment";
     String ROUTE_GET_LIKES = ROUTE_HOST + ROUTE_HOME + "/posts/likes/getAll";
     String ROUTE_LIKE_COMMENT = ROUTE_HOST + ROUTE_HOME + "/posts/comments/like";
+
+    String ROUTE_SEARCH_ALL = ROUTE_HOST + ROUTE_HOME +"/search/all";
 }

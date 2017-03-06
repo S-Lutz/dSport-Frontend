@@ -2,33 +2,25 @@ package com.omgproduction.dsport_application.activities.main;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
 import com.omgproduction.dsport_application.fragments.helper.FriendMenuFragment;
-import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
-import com.omgproduction.dsport_application.fragments.main.ChatFragment;
-import com.omgproduction.dsport_application.fragments.main.EventFragment;
-import com.omgproduction.dsport_application.fragments.main.ExerciseUnitFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.fragments.users.UserFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
 import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.SearchUser;
-import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
-public class FriendActivity  extends NavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
+public class FriendActivity  extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -38,14 +30,14 @@ public class FriendActivity  extends NavigationActivity implements TabLayout.OnT
 
     @Override
     protected int onSetContentView(Bundle savedInstanceState) {
-        return R.layout.activity_main;
+        return R.layout.layout_activity_main;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        friend = (SearchUser) getIntent().getSerializableExtra(ApplicationKeys.FRIEND_FRIEND);
+        friend = (SearchUser) getIntent().getSerializableExtra(ApplicationKeys.APPLICATION_FRIEND_FRIEND);
 
         ((SearchView)findViewById(R.id.toolbar_search)).setOnQueryTextListener(this);
         buildTabViewer();
@@ -179,7 +171,7 @@ public class FriendActivity  extends NavigationActivity implements TabLayout.OnT
     @Override
     public boolean onQueryTextSubmit(String query) {
         Intent i = new Intent(this, SearchResultActivity.class);
-        i.putExtra(ApplicationKeys.QUERY, query);
+        i.putExtra(ApplicationKeys.APPLICATION_QUERY, query);
         startActivity(i);
         return false;
     }

@@ -1,6 +1,5 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,23 +7,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.controller.SearchController;
-import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.SearchService;
 import com.omgproduction.dsport_application.fragments.search.EventsResultFragment;
 import com.omgproduction.dsport_application.fragments.search.StudioResultFragment;
 import com.omgproduction.dsport_application.fragments.search.UserResultFragment;
 import com.omgproduction.dsport_application.holder.SearchResultHolder;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
-import com.omgproduction.dsport_application.models.SearchUser;
-import com.omgproduction.dsport_application.supplements.activities.NavigationActivity;
+import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
-import org.json.JSONException;
-
-public class SearchResultActivity extends NavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
+public class SearchResultActivity extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -34,18 +29,21 @@ public class SearchResultActivity extends NavigationActivity implements TabLayou
     private StudioResultFragment studioResultFragment;
     private EventsResultFragment eventsResultFragment;
 
+    private SearchService searchService;
 
     @Override
     protected int onSetContentView(Bundle savedInstanceState) {
-        return R.layout.activity_search_result;
+        return R.layout.layout_activity_search_result;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ((SearchView)findViewById(R.id.toolbar_search)).setOnQueryTextListener(this);
-        query = getIntent().getStringExtra(ApplicationKeys.QUERY);
+        query = getIntent().getStringExtra(ApplicationKeys.APPLICATION_QUERY);
+
+        searchService = new SearchService(this);
 
         searchResults(query);
 
@@ -55,78 +53,28 @@ public class SearchResultActivity extends NavigationActivity implements TabLayou
     }
 
     private void searchResults(final String query) {
-        UserController.getInstance().getLocalUserID(this,new OnResultAdapter<String>(){
+
+        User user = getLocalUser();
+
+        searchService.searchQuery(user.getId(), query, new RequestFuture<SearchResultHolder>(){
             @Override
             public void onStartQuery() {
-                super.onStartQuery();
+                showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(String localUserID) {
-                SearchController.getInstance().searchQuery(localUserID, query, new OnResultAdapter<SearchResultHolder>(){
-                    @Override
-                    public void onStartQuery() {
-                        super.onStartQuery();
-                    }
-
-                    @Override
-                    public void onSuccess(SearchResultHolder result) {
-                        userResultFragment.setSearchUsers(result.getUsers());
-                        for(SearchUser searchUser: result.getUsers()){
-                            System.out.println(searchUser.getFirstname());
-                        }
-                    }
-
-                    @Override
-                    public void onConnectionError(VolleyError e) {
-                        super.onConnectionError(e);
-                    }
-
-                    @Override
-                    public void onBackendError(String errorCode) {
-                        super.onBackendError(errorCode);
-                    }
-
-                    @Override
-                    public void onJSONException(JSONException e) {
-                        super.onJSONException(e);
-                    }
-
-                    @Override
-                    public void onUserNotFound() {
-                        super.onUserNotFound();
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        super.onFinishQuery();
-                    }
-                });
+            public void onSuccess(SearchResultHolder result) {
+                userResultFragment.setSearchUsers(result.getUsers());
             }
 
             @Override
-            public void onConnectionError(VolleyError e) {
-                super.onConnectionError(e);
-            }
-
-            @Override
-            public void onBackendError(String errorCode) {
-                super.onBackendError(errorCode);
-            }
-
-            @Override
-            public void onJSONException(JSONException e) {
-                super.onJSONException(e);
-            }
-
-            @Override
-            public void onUserNotFound() {
-                super.onUserNotFound();
+            public void onFailure(String errorCode) {
+                //TODO
             }
 
             @Override
             public void onFinishQuery() {
-                super.onFinishQuery();
+                showProgressBar(false);
             }
         });
     }

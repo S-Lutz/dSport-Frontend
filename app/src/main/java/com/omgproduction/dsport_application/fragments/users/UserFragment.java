@@ -6,13 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedFragment;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragment;
 
 /**
  * Created by Florian on 22.12.2016.
  */
 
-public class UserFragment extends AdvancedFragment {
+public class UserFragment extends AbstractFragment {
     public UserFragment() {
         // Required empty public constructor
     }
@@ -20,7 +20,7 @@ public class UserFragment extends AdvancedFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_exercise_unit, container, false);
+        return inflater.inflate(R.layout.layout_fragment_exercise_unit, container, false);
     }
 
     @Override

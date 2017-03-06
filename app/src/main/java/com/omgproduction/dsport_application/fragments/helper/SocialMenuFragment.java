@@ -40,7 +40,7 @@ public class SocialMenuFragment extends Fragment implements FloatingMenu, View.O
     }
 
     public View inflateView(LayoutInflater inflater, ViewGroup container){
-        return inflater.inflate(R.layout.fragment_floating_menu_social,container,false);
+        return inflater.inflate(R.layout.layout_fragment_floating_menu_social,container,false);
     }
 
     @Override

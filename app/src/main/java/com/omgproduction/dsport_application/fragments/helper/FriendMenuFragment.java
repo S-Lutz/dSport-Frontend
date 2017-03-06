@@ -1,12 +1,6 @@
 package com.omgproduction.dsport_application.fragments.helper;
 
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,14 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.activities.main.CreatePostActivity;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.interfaces.FloatingMenu;
 import com.omgproduction.dsport_application.models.SearchUser;
-import com.omgproduction.dsport_application.utils.Transitions;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +23,7 @@ public class FriendMenuFragment extends SocialMenuFragment{
 
     @Override
     public View inflateView(LayoutInflater inflater, ViewGroup container) {
-        return inflater.inflate(R.layout.fragment_floating_menu_friend,container,false);
+        return inflater.inflate(R.layout.layout_fragment_floating_menu_friend,container,false);
     }
 
     @Override

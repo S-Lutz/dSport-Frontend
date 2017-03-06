@@ -12,16 +12,14 @@ import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.FriendActivity;
-import com.omgproduction.dsport_application.adapters.PostAdapter;
 import com.omgproduction.dsport_application.adapters.SearchUserAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.models.SearchUser;
-import com.omgproduction.dsport_application.supplements.activities.AdvancedFragment;
+import com.omgproduction.dsport_application.supplements.activities.AbstractFragment;
 
 import java.util.ArrayList;
 
-public class UserResultFragment extends AdvancedFragment  implements SwipeRefreshLayout.OnRefreshListener, SearchUserAdapter.OnSearchUserClicked {
+public class UserResultFragment extends AbstractFragment implements SwipeRefreshLayout.OnRefreshListener, SearchUserAdapter.OnSearchUserClicked {
 
     private RecyclerView searchUserRecycler;
     private SearchUserAdapter searchUserAdapter;
@@ -46,7 +44,7 @@ public class UserResultFragment extends AdvancedFragment  implements SwipeRefres
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_search_user, container, false);
+        final View view = inflater.inflate(R.layout.layout_fragment_search_user, container, false);
         refresher = (SwipeRefreshLayout) view.findViewById(R.id.search_user_refresher);
         refresher.setOnRefreshListener(this);
         return view;
@@ -64,7 +62,7 @@ public class UserResultFragment extends AdvancedFragment  implements SwipeRefres
     @Override
     public void onSearchUserClicked(SearchUser searchUser) {
         Intent i = new Intent(getContext(), FriendActivity.class);
-        i.putExtra(ApplicationKeys.FRIEND_FRIEND,searchUser);
+        i.putExtra(ApplicationKeys.APPLICATION_FRIEND_FRIEND,searchUser);
         startActivity(i);
     }
 

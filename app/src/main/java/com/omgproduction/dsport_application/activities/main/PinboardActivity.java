@@ -1,10 +1,13 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.services.SessionService;
 import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
@@ -15,7 +18,7 @@ import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 
-public class PinboardActivity extends AbstractNavigationActivity {
+public class PinboardActivity extends AbstractNavigationActivity implements SearchView.OnQueryTextListener {
 
     private SocialMenuFragment socialMenuFragment;
 
@@ -40,6 +43,8 @@ public class PinboardActivity extends AbstractNavigationActivity {
 
         SocialFragment socialFragment = new SocialFragment();
         socialFragment.setFilter(SocialFragment.Filter.PRIVATE);
+
+        ((SearchView)findViewById(R.id.toolbar_search)).setOnQueryTextListener(this);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.pinboard_fragment_container, socialFragment).commit();
@@ -111,5 +116,19 @@ public class PinboardActivity extends AbstractNavigationActivity {
     @Override
     public void onRefresh() {
 
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Intent i = new Intent(this, SearchResultActivity.class);
+        i.putExtra(ApplicationKeys.APPLICATION_QUERY, query);
+        startActivity(i);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

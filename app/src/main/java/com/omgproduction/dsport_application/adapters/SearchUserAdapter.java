@@ -1,7 +1,6 @@
 package com.omgproduction.dsport_application.adapters;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
-import com.omgproduction.dsport_application.utils.ConnectionUtils;
 
 import java.util.ArrayList;
 
