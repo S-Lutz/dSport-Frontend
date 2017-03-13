@@ -1,19 +1,17 @@
 package com.omgproduction.dsport_application.activities.main;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.services.SessionService;
-import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
-import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
+import com.omgproduction.dsport_application.fragments.main.SocialListFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
-import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
@@ -41,8 +39,8 @@ public class PinboardActivity extends AbstractNavigationActivity implements Sear
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SocialFragment socialFragment = new SocialFragment();
-        socialFragment.setFilter(SocialFragment.Filter.PRIVATE);
+        SocialListFragment socialFragment = new SocialListFragment();
+        socialFragment.setMode(UniversalListFragment.Mode.PRIVATE);
 
         ((SearchView)findViewById(R.id.toolbar_search)).setOnQueryTextListener(this);
 
@@ -57,7 +55,7 @@ public class PinboardActivity extends AbstractNavigationActivity implements Sear
     private void loadData() {
 
         User user = getLocalUser();
-        socialMenuFragment.setPinboardOwner(user.getId());
+        socialMenuFragment.setOwner(user.getId());
 
     }
 

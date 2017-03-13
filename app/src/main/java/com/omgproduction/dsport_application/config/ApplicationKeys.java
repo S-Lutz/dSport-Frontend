@@ -50,19 +50,35 @@ public interface ApplicationKeys {
     String APPLICATION_COMMENT_LIKECOUNT = "likecount";
     String APPLICATION_COMMENT_LIKED = "liked";
 
-    String APPLICATION_LIKES = "likes";
+    String APPLICATION_EVENT_EVENT_ID = "event_id";
+    String APPLICATION_EVENT_CREATED = "created";
+    String APPLICATION_EVENT_PICTURE = "picture";
+    String APPLICATION_EVENT_EVENT_PICTURE = "event_picture";
+    String APPLICATION_EVENT_TEXT = "text";
+    String APPLICATION_EVENT_TITLE = "title";
+    String APPLICATION_EVENT_OWNER_ID = "owner_id";
+    String APPLICATION_EVENT_EVENT_DATE = "event_date";
+    String APPLICATION_EVENT_LOCATION = "location";
+    String APPLICATION_EVENT_LIKED = "liked";
+    String APPLICATION_EVENT_PARTICIPATING = "participating";
+    String APPLICATION_EVENT_LIKECOUNT = "likecount";
+    String APPLICATION_EVENT_COMMENTCOUNT = "commentcount";
+    String APPLICATION_EVENT_SHARECOUNT = "sharecount";
+    String APPLICATION_EVENT_MEMBERCOUNT = "membercount";
 
     String APPLICATION_CONNECTION_USER_ID = "user_id";
+
     String APPLICATION_CONNECTION_TOKEN = "token";
-
     String APPLICATION_NOTIFICATION_NEWPOST_TITLE = "Neuer Post";
-    String APPLICATION_NOTIFICATION_NEWPOST_MESSAGE = "Einer deiner Freunde hat einen neuen Post veröffentlicht";
 
+    String APPLICATION_NOTIFICATION_NEWPOST_MESSAGE = "Einer deiner Freunde hat einen neuen Post veröffentlicht";
     String APPLICATION_TOKEN = "token";
 
     String APPLICATION_USERS = "users";
     String APPLICATION_EVENTS = "events";
     String APPLICATION_STUDIOS = "studios";
+    String APPLICATION_LIKES = "likes";
+
 
     String APPLICATION_FRIEND_FRIEND = "friend";
     String APPLICATION_FRIEND_REQUEST_RECEIVED = "request_received";

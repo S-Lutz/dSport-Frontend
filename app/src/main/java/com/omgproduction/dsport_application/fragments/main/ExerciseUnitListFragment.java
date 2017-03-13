@@ -1,15 +1,18 @@
 package com.omgproduction.dsport_application.fragments.main;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.supplements.activities.AbstractFragment;
+import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
 
-public class ExerciseUnitFragment extends AbstractFragment {
-    public ExerciseUnitFragment() {
+import java.util.List;
+
+public class ExerciseUnitListFragment extends UniversalListFragment {
+    public ExerciseUnitListFragment() {
         // Required empty public constructor
     }
     @Override
@@ -17,6 +20,21 @@ public class ExerciseUnitFragment extends AbstractFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.layout_fragment_exercise_unit, container, false);
+    }
+
+    @Override
+    public RecyclerView.Adapter getAdapter(List values) {
+        return null;
+    }
+
+    @Override
+    protected void updatePrivate() {
+
+    }
+
+    @Override
+    protected void updateGlobal() {
+
     }
 
     @Override

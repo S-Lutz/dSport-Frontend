@@ -4,13 +4,14 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,46 +19,28 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.PostDetailActivity;
 import com.omgproduction.dsport_application.adapters.PostAdapter;
 import com.omgproduction.dsport_application.config.NotificationKeys;
-import com.omgproduction.dsport_application.services.PostService;
+import com.omgproduction.dsport_application.fragments.helper.MenuFragment;
+import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
+import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
 import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.NotificationReceiver;
-import com.omgproduction.dsport_application.supplements.activities.AbstractFragment;
+import com.omgproduction.dsport_application.services.PostService;
 
 import java.util.List;
 
 
-public class SocialFragment extends AbstractFragment implements PostAdapter.OnPostClickedListener, IRequestFuture<List<Post>> {
-
-    private RecyclerView postsRecyler;
-    private PostAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private Filter filter = Filter.ALL;
+public class SocialListFragment extends UniversalListFragment<Post, PostAdapter> implements PostAdapter.OnPostClickedListener{
 
     private PostService postService;
+    private SocialMenuFragment socialMenuFragment;
 
-    public enum Filter{
-        PRIVATE,
-        ALL
-    }
-
-
-
-    public SocialFragment() {
+    public SocialListFragment() {
         postService = new PostService(getContext());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        socialMenuFragment = new SocialMenuFragment();
     }
 
     @Override
@@ -71,30 +54,18 @@ public class SocialFragment extends AbstractFragment implements PostAdapter.OnPo
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    private void update() {
-
+    protected void updatePrivate() {
         User user = getLocalUser();
-
-        switch (filter){
-            case ALL:
-                NotificationManager notificationManager = (NotificationManager)getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancel(NotificationKeys.NOTIFICATION_NEW_POSTS_KEY,NotificationReceiver.NEW_POSTS_ID);
-                postService.getAllPosts(user.getId(), SocialFragment.this);
-                break;
-            case PRIVATE:
-                postService.getPinboard(user.getId(), user.getId(), SocialFragment.this);
-                break;
-        }
-
+        postService.getPinboard(user.getId(), user.getId(), SocialListFragment.this);
     }
 
     @Override
-    public void onRefresh() {
-        update();
+    protected void updateGlobal() {
+        User user = getLocalUser();
+        NotificationManager notificationManager = (NotificationManager)getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(NotificationKeys.NOTIFICATION_NEW_POSTS_KEY,NotificationReceiver.NEW_POSTS_ID);
+        postService.getAllPosts(user.getId(), SocialListFragment.this);
+
     }
 
     @Override
@@ -153,39 +124,16 @@ public class SocialFragment extends AbstractFragment implements PostAdapter.OnPo
     public void onPostComment(PostAdapter.PostViewHolder holder, Post p) {
         onPostClicked(holder, p);
     }
-
-    public void setFilter(Filter filter) {
-        this.filter = filter;
+    @Override
+    public PostAdapter getAdapter(List<Post> posts) {
+        PostAdapter adapter = new PostAdapter(posts);
+        adapter.addOnPostClickedListener(this);
+        return adapter;
     }
 
     @Override
-    public void onStartQuery() {
-        showProgressBar(true);
+    public void onSetActive(boolean flag) {
+        Log.e("SocialFragment", "Activeated");
+        menuManager.setMenuFragment(flag?socialMenuFragment:null);
     }
-
-    @Override
-    public void onSuccess(List<Post> posts) {
-        postsRecyler = (RecyclerView) getView().findViewById(R.id.social_posts_recycler);
-        layoutManager = new LinearLayoutManager(getContext());
-        postsRecyler.setLayoutManager(layoutManager);
-        postsRecyler.setHasFixedSize(true);
-        adapter = new PostAdapter(posts);
-        adapter.addOnPostClickedListener(SocialFragment.this);
-        postsRecyler.setAdapter(adapter);
-    }
-
-    @Override
-    public void onFailure(String errorCode) {
-        if(getView()!=null){
-            printError(getView(), getView(), errorCode);
-        }
-    }
-
-    @Override
-    public void onFinishQuery() {
-        showProgressBar(false);
-    }
-
-
-
 }

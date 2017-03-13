@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_height="wrap_content"
         android:background="@android:drawable/dialog_holo_light_frame"
-        android:id="@+id/postView">
+        android:id="@+id/eventView">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:id="@+id/post_relative_layout"
+            android:id="@+id/event_relative_layout"
             android:layout_height="wrap_content">
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="match_parent"
@@ -21,17 +21,17 @@
                 android:src="@drawable/default_profile"
                 android:scaleType="centerCrop"
                 android:transitionName="@string/transition_user_picture"
-                android:id="@+id/post_picture"
+                android:id="@+id/event_picture"
                 android:adjustViewBounds="true"/>
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignTop="@+id/post_picture"
-                android:transitionName="@string/transition_post_picture_overlay"
-                android:id="@+id/post_picture_overlay"
+                android:layout_alignTop="@+id/event_picture"
+                android:transitionName="@string/transition_event_picture_overlay"
+                android:id="@+id/event_picture_overlay"
                 android:layout_alignParentLeft="true"
-                android:layout_alignRight="@+id/post_picture"
-                android:layout_alignBottom="@+id/post_picture"
+                android:layout_alignRight="@+id/event_picture"
+                android:layout_alignBottom="@+id/event_picture"
                 android:scaleType="centerCrop"
                 android:src="@drawable/post_overlay"
                 android:fitsSystemWindows="true"
@@ -39,57 +39,138 @@
 
             <android.support.v7.widget.AppCompatTextView
                 style="@style/header"
-                android:layout_below="@id/post_picture"
-                android:layout_alignTop="@+id/post_picture"
+                android:layout_below="@id/event_picture"
+                android:layout_alignTop="@+id/event_picture"
                 android:layout_alignParentLeft="true"
                 android:layout_margin="8dp"
                 android:textColor="#666666"
-                android:transitionName="@string/transition_post_username"
-                android:layout_alignRight="@+id/post_picture"
-                android:layout_alignBottom="@+id/post_picture"
+                android:transitionName="@string/transition_event_username"
+                android:layout_alignRight="@+id/event_picture"
+                android:layout_alignBottom="@+id/event_picture"
                 android:gravity="bottom|left"
-                android:id="@+id/post_username"/>
+                android:id="@+id/event_username"/>
 
             <android.support.v7.widget.AppCompatTextView
                 style="@style/header"
-                android:layout_below="@id/post_picture"
+                android:layout_below="@id/event_picture"
                 android:gravity="center"
-                android:transitionName="@string/transition_post_title"
+                android:transitionName="@string/transition_event_title"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:id="@+id/post_title"/>
+                android:id="@+id/event_title"/>
+
+            <LinearLayout
+                android:id="@+id/event_date_container"
+                android:layout_below="@id/event_title"
+                android:orientation="horizontal"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="24dp">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:tint="@color/colorPrimary"
+                    android:src="@android:drawable/ic_dialog_alert"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    style="@style/body"
+                    android:transitionName="@string/transition_event_text"
+                    android:id="@+id/event_date_tv"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/event_member_container"
+                android:layout_below="@id/event_date_container"
+                android:orientation="horizontal"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="24dp">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:tint="@color/colorPrimary"
+                    android:src="@drawable/ic_users"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    style="@style/body"
+                    android:transitionName="@string/transition_event_text"
+                    android:id="@+id/event_member_tv"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/event_location_container"
+                android:layout_below="@id/event_member_container"
+                android:orientation="horizontal"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="24dp">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:tint="@color/colorPrimary"
+                    android:src="@android:drawable/ic_dialog_map"/>
+
+                <android.support.v7.widget.AppCompatTextView
+                    style="@style/body"
+                    android:transitionName="@string/transition_event_text"
+                    android:id="@+id/event_location_tv"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
+                    />
+            </LinearLayout>
 
             <android.support.v7.widget.AppCompatImageView
                 android:layout_width="match_parent"
-                android:layout_below="@id/post_title"
+                android:layout_below="@id/event_location_container"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
                 android:adjustViewBounds="true"
                 android:visibility="gone"
-                android:id="@+id/post_post_picture"/>
+                android:id="@+id/event_event_picture"/>
             <android.support.v7.widget.AppCompatTextView
                 style="@style/body"
-                android:layout_below="@id/post_post_picture"
-                android:transitionName="@string/transition_post_text"
-                android:id="@+id/post_text"
+                android:layout_below="@id/event_event_picture"
+                android:transitionName="@string/transition_event_text"
+                android:id="@+id/event_text"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_below="@+id/post_text"
+                android:layout_below="@+id/event_text"
                 android:weightSum="3"
-                android:transitionName="@string/transition_post_buttons"
+                android:transitionName="@string/transition_event_buttons"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:id="@+id/post_option_container"
+                android:id="@+id/event_option_container"
                 android:orientation="horizontal">
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_like"
-                    android:id="@+id/post_like_count"
+                    android:id="@+id/event_like_count"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
@@ -103,7 +184,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_comments"
-                    android:id="@+id/post_comment_count"
+                    android:id="@+id/event_comment_count"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
@@ -111,14 +192,14 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/post_create_action"
+                    android:layout_below="@+id/event_create_action"
                     style="@style/devider"/>
                 <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="match_parent"                             
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_share"
-                    android:id="@+id/post_share_count"
+                    android:id="@+id/event_share_count"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
@@ -128,15 +209,15 @@
                 android:layout_width="match_parent"
                 android:id="@+id/devider"
                 android:layout_height="1dp"
-                android:layout_below="@+id/post_option_container"
+                android:layout_below="@+id/event_option_container"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 style="@style/devider"/>
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/post_date"
-                android:transitionName="@string/transition_post_date"
+                android:id="@+id/event_date"
+                android:transitionName="@string/transition_event_date"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_alignParentEnd="true"

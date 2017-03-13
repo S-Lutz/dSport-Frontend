@@ -31,7 +31,7 @@ public class FriendMenuFragment extends SocialMenuFragment{
                              Bundle savedInstanceState) {
         View v = super.onCreateView(inflater,container,savedInstanceState);
 
-        setPinboardOwner(user.getId());
+        setOwner(user.getId());
 
         add = (FloatingActionButton) v.findViewById(R.id.friend_fab_add);
         delete = (FloatingActionButton) v.findViewById(R.id.friend_fab_delete);

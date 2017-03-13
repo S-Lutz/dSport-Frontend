@@ -1,46 +1,29 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.IntentKeys;
 import com.omgproduction.dsport_application.config.LocalErrorCodes;
-import com.omgproduction.dsport_application.fragments.main.SocialFragment;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.SessionService;
 import com.omgproduction.dsport_application.services.UserService;
-import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import static java.security.AccessController.getContext;
 
 
 /**
