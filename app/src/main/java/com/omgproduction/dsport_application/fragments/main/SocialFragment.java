@@ -10,6 +10,7 @@ import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.PostDetailActivity;
 import com.omgproduction.dsport_application.adapters.PostAdapter;
 import com.omgproduction.dsport_application.config.NotificationKeys;
+import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.services.PostService;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
@@ -38,6 +40,7 @@ public class SocialFragment extends AbstractFragment implements PostAdapter.OnPo
     private Filter filter = Filter.ALL;
 
     private PostService postService;
+    private SearchUser owner;
 
     public enum Filter{
         PRIVATE,
@@ -86,7 +89,7 @@ public class SocialFragment extends AbstractFragment implements PostAdapter.OnPo
                 postService.getAllPosts(user.getId(), SocialFragment.this);
                 break;
             case PRIVATE:
-                postService.getPinboard(user.getId(), user.getId(), SocialFragment.this);
+                postService.getPinboard(user.getId(), (owner==null?user.getId():owner.getId()), SocialFragment.this);
                 break;
         }
 
@@ -176,6 +179,7 @@ public class SocialFragment extends AbstractFragment implements PostAdapter.OnPo
 
     @Override
     public void onFailure(String errorCode) {
+        Log.e("FAILURE", errorCode);
         if(getView()!=null){
             printError(getView(), getView(), errorCode);
         }
@@ -187,5 +191,7 @@ public class SocialFragment extends AbstractFragment implements PostAdapter.OnPo
     }
 
 
-
+    public void setOwner(SearchUser owner) {
+        this.owner = owner;
+    }
 }

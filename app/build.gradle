@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.omgproduction.dsport_application"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 24
         versionCode 9
         versionName "1.0.8"
@@ -22,7 +22,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/volley.jar')
-
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
     compile 'com.google.firebase:firebase-messaging:9.8.0'
@@ -30,6 +29,7 @@ dependencies {
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     testCompile 'junit:junit:4.12'
 }
 

@@ -40,6 +40,7 @@ public class ConverterFactory implements ApplicationKeys {
                             input.getString(APPLICATION_USER_AGBVERSION)
                     );
                 } catch (JSONException e) {
+                    e.printStackTrace();
                     return null;
                 }
             }

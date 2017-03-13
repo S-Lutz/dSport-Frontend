@@ -10,9 +10,11 @@ import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
-import com.omgproduction.dsport_application.utils.ResultWrapper;
+import com.omgproduction.dsport_application.utils.Converter;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
+import com.omgproduction.dsport_application.utils.ResultWrapper;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -102,18 +104,50 @@ public class PostService extends AbstractService{
 
     }
 
+    //public void createPost(final String localUserID, final String pinboardOwnerID, final String picture, final String text, final String title, final IRequestFuture<Void> listener) {
+    //    listener.onStartQuery();
+    //    BackendRequest request = new BackendRequest(ROUTE_CREATE_POST)
+    //            .param(APPLICATION_USER_USER_ID, localUserID)
+    //            .param(APPLICATION_POST_OWNER_ID, pinboardOwnerID)
+    //            .param(APPLICATION_POST_TEXT, text)
+    //            .param(APPLICATION_POST_PICTURE, picture)
+    //            .param(APPLICATION_POST_TITLE, title)
+    //            .responseListener(new Response.Listener<JSONObject>() {
+    //                @Override
+    //                public void onResponse(JSONObject jsonObject) {
+//
+    //                    ResultWrapper result = new ResultWrapper(context,  jsonObject);
+//
+    //                    listener.onFinishQuery();
+    //                    if(result.isOk()){
+    //                        listener.onSuccess(null);
+    //                    }else{
+    //                        listener.onFailure(result.extractErrorCode());
+    //                    }
+    //                }
+    //            })
+    //            .errorListener(new Response.ErrorListener() {
+    //                @Override
+    //                public void onErrorResponse(VolleyError volleyError) {
+    //                    listener.onFinishQuery();
+    //                    listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+    //                }
+    //            });
+//
+    //    executeRequest(request.build());
+    //}
+
     public void createPost(final String localUserID, final String pinboardOwnerID, final String picture, final String text, final String title, final IRequestFuture<Void> listener) {
         listener.onStartQuery();
-        BackendRequest request = new BackendRequest(ROUTE_CREATE_POST)
+        final BackendRequest request = new BackendRequest(ROUTE_CREATE_POST)
                 .param(APPLICATION_USER_USER_ID, localUserID)
                 .param(APPLICATION_POST_OWNER_ID, pinboardOwnerID)
-                .param(APPLICATION_POST_PICTURE, picture)
                 .param(APPLICATION_POST_TEXT, text)
                 .param(APPLICATION_POST_TITLE, title)
+                .param(APPLICATION_POST_PICTURE, picture)
                 .responseListener(new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-
                         ResultWrapper result = new ResultWrapper(context,  jsonObject);
 
                         listener.onFinishQuery();

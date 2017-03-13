@@ -30,9 +30,11 @@ public class BackendRequest implements Response.Listener<JSONObject>, Response.E
     private Response.Listener<JSONObject> responseListener;
     private Response.ErrorListener errorListener;
     private String content_type = "application/json";
+    private Map<String, Object> params;
 
     public BackendRequest(String url) {
         this.url = url;
+        params = new HashMap<>();
     }
 
     public BackendRequest method(int method) {
@@ -80,6 +82,13 @@ public class BackendRequest implements Response.Listener<JSONObject>, Response.E
                 //Creating JSON Header
                 headers.put(RESULT_CONTENT_TYPE_KEY, content_type);
                 return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map params = super.getParams();
+                params.putAll(BackendRequest.this.params);
+                return params;
             }
         };
         return request;

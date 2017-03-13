@@ -1,13 +1,8 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,10 +11,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.CameraOptions;
 import com.omgproduction.dsport_application.config.IntentKeys;
 import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.models.User;
@@ -30,12 +24,9 @@ import com.omgproduction.dsport_application.services.UserService;
  * Created by Florian on 06.11.2016.
  */
 
-public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LocalErrorCodes, IntentKeys{
+public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LocalErrorCodes, IntentKeys, CameraOptions {
 
     protected SwipeRefreshLayout refresher;
-    private static final int CAM_REQUEST = 1;
-    private static final int PIC_CROP = 2;
-    private static final int SELECT_PICTURE = 3;
 
     protected SessionService sessionService;
     protected UserService userService;
@@ -144,62 +135,6 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         if(refresher!=null){
             refresher.setRefreshing(flag);
         }
-    }
-
-    private void openCrop(Uri uri){
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(uri, "image/*");
-            cropIntent.putExtra("openCrop", "true");
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1024);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, PIC_CROP);
-        }
-        catch(ActivityNotFoundException e){
-            onCameraException(e);
-        }
-    }
-
-    protected void onCameraException(ActivityNotFoundException e){};
-
-    protected void openGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.select_picture)), SELECT_PICTURE);
-    }
-
-    protected void openCamera() {
-        try{
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
-        }catch(ActivityNotFoundException e){
-            onCameraException(e);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            final Bundle extras = data.getExtras();
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
-                //TODO FIX QUALITY OF BITMAP
-                openCrop(data.getData());
-            }else if(requestCode == PIC_CROP){
-                //TODO FIX QUALITY OF BITMAP
-                Bitmap thePic = extras.getParcelable("data");
-                onBitmapResult(thePic);
-            }
-        }
-    }
-
-    protected void onBitmapResult(Bitmap bitmap){
-
     }
 
     protected User getLocalUser(){

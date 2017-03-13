@@ -1,13 +1,19 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -16,6 +22,7 @@ import android.widget.EditText;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.CommentAdapter;
 import com.omgproduction.dsport_application.adapters.LikeAdapter;
+import com.omgproduction.dsport_application.config.CreatePostStartValues;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
@@ -28,6 +35,8 @@ import com.omgproduction.dsport_application.supplements.activities.AbstractFragm
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.DateConverter;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class PostDetailActivity extends AbstractFragmentActivity implements CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
@@ -83,8 +92,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
         findViewById(R.id.post_detail_like_count).setOnClickListener(this);
         findViewById(R.id.post_detail_share_count).setOnClickListener(this);
 
-        setPicture(post.getBitmapPicture(this));
-        setPostPicture(post.getBitmapPostPicture(this));
+        setPicture(post.getBitmapPicture());
+        setPostPicture(post.getBitmapPostPicture());
     }
 
     private void setPostPicture(Bitmap postPicture){
@@ -235,14 +244,6 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
     private void onCameraButtonPressed() {
         openCamera();
-    }
-
-    @Override
-    protected void onBitmapResult(Bitmap bitmap) {
-        findViewById(R.id.post_detail_create_comment_post_picture).setVisibility(View.VISIBLE);
-        setPic(R.id.post_detail_create_comment_post_picture,bitmap);
-        newCommentBitmap = bitmap;
-        showNewComment(true);
     }
 
     private void onCreateCommentClick() {
@@ -426,4 +427,69 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     public void onLikeSelected(Like like) {
         //TODO OPEN USER WHO LIKED
     }
+
+    public void onCameraResult(Bitmap bitmap, File file) {
+        showNewComment(true);
+        findViewById(R.id.post_detail_create_comment_post_picture).setVisibility(View.VISIBLE);
+        setPic(R.id.post_detail_create_comment_post_picture,bitmap);
+        newCommentBitmap = bitmap;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+                openCrop(getUriFromData(data));
+            }else if(requestCode == PIC_CROP){
+                onCameraResult(getBitmapFromData( data), new File(getUriFromData(data).getPath()));
+            }
+        }else {
+        }
+    }
+    public Bitmap getBitmapFromData(Intent data){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getUriFromData(data));
+            return Bitmap.createScaledBitmap(bitmap, CAMERA_DEFAULT_CAPTURE_WIDTH, CAMERA_DEFAULT_CAPTURE_HEIGHT, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Uri getUriFromData(Intent data){
+        return data.getData();
+    }
+
+    public void openCrop(Uri uri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(uri, "image/*");
+            cropIntent.putExtra("openCrop", "true");
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 2048);
+            cropIntent.putExtra("outputY", 1024);
+            cropIntent.putExtra("return-data", false);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(cropIntent, PIC_CROP);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openCamera() {
+        try {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAM_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), SELECT_PICTURE);
+    }
+
 }

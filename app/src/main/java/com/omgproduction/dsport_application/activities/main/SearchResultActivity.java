@@ -70,6 +70,7 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
             @Override
             public void onFailure(String errorCode) {
                 //TODO
+
             }
 
             @Override
@@ -136,7 +137,7 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
 
     @Override
     public void onRefresh() {
-
+        showProgressBar(false);
     }
 
     @Override

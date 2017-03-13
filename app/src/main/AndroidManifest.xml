@@ -5,10 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
+    <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
         android:name=".controller.App"
@@ -52,6 +51,15 @@
         <activity
             android:name=".activities.main.PinboardActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.main.SearchResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.main.FriendActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.helper.CameraActivity"
+            android:screenOrientation="portrait"></activity>
 
         <service android:name=".services.NotificationReceiver">
             <intent-filter>
@@ -74,8 +82,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activities.main.SearchResultActivity" />
-        <activity android:name=".activities.main.FriendActivity"></activity>
+        <activity android:name=".activities.main.FriendListActivity"></activity>
     </application>
 
 </manifest>

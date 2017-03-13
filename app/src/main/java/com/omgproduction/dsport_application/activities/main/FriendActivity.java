@@ -64,6 +64,9 @@ public class FriendActivity  extends AbstractNavigationActivity implements TabLa
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
         SocialFragment socialFragment = new SocialFragment();
+        socialFragment.setFilter(SocialFragment.Filter.PRIVATE);
+        socialFragment.setOwner(friend);
+
         UserFragment userFragment = new UserFragment();
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());

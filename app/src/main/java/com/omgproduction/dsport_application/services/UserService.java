@@ -7,12 +7,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.builder.BackendRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
+import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.ResultWrapper;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * Created by Florian on 07.11.2016.
@@ -31,51 +35,46 @@ public class UserService extends AbstractService {
     public void saveUser(final User user , final IRequestFuture<User> listener){
 
         listener.onStartQuery();
+        BackendRequest request = new BackendRequest(ROUTE_EDIT_USER)
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+                    }
+                })
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
 
-        if(isAvailable(user)){
+                        ResultWrapper result = new ResultWrapper(context,jsonObject);
 
-            BackendRequest request = new BackendRequest(ROUTE_EDIT_USER)
-                    .errorListener(new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            listener.onFinishQuery();
-                            listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                        }
-                    })
-                    .responseListener(new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject jsonObject) {
+                        if(result.isOk()){
+                            User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
 
-                            ResultWrapper result = new ResultWrapper(context,jsonObject);
-
-                            if(result.isOk()){
-                                User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
-
-                                if(user == null){
-                                    listener.onFinishQuery();
-                                    listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                                }else {
-                                    saveLocalUser(user);
-                                    listener.onFinishQuery();
-                                    listener.onSuccess(user);
-                                }
-                            }else{
-                                listener.onFailure(result.extractErrorCode());
+                            if(user == null){
+                                listener.onFinishQuery();
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+                            }else {
+                                saveLocalUser(user);
+                                listener.onFinishQuery();
+                                listener.onSuccess(user);
                             }
+                        }else{
+                            listener.onFinishQuery();
+                            listener.onFailure(result.extractErrorCode());
                         }
-                    })
-                    .param(APPLICATION_USER_USERNAME, user.getUsername())
-                    .param(APPLICATION_USER_FIRSTNAME, user.getFirstname())
-                    .param(APPLICATION_USER_LASTNAME, user.getLastname())
-                    .param(APPLICATION_USER_EMAIL, user.getEmail())
-                    .param(APPLICATION_USER_PASSWORD, user.getPassword())
-                    .param(APPLICATION_USER_USER_ID, user.getId())
-                    .param(APPLICATION_USER_PICTURE, user.getPicture());
+                    }
+                })
+                .param(APPLICATION_USER_USERNAME, user.getUsername())
+                .param(APPLICATION_USER_FIRSTNAME, user.getFirstname())
+                .param(APPLICATION_USER_LASTNAME, user.getLastname())
+                .param(APPLICATION_USER_EMAIL, user.getEmail())
+                .param(APPLICATION_USER_PASSWORD, user.getPassword())
+                .param(APPLICATION_USER_USER_ID, user.getId())
+                .param(APPLICATION_USER_PICTURE, user.getPicture());
 
-            executeRequest(request.build());
-        }else{
-            listener.onFinishQuery();
-        }
+        executeRequest(request.build());
     }
 
 
@@ -93,6 +92,7 @@ public class UserService extends AbstractService {
                 .putString(APPLICATION_USER_AGBVERSION, user.getAgbversion())
                 .putString(APPLICATION_USER_PICTURE, user.getPicture())
                 .commit();
+        localUser = user;
     }
 
     public void synchronizeLocalUser(String userID, final IRequestFuture<User> listener){
@@ -110,11 +110,12 @@ public class UserService extends AbstractService {
 
                         if(result.isOk()){
                             User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
-                            listener.onFinishQuery();
                             if(user == null){
+                                listener.onFinishQuery();
                                 listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
                             }else {
                                 saveLocalUser(user);
+                                listener.onFinishQuery();
                                 listener.onSuccess(user);
                             }
                         }else{
@@ -156,5 +157,43 @@ public class UserService extends AbstractService {
 
     public boolean isAvailable(User user){
         return user != null && !user.getId().equals(UNKNOWN_VALUE) && !user.getId().trim().isEmpty();
+    }
+
+    public void getAllFriends(String localUserId, final RequestFuture<List<SearchUser>> listener) {
+        listener.onStartQuery();
+        final BackendRequest request = new BackendRequest(ROUTE_GET_ALL_FRIENDS)
+                .param(APPLICATION_USER_USER_ID, localUserId)
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+                    }
+                }).responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+                        ResultWrapper result = new ResultWrapper(context, jsonObject);
+                        if(result.isOk()){
+
+                            List<SearchUser> friends = result.extractArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS);
+
+
+                            listener.onFinishQuery();
+                            if(friends==null){
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+                            }else {
+                                listener.onSuccess(friends);
+                            }
+
+                        }else {
+                            listener.onFinishQuery();
+                            listener.onFailure(result.extractErrorCode());
+                        }
+                    }
+                });
+
+        executeRequest(request.build());
+
+
     }
 }

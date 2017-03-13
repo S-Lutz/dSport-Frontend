@@ -1,8 +1,12 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatImageView;
@@ -21,6 +25,9 @@ import com.omgproduction.dsport_application.supplements.activities.AbstractNavig
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.StringUtils;
 import com.omgproduction.dsport_application.utils.Transitions;
+
+import java.io.File;
+import java.io.IOException;
 
 
 public class ProfileActivity extends AbstractNavigationActivity {
@@ -93,7 +100,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
         setText(R.id.profile_email_text,user.getEmail());
         setText(R.id.profile_firstname_text,user.getFirstname());
         setText(R.id.profile_lastname_text,user.getLastname());
-        setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(context,user.getPicture()));
+        setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(user.getPicture()));
     }
 
     private void addActionListeners() {
@@ -307,7 +314,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
 
             @Override
             public void onSuccess(User user) {
-                setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(context,user.getPicture()));
+                setPic(R.id.profile_pic,BitmapUtils.getBitmapFromString(user.getPicture()));
             }
 
             @Override
@@ -514,11 +521,6 @@ public class ProfileActivity extends AbstractNavigationActivity {
     }
 
     @Override
-    protected void onBitmapResult(Bitmap bitmap) {
-        savePicture(bitmap);
-    }
-
-    @Override
     public void onBackPressed() {
         if(isSomethingShown()){
             closeAll();
@@ -691,5 +693,65 @@ public class ProfileActivity extends AbstractNavigationActivity {
     @Override
     public void onRefresh() {
         update();
+    }
+
+    public void onCameraResult(Bitmap bitmap, File file) {
+        savePicture(bitmap);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+                openCrop(getUriFromData(data));
+            }else if(requestCode == PIC_CROP){
+                onCameraResult(getBitmapFromData( data), new File(getUriFromData(data).getPath()));
+            }
+        }else {
+        }
+    }
+    public Bitmap getBitmapFromData(Intent data){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getUriFromData(data));
+            return Bitmap.createScaledBitmap(bitmap, CAMERA_DEFAULT_CAPTURE_WIDTH, CAMERA_DEFAULT_CAPTURE_HEIGHT, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Uri getUriFromData(Intent data){
+        return data.getData();
+    }
+
+    public void openCrop(Uri uri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(uri, "image/*");
+            cropIntent.putExtra("openCrop", "true");
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 2048);
+            cropIntent.putExtra("outputY", 1024);
+            cropIntent.putExtra("return-data", false);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(cropIntent, PIC_CROP);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openCamera() {
+        try {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAM_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), SELECT_PICTURE);
     }
 }

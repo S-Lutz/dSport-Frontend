@@ -61,6 +61,7 @@ public interface ApplicationKeys {
     String APPLICATION_TOKEN = "token";
 
     String APPLICATION_USERS = "users";
+    String APPLICATION_FRIENDS = "friends";
     String APPLICATION_EVENTS = "events";
     String APPLICATION_STUDIOS = "studios";
 

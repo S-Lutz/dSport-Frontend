@@ -2,6 +2,7 @@ package com.omgproduction.dsport_application.adapters;
 
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.models.Post;
+import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.DateConverter;
 
 import java.util.ArrayList;
@@ -48,6 +50,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(PostViewHolder holder, int position) {
         Post post = posts.get(position);
 
+
+
         DateConverter converter = new DateConverter();
 
         holder.tv_date.setText(converter.convertString(post.getCreated()));
@@ -63,8 +67,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.tv_likes.setOnClickListener(new OnPostClicked(holder,post));
         holder.tv_shares.setOnClickListener(new OnPostClicked(holder,post));
 
-        Bitmap postPicture = post.getBitmapPostPicture(holder.contextView.getContext());
-        Bitmap picture = post.getBitmapPicture(holder.contextView.getContext());
+        Bitmap postPicture = post.getBitmapPostPicture();
+        Bitmap picture = post.getBitmapPicture();
         if(picture!=null){
             holder.iv_picture.setImageBitmap(picture);
         }

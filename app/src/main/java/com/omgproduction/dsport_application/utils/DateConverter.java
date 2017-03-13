@@ -38,7 +38,7 @@ public class DateConverter implements ApplicationConfig{
     public String convertString(String dateString){
         Calendar currentCalendar = getCurrentCalendar();
         Calendar postCalendar = getPostCalendar(dateString);
-
+        if(postCalendar==null) return "unknown";
         long offset = currentCalendar.getTimeZone().getOffset(postCalendar.getTimeInMillis())-(60*60*1000);
 
         CharSequence timeAgo = android.text.format.DateUtils.getRelativeTimeSpanString(postCalendar.getTimeInMillis()+offset,currentCalendar.getTimeInMillis(),10000);

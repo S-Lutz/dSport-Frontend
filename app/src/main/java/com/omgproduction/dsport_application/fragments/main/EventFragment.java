@@ -11,7 +11,7 @@ import com.omgproduction.dsport_application.supplements.activities.AbstractFragm
 public class EventFragment extends AbstractFragment {
     public EventFragment() {
         // Required empty public constructor
-    }
+}
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

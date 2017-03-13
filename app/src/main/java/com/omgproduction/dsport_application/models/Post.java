@@ -85,20 +85,20 @@ public class Post  implements Serializable {
         this.liked = liked;
     }
 
-    public Bitmap getBitmapPicture(Context context){
+    public Bitmap getBitmapPicture(){
 
-        if(picture.isEmpty()){
+        if(picture.trim().isEmpty()){
             return null;
         }
-        return BitmapUtils.getBitmapFromString(context,picture);
+        return BitmapUtils.getBitmapFromString(picture);
     }
 
-    public Bitmap getBitmapPostPicture(Context context){
+    public Bitmap getBitmapPostPicture(){
 
-        if(postPicture.isEmpty()){
+        if(postPicture.trim().isEmpty()){
             return null;
         }
-        return BitmapUtils.getBitmapFromString(context,postPicture);
+        return BitmapUtils.getBitmapFromString(postPicture);
     }
 
     public String getLikeString(Context context) {
