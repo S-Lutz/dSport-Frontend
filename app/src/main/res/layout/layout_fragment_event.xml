@@ -1,17 +1,27 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.main.EventFragment">
+<!-- TODO: Update blank fragment layout -->
 
-    <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.AppCompatTextView
+<android.support.v4.widget.SwipeRefreshLayout android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/event_refresher"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Event Fragment"
-        android:gravity="center"
-        android:textSize="30dp"
-        android:textStyle="bold"/>
+        android:id="@+id/event_container"
+        android:background="@android:color/darker_gray"
+        android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/event_linear_layout"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/universal_recycler">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
 
-
-</FrameLayout>
+    </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

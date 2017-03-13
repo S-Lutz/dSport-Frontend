@@ -8,6 +8,7 @@ import android.util.Base64;
 import com.omgproduction.dsport_application.R;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 /**
  * Created by Florian on 07.11.2016.
@@ -26,7 +27,7 @@ public class BitmapUtils {
 
     }
 
-    public static Bitmap getBitmapFromString(Context context, String stringPicture) {
+    public static Bitmap getBitmapFromString(String stringPicture) {
         try{
             byte[] decodedString = Base64.decode(stringPicture, Base64.DEFAULT);
             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);

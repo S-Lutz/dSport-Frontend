@@ -3,6 +3,7 @@ package com.omgproduction.dsport_application.utils;
 import android.content.Context;
 
 import com.omgproduction.dsport_application.config.ResultKeys;
+import com.omgproduction.dsport_application.models.SearchUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,5 +102,4 @@ public class ResultWrapper implements ResultKeys{
         int resId = context.getResources().getIdentifier(extractErrorCode(), "string", packageName);
         return context.getString(resId);
     }
-
 }

@@ -62,7 +62,7 @@ public class Comment implements Serializable{
         if(commentPicture.isEmpty()){
             return null;
         }
-        return BitmapUtils.getBitmapFromString(context, commentPicture);
+        return BitmapUtils.getBitmapFromString( commentPicture);
     }
 
     public boolean isLiked() {

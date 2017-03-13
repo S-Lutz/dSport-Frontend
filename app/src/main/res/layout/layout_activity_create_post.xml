@@ -71,7 +71,7 @@
             android:adjustViewBounds="true"
             android:visibility="gone"
             android:id="@+id/create_post_post_picture"/>
-        <LinearLayout
+        <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/create_post_button_container"
@@ -92,7 +92,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:src="@drawable/ic_gallery"/>
-        </LinearLayout>
+        </android.support.v7.widget.LinearLayoutCompat>
         <android.support.design.widget.TextInputLayout
             style="@style/body"
             android:id="@+id/create_post_text_input_layout"

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.activities.main.FriendListActivity;
 import com.omgproduction.dsport_application.activities.main.MainActivity;
 import com.omgproduction.dsport_application.activities.main.PinboardActivity;
 import com.omgproduction.dsport_application.activities.main.ProfileActivity;
@@ -134,7 +135,7 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
 
         ((TextView)headerLayout.findViewById(R.id.nav_username)).setText(user.getUsername());
         ((TextView)headerLayout.findViewById(R.id.nav_email)).setText(user.getEmail());
-        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(context,user.getPicture()));
+        ((ImageView)headerLayout.findViewById(R.id.nav_img)).setImageBitmap(BitmapUtils.getBitmapFromString(user.getPicture()));
 
     }
 
@@ -158,13 +159,17 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
             case R.id.nav_main: startActivity(new Intent(this, MainActivity.class)); break;
             case R.id.nav_pinboard: startActivity(new Intent(this, PinboardActivity.class)); break;
             case R.id.nav_profile: performProfileClick();break;
-            case R.id.nav_friends: break;
+            case R.id.nav_friends: performFriendClick(); break;
             case R.id.nav_logout: logoutUser(); break;
             case R.id.nav_settings: break;
         }
 
         closeDrawer();
         return true;
+    }
+
+    protected void performFriendClick(){
+        startActivity(new Intent(this, FriendListActivity.class));
     }
 
     protected void performProfileClick(){

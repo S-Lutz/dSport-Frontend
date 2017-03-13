@@ -15,6 +15,7 @@ import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Florian on 01.12.2016.
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 
 public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.SearchUserHolder> {
 
-    private ArrayList<SearchUser> searchUsers = new ArrayList<>();
+    private List<SearchUser> searchUsers = new ArrayList<>();
 
     public interface OnSearchUserClicked {
         void onSearchUserClicked(SearchUser searchUser);
@@ -30,7 +31,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Se
 
     private final ArrayList<OnSearchUserClicked> onSearchUserClickedListeners = new ArrayList<>();
 
-    public SearchUserAdapter(ArrayList<SearchUser> searchUsers) {
+    public SearchUserAdapter(List<SearchUser> searchUsers) {
         this.searchUsers = searchUsers;
     }
 
@@ -45,7 +46,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Se
     public void onBindViewHolder(SearchUserAdapter.SearchUserHolder holder, int position) {
         SearchUser searchUser = searchUsers.get(position);
         holder.tv_username.setText(searchUser.getUsername());
-        holder.iv_userpic.setImageBitmap(BitmapUtils.getBitmapFromString(holder.getContext(),searchUser.getPicture()));
+        holder.iv_userpic.setImageBitmap(BitmapUtils.getBitmapFromString(searchUser.getPicture()));
         if(searchUser.isFriend()){
             holder.iv_progress.setImageDrawable(holder.context.getResources().getDrawable(R.drawable.ic_star));
         }else if(searchUser.isRequest_sended()){
@@ -106,7 +107,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Se
         }
     }
 
-    public ArrayList<SearchUser> getSearchUsers() {
+    public List<SearchUser> getSearchUsers() {
         return searchUsers;
     }
 

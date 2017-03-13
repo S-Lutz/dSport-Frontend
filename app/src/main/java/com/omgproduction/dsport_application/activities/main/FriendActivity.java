@@ -13,7 +13,7 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.fragments.helper.FriendMenuFragment;
-import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.fragments.main.SocialListFragment;
 import com.omgproduction.dsport_application.fragments.users.UserFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
 import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
@@ -63,7 +63,10 @@ public class FriendActivity  extends AbstractNavigationActivity implements TabLa
         tabLayout = (TabLayout)findViewById(R.id.tabLayout);
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
-        SocialFragment socialFragment = new SocialFragment();
+        SocialListFragment socialFragment = new SocialListFragment();
+        socialFragment.setMode(SocialListFragment.Mode.PRIVATE);
+        socialFragment.setOwner(friend);
+
         UserFragment userFragment = new UserFragment();
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());

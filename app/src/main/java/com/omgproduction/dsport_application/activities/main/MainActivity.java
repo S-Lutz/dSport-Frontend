@@ -7,28 +7,37 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.fragments.helper.MenuFragment;
+import com.omgproduction.dsport_application.fragments.helper.MenuManager;
+import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
 import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.ChatFragment;
-import com.omgproduction.dsport_application.fragments.main.EventFragment;
-import com.omgproduction.dsport_application.fragments.main.ExerciseUnitFragment;
-import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.fragments.main.EventListFragment;
+import com.omgproduction.dsport_application.fragments.main.ExerciseUnitListFragment;
+import com.omgproduction.dsport_application.fragments.main.SocialListFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 
-public class MainActivity extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
+public class MainActivity extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener, ViewPager.OnPageChangeListener{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
-    private SocialMenuFragment socialMenuFragment;
+    private MenuManager menuManager;
+    private SocialListFragment socialFragment;
+    private ExerciseUnitListFragment exerciseUnitFragment;
+    private EventListFragment eventFragment;
+    private ChatFragment chatFragment;
+    private UniversalListFragment currentFragment;
 
     @Override
     protected int onSetContentView(Bundle savedInstanceState) {
@@ -38,43 +47,33 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        menuManager = new MenuManager((FloatingActionButton) findViewById(R.id.options_fab), this, getLocalUser());
         ((SearchView)findViewById(R.id.toolbar_search)).setOnQueryTextListener(this);
         buildTabViewer();
-
-        preferFabs();
-    }
-
-    private void preferFabs() {
-
-        findViewById(R.id.options_fab).setOnClickListener(this);
-
-        socialMenuFragment = new SocialMenuFragment();
-        socialMenuFragment.setRootFab((FloatingActionButton) findViewById(R.id.options_fab));
-
-        User localUser = getLocalUser();
-
-        socialMenuFragment.setPinboardOwner(localUser.getId());
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fab_menu_container, socialMenuFragment).commit();
-
     }
 
     private void buildTabViewer() {
         tabLayout = (TabLayout)findViewById(R.id.tabLayout);
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
-        SocialFragment socialFragment = new SocialFragment();
-        ExerciseUnitFragment exerciseUnitFragment = new ExerciseUnitFragment();
-        EventFragment eventFragment = new EventFragment();
-        ChatFragment chatFragment = new ChatFragment();
+        socialFragment = new SocialListFragment();
+        socialFragment.setMenuManager(menuManager);
+        exerciseUnitFragment = new ExerciseUnitListFragment();
+        exerciseUnitFragment.setMenuManager(menuManager);
+        eventFragment = new EventListFragment();
+        eventFragment.setMenuManager(menuManager);
+        chatFragment = new ChatFragment();
+        chatFragment.setMenuManager(menuManager);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setOnPageChangeListener(this);
         viewPagerAdapter.addFragments(socialFragment,getString(R.string.social));
         viewPagerAdapter.addFragments(exerciseUnitFragment,getString(R.string.exercise_units));
         viewPagerAdapter.addFragments(eventFragment,getString(R.string.events));
         viewPagerAdapter.addFragments(chatFragment,getString(R.string.chats));
+
+        currentFragment = socialFragment;
+        socialFragment.onSetActive(true);
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -85,7 +84,7 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                showFABMenu(false);
+                menuManager.showMenu(false);
             }
         });
     }
@@ -101,8 +100,8 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
 
     @Override
     public boolean onBackPressedAfterNavigationClosed() {
-        if(socialMenuFragment.isOpened()){
-            showFABMenu(false);
+        if(menuManager.isMenuOpened()){
+            menuManager.showMenu(false);
             return false;
         }else if (viewPager.getCurrentItem() == 0) {
             return true;
@@ -121,35 +120,8 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.options_fab:
-                showFABMenu(!socialMenuFragment.isOpened());
+                menuManager.toggleMenu();
                 break;
-        }
-    }
-
-    private void showFABMenu(boolean flag) {
-        if(flag){
-            if(!socialMenuFragment.isOpened()){
-                switch (viewPager.getCurrentItem()){
-                    case 0 : showFABMenu(socialMenuFragment,true);
-                        break;
-                }
-            }
-        }else{
-            if(socialMenuFragment.isOpened()) {
-                switch (viewPager.getCurrentItem()) {
-                    case 0:
-                        showFABMenu(socialMenuFragment, false);
-                        break;
-                }
-            }
-        }
-    }
-
-    private void showFABMenu(FloatingMenu floatingMenu, boolean flag){
-        if(flag){
-            floatingMenu.show();
-        }else{
-            floatingMenu.hide();
         }
     }
 
@@ -160,7 +132,7 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        showFABMenu(false);
+        menuManager.showMenu(false);
     }
 
     @Override
@@ -185,5 +157,30 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        Log.e("Position", String.valueOf(position));
+        if(currentFragment!=null)
+            currentFragment.onSetActive(false);
+        switch (position){
+            case 0: currentFragment = socialFragment; break;
+            case 1: currentFragment = exerciseUnitFragment; break;
+            case 2: currentFragment = eventFragment; break;
+            case 3: currentFragment = chatFragment; break;
+        }
+        if(currentFragment!=null)
+            currentFragment.onSetActive(true);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }
