@@ -3,6 +3,7 @@ package com.omgproduction.dsport_application.utils;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.holder.SearchResultHolder;
 import com.omgproduction.dsport_application.models.Comment;
+import com.omgproduction.dsport_application.models.Event;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
@@ -65,6 +66,37 @@ public class ConverterFactory implements ApplicationKeys {
                             input.getString(APPLICATION_POST_COMMENTCOUNT),
                             input.getString(APPLICATION_POST_SHARECOUNT),
                             Integer.parseInt(input.getString(APPLICATION_POST_LIKED)) == 1
+                    );
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
+
+    public static Converter<JSONObject, Event> createJsonToEventConverter() {
+        return new Converter<JSONObject, Event>() {
+            @Override
+            public Event convert(JSONObject input) {
+                try {
+                    return new Event(
+                            input.getString(APPLICATION_EVENT_EVENT_ID),
+                            input.getString(APPLICATION_USER_USERNAME),
+                            input.getString(APPLICATION_USER_USER_ID),
+                            input.getString(APPLICATION_EVENT_TITLE),
+                            input.getString(APPLICATION_EVENT_EVENT_PICTURE),
+                            input.getString(APPLICATION_EVENT_PICTURE),
+                            input.getString(APPLICATION_EVENT_TEXT),
+                            input.getString(APPLICATION_EVENT_CREATED),
+                            input.getString(APPLICATION_EVENT_EVENT_DATE),
+                            input.getString(APPLICATION_EVENT_MEMBERCOUNT),
+                            input.getString(APPLICATION_EVENT_LOCATION),
+                            input.getString(APPLICATION_EVENT_LIKECOUNT),
+                            input.getString(APPLICATION_EVENT_COMMENTCOUNT),
+                            input.getString(APPLICATION_EVENT_SHARECOUNT),
+                            Integer.parseInt(input.getString(APPLICATION_EVENT_PARTICIPATING)) == 1,
+                            Integer.parseInt(input.getString(APPLICATION_EVENT_LIKED)) == 1
                     );
                 } catch (JSONException e) {
                     e.printStackTrace();
