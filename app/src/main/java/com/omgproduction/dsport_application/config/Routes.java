@@ -15,7 +15,6 @@ public interface Routes {
     String ROUTE_GET_POSTS = ROUTE_HOST + ROUTE_HOME +"/posts/getAll";
     String ROUTE_CREATE_POST = ROUTE_HOST + ROUTE_HOME +"/posts/create"; //owner_id, user_id, picture, text, title
 
-    String ROUTE_CREATEANDPOST_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/createAndPost";
     String ROUTE_CREATE_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/create";
     String ROUTE_LIKE_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/like";
     String ROUTE_COMMENT_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/comment";
@@ -39,14 +38,18 @@ public interface Routes {
     String ROUTE_GET_PINBOARD = ROUTE_HOST + ROUTE_HOME +"/posts/getPinboard";
     String ROUTE_GET_POST_DETAIL = ROUTE_HOST + ROUTE_HOME +"/posts/getDetail";
     String ROUTE_GET_COMMENTS = ROUTE_HOST + ROUTE_HOME + "/posts/comments/getAll";
-    String ROUTE_GET_LIKES = ROUTE_HOST + ROUTE_HOME + "/posts/likes/getAll";
     String ROUTE_LIKE_POST = ROUTE_HOST + ROUTE_HOME + "/posts/like";
     String ROUTE_SHARE_POST = ROUTE_HOST + ROUTE_HOME + "/posts/share";
     String ROUTE_COMMENT_POST = ROUTE_HOST + ROUTE_HOME + "/posts/comment";
     String ROUTE_LIKE_COMMENT = ROUTE_HOST + ROUTE_HOME + "/posts/comments/like";
     String ROUTE_GET_LIKES = ROUTE_HOST + ROUTE_HOME + "/posts/likes/getAll";
 
-    String ROUTE_GET_ALL_FRIENDS = ROUTE_HOST + ROUTE_HOME + "/friends/getAll";
 
     String ROUTE_SEARCH_ALL = ROUTE_HOST + ROUTE_HOME +"/search/all";
+
+    String ROUTE_FRIENDS_GET_ALL = ROUTE_HOST + ROUTE_HOME + "/friends/getAll";
+    String ROUTE_FRIENDS_DELETE = ROUTE_HOST + ROUTE_HOME +"/friends/delete ";
+    String ROUTE_FRIENDS_SEND = ROUTE_HOST + ROUTE_HOME +"/friends/request/send ";
+    String ROUTE_FRIENDS_ACCEPT = ROUTE_HOST + ROUTE_HOME +"/friends/request/accept ";
+    String ROUTE_FRIENDS_DECLINE= ROUTE_HOST + ROUTE_HOME +"/friends/request/decline ";
 }

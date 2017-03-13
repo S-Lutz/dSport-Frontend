@@ -48,7 +48,7 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.Comment
 
         DateConverter dateConverter = new DateConverter();
 
-        holder.tv_date.setText(dateConverter.convertString(comment.getCreated()));
+        holder.tv_date.setText(dateConverter.convertString(holder.contextView.getContext(),comment.getCreated()));
         holder.tv_likes.setText(comment.getLikeString(holder.contextView.getContext()));
         holder.tv_text.setText(comment.getText());
         holder.tv_username.setText(comment.getUsername());

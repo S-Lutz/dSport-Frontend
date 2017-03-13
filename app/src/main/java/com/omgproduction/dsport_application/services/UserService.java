@@ -161,7 +161,7 @@ public class UserService extends AbstractService {
 
     public void getAllFriends(String localUserId, final RequestFuture<List<SearchUser>> listener) {
         listener.onStartQuery();
-        final BackendRequest request = new BackendRequest(ROUTE_GET_ALL_FRIENDS)
+        final BackendRequest request = new BackendRequest(ROUTE_FRIENDS_GET_ALL)
                 .param(APPLICATION_USER_USER_ID, localUserId)
                 .errorListener(new Response.ErrorListener() {
                     @Override

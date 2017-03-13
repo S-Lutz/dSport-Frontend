@@ -1,7 +1,11 @@
 package com.omgproduction.dsport_application.utils;
 
+import android.content.Context;
+
+import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationConfig;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,7 +23,7 @@ public class DateConverter implements ApplicationConfig{
     public DateConverter(){
         dateFormat = new SimpleDateFormat(APPLICATION_CONFIG_DATE_FORMAT);
     }
-    public String convertString(String dateString){
+    public String convertString(Context context, String dateString){
         Calendar currentCalendar = getCurrentCalendar();
         Calendar postCalendar;
 
@@ -34,7 +38,7 @@ public class DateConverter implements ApplicationConfig{
 
             return timeAgo.toString();
         } catch (ParseException e) {
-            return "unknown";
+            return  context.getString(R.string.unknown);
         }
     }
     public String convertDate(Date date){

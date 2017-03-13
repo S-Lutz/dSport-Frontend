@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.controller.App;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
+import com.omgproduction.dsport_application.utils.StringUtils;
 
 import java.io.Serializable;
 
@@ -15,13 +17,14 @@ import java.io.Serializable;
 public class Event implements Serializable {
 
 
-    private String event_id, username, userid, picture, eventPicture, text, created, eventDate, location, likeCount, commentCount, shareCount, title, eventMember;
+    private String event_id, username, userid, picture, eventPicture, text, created, eventDate, likeCount, commentCount, shareCount, title, eventMember;
     private boolean liked;
 
 
 
     private boolean participating;
-
+    private String locationName;
+    private String locationAddress;
 
 
     /**
@@ -56,7 +59,8 @@ public class Event implements Serializable {
         this.event_id = event_id;
         this.liked = liked;
         this.participating = participating;
-        this.location = location;
+        this.locationName = getLocationName(location);
+        this.locationAddress = getLocationAddress(location);
         this.eventDate = eventDate;
     }
 
@@ -116,22 +120,58 @@ public class Event implements Serializable {
         return participating;
     }
 
+    public void setLocationName(CharSequence name){
+        this.locationName = String.valueOf(name);
+    }
+
+    public void setLocationAddress(CharSequence address){
+        this.locationAddress = String.valueOf(address);
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public String getLocationAddress() {
+        return locationAddress;
+    }
+
+    public String getLocation(){
+        return toLocationString(getLocationName(), getLocationAddress());
+    }
+
+    public static String toLocationString(String locationName, String locationAddress){
+        return locationName+"&"+locationAddress;
+    }
+
+    private String getLocationName(String locationString){
+        try{
+            return locationString.split("&")[0];
+        }catch (ArrayIndexOutOfBoundsException e){
+            return App.getContext().getString(R.string.unknown);
+        }
+    }
+
+    private String getLocationAddress(String locationString){
+        try{
+            return locationString.split("&")[1];
+        }catch (ArrayIndexOutOfBoundsException e){
+            return App.getContext().getString(R.string.unknown);
+        }
+    }
+
     public void setLiked(boolean liked) {
         this.liked = liked;
     }
 
     public String getEventDate() { return eventDate; }
 
-    public String getLocation() {
-        return location;
-    }
-
     public Bitmap getBitmapPicture(Context context){
 
         if(picture.isEmpty()){
             return null;
         }
-        return BitmapUtils.getBitmapFromString(context,picture);
+        return BitmapUtils.getBitmapFromString(picture);
     }
 
 
@@ -140,7 +180,7 @@ public class Event implements Serializable {
         if(eventPicture.isEmpty()){
             return null;
         }
-        return BitmapUtils.getBitmapFromString(context,eventPicture);
+        return BitmapUtils.getBitmapFromString(eventPicture);
     }
 
 

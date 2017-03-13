@@ -78,7 +78,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
         setText(R.id.post_detail_share_count,post.getShareCount());
         setText(R.id.post_detail_username,post.getUsername());
         setText(R.id.post_detail_text,post.getText());
-        setText(R.id.post_detail_date, dateConverter.convertString(post.getCreated()));
+        setText(R.id.post_detail_date, dateConverter.convertString(this,post.getCreated()));
 
         findViewById(R.id.post_detail_new_comment_button).setOnClickListener(this);
         findViewById(R.id.post_detail_likes_button).setOnClickListener(this);

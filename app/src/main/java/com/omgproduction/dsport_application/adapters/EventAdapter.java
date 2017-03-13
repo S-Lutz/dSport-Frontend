@@ -52,9 +52,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         DateConverter converter = new DateConverter();
 
-        holder.tv_date.setText(converter.convertString(event.getCreated()));
-        holder.tv_event_date.setText(converter.convertString(event.getEventDate()));
-        holder.tv_location.setText(event.getLocation());
+        holder.tv_date.setText(converter.convertString(holder.contextView.getContext(),event.getCreated()));
+        holder.tv_event_date.setText(converter.convertString(holder.contextView.getContext(),event.getEventDate()));
+        holder.tv_address_location.setText(event.getLocationAddress());
+        holder.tv_name_location.setText(event.getLocationName());
         holder.tv_shares.setText(event.getShareCount());
         holder.tv_comments.setText(event.getCommentCount());
         holder.tv_likes.setText(event.getLikeString(holder.contextView.getContext()));
@@ -89,7 +90,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public static class EventViewHolder extends RecyclerView.ViewHolder{
 
         private ImageView iv_picture, iv_event_picture, iv_event_picture_overlay;
-        private TextView tv_username, tv_text, tv_likes, tv_comments, tv_shares, tv_date, tv_title, tv_event_date, tv_location, tv_event_member;
+        private TextView tv_username, tv_text, tv_likes, tv_comments, tv_shares, tv_date, tv_title, tv_event_date, tv_address_location,tv_name_location, tv_event_member;
         private final View contextView;
         private LinearLayout event_buttons;
         private RelativeLayout event_layout;
@@ -104,7 +105,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             tv_likes = (TextView) view.findViewById(R.id.event_like_count);
             tv_comments = (TextView) view.findViewById(R.id.event_comment_count);
             tv_event_date = (TextView) view.findViewById(R.id.event_date_tv);
-            tv_location = (TextView) view.findViewById(R.id.event_location_tv);
+            tv_address_location = (TextView) view.findViewById(R.id.event_location_address_tv);
+            tv_name_location = (TextView) view.findViewById(R.id.event_location_name_tv);
             tv_shares = (TextView) view.findViewById(R.id.event_share_count);
             tv_date = (TextView) view.findViewById(R.id.event_date);
             tv_title = (TextView) view.findViewById(R.id.event_title);

@@ -174,15 +174,27 @@
                 android:tint="@color/colorPrimary"
                 android:src="@android:drawable/ic_dialog_map"/>
 
-            <android.support.v7.widget.AppCompatEditText
-                style="@style/body"
-                android:transitionName="@string/transition_event_location"
-                android:id="@+id/event_location_tv"
-                android:singleLine="true"
-                android:layout_gravity="center"
-                android:layout_margin="0dp"
-                android:hint="@string/create_event_location_hint"
-                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <android.support.v7.widget.AppCompatTextView
+                    style="@style/body"
+                    android:transitionName="@string/transition_event_location"
+                    android:id="@+id/event_location_name_tv"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp">
+                </android.support.v7.widget.AppCompatTextView>
+
+                <android.support.v7.widget.AppCompatTextView
+                    style="@style/body"
+                    android:transitionName="@string/transition_event_location"
+                    android:id="@+id/event_location_address_tv"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp">
+                </android.support.v7.widget.AppCompatTextView>
+
+            </LinearLayout>
         </LinearLayout>
 
 

@@ -121,7 +121,7 @@
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
                 android:layout_width="match_parent"
-                android:layout_height="24dp">
+                android:layout_height="wrap_content">
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_marginRight="16dp"
@@ -130,13 +130,28 @@
                     android:tint="@color/colorPrimary"
                     android:src="@android:drawable/ic_dialog_map"/>
 
-                <android.support.v7.widget.AppCompatTextView
-                    style="@style/body"
-                    android:transitionName="@string/transition_event_text"
-                    android:id="@+id/event_location_tv"
-                    android:layout_gravity="center"
-                    android:layout_margin="0dp"
-                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        style="@style/body"
+                        android:transitionName="@string/transition_event_location"
+                        android:id="@+id/event_location_name_tv"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp">
+                    </android.support.v7.widget.AppCompatTextView>
+
+                    <android.support.v7.widget.AppCompatTextView
+                        style="@style/body"
+                        android:transitionName="@string/transition_event_location"
+                        android:id="@+id/event_location_address_tv"
+                        android:layout_gravity="center"
+                        android:layout_margin="0dp">
+                    </android.support.v7.widget.AppCompatTextView>
+                </LinearLayout>
             </LinearLayout>
 
             <android.support.v7.widget.AppCompatImageView

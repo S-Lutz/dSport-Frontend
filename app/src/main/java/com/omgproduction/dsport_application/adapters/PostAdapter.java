@@ -54,7 +54,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         DateConverter converter = new DateConverter();
 
-        holder.tv_date.setText(converter.convertString(post.getCreated()));
+        holder.tv_date.setText(converter.convertString(holder.contextView.getContext(), post.getCreated()));
         holder.tv_shares.setText(post.getShareCount());
         holder.tv_comments.setText(post.getCommentCount());
         holder.tv_likes.setText(post.getLikeString(holder.contextView.getContext()));
