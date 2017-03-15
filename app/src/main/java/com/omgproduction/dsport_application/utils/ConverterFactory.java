@@ -1,5 +1,6 @@
 package com.omgproduction.dsport_application.utils;
 
+import com.herbornsoftware.omnet.ResultConverter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.holder.SearchResultHolder;
 import com.omgproduction.dsport_application.models.Comment;

@@ -31,6 +31,7 @@ import com.omgproduction.dsport_application.services.EventService;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.DateConverter;
+import com.omgproduction.dsport_application.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -125,8 +126,8 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.event_detail_relative_layout, errorCode);
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.event_detail_relative_layout, errorValue);
             }
 
             @Override
@@ -159,8 +160,8 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.event_detail_relative_layout, errorCode);
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.event_detail_relative_layout, errorValue);
             }
             @Override
             public void onFinishQuery() {
@@ -188,8 +189,8 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.event_detail_relative_layout, errorCode);
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.event_detail_relative_layout, errorValue);
             }
             @Override
             public void onFinishQuery() {
@@ -267,8 +268,8 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.activity_create_event, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.activity_create_event, errorValue, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onCreateCommentClick();
@@ -377,7 +378,7 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             }
 
             @Override
-            public void onFailure(String errorCode) {printError(R.id.event_detail_relative_layout, errorCode);}
+            public void onFailure(int errorCode, String errorValue) {printError(R.id.event_detail_relative_layout, errorValue);}
 
             @Override
             public void onFinishQuery() {
@@ -405,7 +406,7 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             }
 
             @Override
-            public void onFailure(String errorCode) {printError(R.id.event_detail_relative_layout, errorCode);}
+            public void onFailure(int errorCode, String errorValue) {printError(R.id.event_detail_relative_layout, errorValue);}
 
             @Override
             public void onFinishQuery() {

@@ -76,8 +76,8 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(getView(), getView().findViewById(getView().getId()), errorCode);
+            public void onFailure(int errorCode, String errorValue) {
+                printError(getView(), getView().findViewById(getView().getId()), errorValue);
             }
 
             @Override

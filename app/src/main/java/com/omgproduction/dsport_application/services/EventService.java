@@ -18,6 +18,7 @@ import com.omgproduction.dsport_application.models.Event;
 
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 /**
@@ -219,40 +220,63 @@ public class EventService extends AbstractService{
 
     public void likeEvent(final String localUserID, final String event_id, final IRequestFuture<LikeResult> listener) {
         listener.onStartQuery();
-        BackendRequest request = new BackendRequest(ROUTE_LIKE_EVENT)
-                .param(APPLICATION_EVENT_EVENT_ID,event_id)
-                .param(APPLICATION_USER_USER_ID, localUserID)
-                .responseListener(new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
 
-                        ResultWrapper result = new ResultWrapper(context, jsonObject);
-
-                        if(result.isOk()){
-                            LikeResult likeResult = result.extractValue(ConverterFactory.createJsonToEventLikeResultConverter());
-
-                            if(likeResult==null){
-                                listener.onFinishQuery();
-                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                            }else {
-                                listener.onFinishQuery();
-                                listener.onSuccess(likeResult);
-                            }
-                        }else{
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_LIKE_EVENT)
+                    .addParam(APPLICATION_EVENT_EVENT_ID,event_id)
+                    .addParam(APPLICATION_USER_USER_ID, localUserID)
+                    .setDebug(true)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
                             listener.onFinishQuery();
-                            listener.onFailure(result.extractErrorCode());
+                            if(response.isOk()){
+                                listener.onSuccess(response.getValue(ConverterFactory.createJsonToEventLikeResultConverter()));
+                            }else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
                         }
-                    }
-                })
-                .errorListener(new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        listener.onFinishQuery();
-                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                    }
-                });
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
 
-        executeRequest(request.build());
+        //BackendRequest request = new BackendRequest(ROUTE_LIKE_EVENT)
+        //        .param(APPLICATION_EVENT_EVENT_ID,event_id)
+        //        .param(APPLICATION_USER_USER_ID, localUserID)
+        //        .responseListener(new Response.Listener<JSONObject>() {
+        //            @Override
+        //            public void onResponse(JSONObject jsonObject) {
+//
+        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+//
+        //                if(result.isOk()){
+        //                    LikeResult likeResult = result.extractValue(ConverterFactory.createJsonToEventLikeResultConverter());
+//
+        //                    if(likeResult==null){
+        //                        listener.onFinishQuery();
+        //                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //                    }else {
+        //                        listener.onFinishQuery();
+        //                        listener.onSuccess(likeResult);
+        //                    }
+        //                }else{
+        //                    listener.onFinishQuery();
+        //                    listener.onFailure(result.extractErrorCode());
+        //                }
+        //            }
+        //        })
+        //        .errorListener(new Response.ErrorListener() {
+        //            @Override
+        //            public void onErrorResponse(VolleyError volleyError) {
+        //                listener.onFinishQuery();
+        //                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //            }
+        //        });
+//
+        //executeRequest(request.build());
     }
 
     public void getEventDetail(final String localUserID, final String event_id, final IRequestFuture<Event> listener) {
