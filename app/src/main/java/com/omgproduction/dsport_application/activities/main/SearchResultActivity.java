@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
@@ -45,11 +46,11 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
 
         searchService = new SearchService(this);
 
-        searchResults(query);
+        preferFabs();
 
         buildTabViewer();
 
-        preferFabs();
+        searchResults(query);
     }
 
     private void searchResults(final String query) {

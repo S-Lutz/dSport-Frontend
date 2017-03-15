@@ -348,8 +348,8 @@ public class CreateEventActivity extends AbstractFragmentActivity implements Cre
             cropIntent.putExtra("openCrop", "true");
             cropIntent.putExtra("aspectX", 2);
             cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1024);
+            cropIntent.putExtra("outputX", CAMERA_DEFAULT_CAPTURE_WIDTH);
+            cropIntent.putExtra("outputY", CAMERA_DEFAULT_CAPTURE_HEIGHT);
             cropIntent.putExtra("return-data", false);
             cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             startActivityForResult(cropIntent, CODE);
