@@ -1,6 +1,5 @@
 package com.omgproduction.dsport_application.utils;
 
-import com.herbornsoftware.omnet.ResultConverter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.holder.SearchResultHolder;
 import com.omgproduction.dsport_application.models.Comment;
@@ -154,6 +153,22 @@ public class ConverterFactory implements ApplicationKeys {
                     return new LikeResult(
                             Integer.parseInt(input.getString(APPLICATION_COMMENT_LIKED)) == 1,
                             input.getString(APPLICATION_COMMENT_LIKECOUNT));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
+
+    public static ResultConverter<JSONObject, LikeResult> createJsonToEventLikeResultConverter() {
+        return new ResultConverter<JSONObject, LikeResult>() {
+            @Override
+            public LikeResult convert(JSONObject input) {
+                try {
+                    return new LikeResult(
+                            Integer.parseInt(input.getString(APPLICATION_EVENT_LIKED)) == 1,
+                            input.getString(APPLICATION_EVENT_LIKECOUNT));
                 } catch (JSONException e) {
                     e.printStackTrace();
                     return null;

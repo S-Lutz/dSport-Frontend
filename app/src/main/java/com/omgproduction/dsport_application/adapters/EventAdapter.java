@@ -26,10 +26,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private List<Event> events = new ArrayList<>();
 
     public interface OnEventClickedListener{
-        void onEventClicked(EventAdapter.EventViewHolder holder, Event e);
-        void onEventLike(EventAdapter.EventViewHolder holder, Event e);
-        void onEventShare(EventAdapter.EventViewHolder holder, Event e);
-        void onEventComment(EventAdapter.EventViewHolder holder, Event e);
+        void onEventClicked(EventViewHolder holder, Event e);
+        void onEventLike(EventViewHolder holder, Event e);
+        void onEventShare(EventViewHolder holder, Event e);
+        void onEventComment(EventViewHolder holder, Event e);
     }
 
     private final ArrayList<OnEventClickedListener> onEventClickedListeners = new ArrayList<>();
@@ -39,9 +39,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     @Override
-    public EventAdapter.EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_event,parent,false);
-        EventAdapter.EventViewHolder viewHolder = new EventAdapter.EventViewHolder(view);
+        EventViewHolder viewHolder = new EventViewHolder(view);
         return viewHolder;
     }
 
@@ -172,7 +172,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private class OnEventClicked implements View.OnClickListener{
         final Event event;
         final EventAdapter.EventViewHolder holder;
-        private OnEventClicked(final EventAdapter.EventViewHolder holder, final Event event){
+        private OnEventClicked(final EventViewHolder holder, final Event event){
             this.holder = holder;
             this.event = event;
         }

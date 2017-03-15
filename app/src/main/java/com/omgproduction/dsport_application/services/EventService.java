@@ -7,14 +7,17 @@ import com.android.volley.VolleyError;
 import com.herbornsoftware.omnet.JSONRequest;
 import com.herbornsoftware.omnet.JSONResponse;
 import com.omgproduction.dsport_application.builder.BackendRequest;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
+import com.omgproduction.dsport_application.models.Comment;
+import com.omgproduction.dsport_application.models.Like;
+import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
 import com.omgproduction.dsport_application.utils.ResultWrapper;
 import com.omgproduction.dsport_application.models.Event;
 
 import org.json.JSONObject;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 /**
@@ -214,5 +217,58 @@ public class EventService extends AbstractService{
 
     }
 
+    public void likeEvent(final String localUserID, final String event_id, final IRequestFuture<LikeResult> listener) {
+        listener.onStartQuery();
+        BackendRequest request = new BackendRequest(ROUTE_LIKE_EVENT)
+                .param(APPLICATION_EVENT_EVENT_ID,event_id)
+                .param(APPLICATION_USER_USER_ID, localUserID)
+                .responseListener(new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
 
+                        ResultWrapper result = new ResultWrapper(context, jsonObject);
+
+                        if(result.isOk()){
+                            LikeResult likeResult = result.extractValue(ConverterFactory.createJsonToEventLikeResultConverter());
+
+                            if(likeResult==null){
+                                listener.onFinishQuery();
+                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+                            }else {
+                                listener.onFinishQuery();
+                                listener.onSuccess(likeResult);
+                            }
+                        }else{
+                            listener.onFinishQuery();
+                            listener.onFailure(result.extractErrorCode());
+                        }
+                    }
+                })
+                .errorListener(new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        listener.onFinishQuery();
+                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+                    }
+                });
+
+        executeRequest(request.build());
+    }
+
+    public void getEventDetail(final String localUserID, final String event_id, final IRequestFuture<Event> listener) {
+
+    }
+
+
+    public void getAllComments(String event_id, RequestFuture<List<Comment>> requestFuture) {
+    }
+
+    public void getAllLikes(String event_id, RequestFuture<List<Like>> requestFuture) {
+    }
+
+    public void createComment(String id, String event_id, String picture, String text, RequestFuture<Void> requestFuture) {
+    }
+
+    public void likeComment(String id, String comment_id, RequestFuture<LikeResult> requestFuture) {
+    }
 }
