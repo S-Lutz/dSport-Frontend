@@ -50,8 +50,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(PostViewHolder holder, int position) {
         Post post = posts.get(position);
 
-
-
         DateConverter converter = new DateConverter();
 
         holder.tv_date.setText(converter.convertString(holder.contextView.getContext(), post.getCreated()));

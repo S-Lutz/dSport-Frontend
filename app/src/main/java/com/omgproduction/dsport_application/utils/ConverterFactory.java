@@ -145,6 +145,22 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
+    public static Converter<JSONObject, LikeResult> createJsonToEventLikeResultConverter() {
+        return new Converter<JSONObject, LikeResult>() {
+            @Override
+            public LikeResult convert(JSONObject input) {
+                try {
+                    return new LikeResult(
+                            Integer.parseInt(input.getString(APPLICATION_EVENT_LIKED)) == 1,
+                            input.getString(APPLICATION_EVENT_LIKECOUNT));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
+
     public static Converter<JSONObject, LikeResult> createJsonToCommentLikeResultConverter() {
         return new Converter<JSONObject, LikeResult>() {
             @Override
