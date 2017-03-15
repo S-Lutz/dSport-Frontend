@@ -100,8 +100,8 @@ public class LoginActivity extends AbstractFragmentActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printInputError(R.id.login_layout_password,errorCode);
+            public void onFailure(int errorCode,String errorMessage) {
+                printInputError(R.id.login_layout_password,errorMessage);
             }
 
             @Override

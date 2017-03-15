@@ -128,8 +128,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.post_detail_relative_layout, errorCode);
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.post_detail_relative_layout, errorMessage);
             }
 
             @Override
@@ -162,8 +162,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.post_detail_relative_layout, errorCode);
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.post_detail_relative_layout, errorMessage);
             }
             @Override
             public void onFinishQuery() {
@@ -191,8 +191,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.post_detail_relative_layout, errorCode);
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.post_detail_relative_layout, errorMessage);
             }
             @Override
             public void onFinishQuery() {
@@ -270,8 +270,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.activity_create_post, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.activity_create_post, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onCreateCommentClick();
@@ -380,7 +380,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             }
 
             @Override
-            public void onFailure(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
+            public void onFailure(int errorCode,String errorMessage) {printError(R.id.post_detail_relative_layout, errorMessage);}
 
             @Override
             public void onFinishQuery() {
@@ -408,7 +408,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             }
 
             @Override
-            public void onFailure(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
+            public void onFailure(int errorCode,String errorMessage) {printError(R.id.post_detail_relative_layout, errorMessage);}
 
             @Override
             public void onFinishQuery() {

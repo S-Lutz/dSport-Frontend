@@ -110,8 +110,8 @@ public class SocialListFragment extends UniversalListFragment<Post, PostAdapter>
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(getView(), getView().findViewById(getView().getId()), errorCode);
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(getView(), getView().findViewById(getView().getId()), errorMessage);
             }
 
             @Override

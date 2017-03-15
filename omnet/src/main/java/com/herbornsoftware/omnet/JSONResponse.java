@@ -1,8 +1,12 @@
 package com.herbornsoftware.omnet;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Florian on 15.03.2017.
@@ -19,8 +23,27 @@ public class JSONResponse{
         this.jsonObject = jsonObject;
     }
 
-    public <T> T convert(ResultConverter<JSONObject, T> converter){
+    public <Output> Output getValue(ResultConverter<JSONObject, Output> converter){
         return converter.convert(jsonObject);
+    }
+
+    public <Output> List<Output> getArray(ResultConverter<JSONObject, Output> converter, String arrayName){
+        try {
+
+            List<Output> resultList = new ArrayList<>();
+            JSONArray jsonArray = jsonObject.getJSONArray(arrayName);
+            for(int i = 0; i< jsonArray.length(); i++){
+                Output item = converter.convert(jsonArray.getJSONObject(i));
+                if(item!=null){
+                    resultList.add(item);
+                }
+            }
+
+            return resultList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public String getResponseMessage() {
@@ -37,5 +60,13 @@ public class JSONResponse{
 
     public boolean isOk(){
         return responseCode == HttpURLConnection.HTTP_OK && jsonObject!=null;
+    }
+
+    public String getString(String name){
+        try {
+            return jsonObject.getString(name);
+        } catch (JSONException e) {
+            return null;
+        }
     }
 }

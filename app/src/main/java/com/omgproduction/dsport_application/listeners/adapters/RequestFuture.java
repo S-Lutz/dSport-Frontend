@@ -21,7 +21,7 @@ public class RequestFuture<T> implements IRequestFuture<T> {
     }
 
     @Override
-    public void onFailure(String errorCode) {
+    public void onFailure(int errorCode, String errorMessage) {
 
     }
 

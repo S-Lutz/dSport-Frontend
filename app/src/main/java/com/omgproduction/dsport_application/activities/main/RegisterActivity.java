@@ -154,10 +154,10 @@ public class RegisterActivity extends AbstractFragmentActivity implements Connec
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(int errorCode,String errorMessage) {
                 switch (errorCode){
-                    case USERNAME_ALREADY_EXISTS_ERROR: printInputError(R.id.register_layout_username,errorCode); break;
-                    case EMAIL_ALREADY_EXISTS_ERROR: printInputError(R.id.register_layout_email,errorCode); break;
+                    //case USERNAME_ALREADY_EXISTS_ERROR: printInputError(R.id.register_layout_username,errorMessage); break;
+                    //case EMAIL_ALREADY_EXISTS_ERROR: printInputError(R.id.register_layout_email,errorMessage); break;
                     //On any other Error print Universal-Error e0
                     default: printError(R.id.register_layout, LocalErrorCodes.SOMETHING_WENT_WRONG_ERROR);
                 }

@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.herbornsoftware.omnet.JSONRequest;
+import com.herbornsoftware.omnet.JSONResponse;
 import com.omgproduction.dsport_application.builder.BackendRequest;
 import com.omgproduction.dsport_application.builder.Preferences;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
@@ -16,6 +18,7 @@ import com.omgproduction.dsport_application.utils.ConverterFactory;
 
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 /**
@@ -35,46 +38,74 @@ public class UserService extends AbstractService {
     public void saveUser(final User user , final IRequestFuture<User> listener){
 
         listener.onStartQuery();
-        BackendRequest request = new BackendRequest(ROUTE_EDIT_USER)
-                .errorListener(new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        listener.onFinishQuery();
-                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                    }
-                })
-                .responseListener(new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
 
-                        ResultWrapper result = new ResultWrapper(context,jsonObject);
-
-                        if(result.isOk()){
-                            User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
-
-                            if(user == null){
-                                listener.onFinishQuery();
-                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                            }else {
-                                saveLocalUser(user);
-                                listener.onFinishQuery();
-                                listener.onSuccess(user);
-                            }
-                        }else{
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_EDIT_USER)
+                    .addParam(APPLICATION_USER_USERNAME, user.getUsername())
+                    .addParam(APPLICATION_USER_FIRSTNAME, user.getFirstname())
+                    .addParam(APPLICATION_USER_LASTNAME, user.getLastname())
+                    .addParam(APPLICATION_USER_EMAIL, user.getEmail())
+                    .addParam(APPLICATION_USER_PASSWORD, user.getPassword())
+                    .addParam(APPLICATION_USER_USER_ID, user.getId())
+                    .addParam(APPLICATION_USER_PICTURE, user.getPicture())
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
                             listener.onFinishQuery();
-                            listener.onFailure(result.extractErrorCode());
+                            if(response.isOk()){
+                                listener.onSuccess(response.getValue(ConverterFactory.createJsonToUserConverter()));
+                            }else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
                         }
-                    }
-                })
-                .param(APPLICATION_USER_USERNAME, user.getUsername())
-                .param(APPLICATION_USER_FIRSTNAME, user.getFirstname())
-                .param(APPLICATION_USER_LASTNAME, user.getLastname())
-                .param(APPLICATION_USER_EMAIL, user.getEmail())
-                .param(APPLICATION_USER_PASSWORD, user.getPassword())
-                .param(APPLICATION_USER_USER_ID, user.getId())
-                .param(APPLICATION_USER_PICTURE, user.getPicture());
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
 
-        executeRequest(request.build());
+
+        //BackendRequest request = new BackendRequest(ROUTE_EDIT_USER)
+        //        .errorListener(new Response.ErrorListener() {
+        //            @Override
+        //            public void onErrorResponse(VolleyError volleyError) {
+        //                listener.onFinishQuery();
+        //                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //            }
+        //        })
+        //        .responseListener(new Response.Listener<JSONObject>() {
+        //            @Override
+        //            public void onResponse(JSONObject jsonObject) {
+//
+        //                ResultWrapper result = new ResultWrapper(context,jsonObject);
+//
+        //                if(result.isOk()){
+        //                    User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
+//
+        //                    if(user == null){
+        //                        listener.onFinishQuery();
+        //                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //                    }else {
+        //                        saveLocalUser(user);
+        //                        listener.onFinishQuery();
+        //                        listener.onSuccess(user);
+        //                    }
+        //                }else{
+        //                    listener.onFinishQuery();
+        //                    listener.onFailure(result.extractErrorCode());
+        //                }
+        //            }
+        //        })
+        //        .param(APPLICATION_USER_USERNAME, user.getUsername())
+        //        .param(APPLICATION_USER_FIRSTNAME, user.getFirstname())
+        //        .param(APPLICATION_USER_LASTNAME, user.getLastname())
+        //        .param(APPLICATION_USER_EMAIL, user.getEmail())
+        //        .param(APPLICATION_USER_PASSWORD, user.getPassword())
+        //        .param(APPLICATION_USER_USER_ID, user.getId())
+        //        .param(APPLICATION_USER_PICTURE, user.getPicture());
+//
+        //executeRequest(request.build());
     }
 
 
@@ -99,41 +130,61 @@ public class UserService extends AbstractService {
 
         listener.onStartQuery();
 
-        final BackendRequest request = new BackendRequest(ROUTE_GET_USER)
-                .param(APPLICATION_USER_USER_ID,userID)
-                .responseListener(new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        listener.onFinishQuery();
-
-                        ResultWrapper result = new ResultWrapper(context,jsonObject);
-
-                        if(result.isOk()){
-                            User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
-                            if(user == null){
-                                listener.onFinishQuery();
-                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                            }else {
-                                saveLocalUser(user);
-                                listener.onFinishQuery();
-                                listener.onSuccess(user);
-                            }
-                        }else{
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_GET_USER)
+                    .addParam(APPLICATION_USER_USER_ID,userID)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
                             listener.onFinishQuery();
-                            listener.onFailure(result.extractErrorCode());
+                            if(response.isOk()){
+                                listener.onSuccess(response.getValue(ConverterFactory.createJsonToUserConverter()));
+                            }else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
                         }
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
 
-                    }
-                })
-                .errorListener(new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        listener.onFinishQuery();
-                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                    }
-                });
-
-        executeRequest(request.build());
+        //final BackendRequest request = new BackendRequest(ROUTE_GET_USER)
+        //        .param(APPLICATION_USER_USER_ID,userID)
+        //        .responseListener(new Response.Listener<JSONObject>() {
+        //            @Override
+        //            public void onResponse(JSONObject jsonObject) {
+        //                listener.onFinishQuery();
+//
+        //                ResultWrapper result = new ResultWrapper(context,jsonObject);
+//
+        //                if(result.isOk()){
+        //                    User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
+        //                    if(user == null){
+        //                        listener.onFinishQuery();
+        //                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //                    }else {
+        //                        saveLocalUser(user);
+        //                        listener.onFinishQuery();
+        //                        listener.onSuccess(user);
+        //                    }
+        //                }else{
+        //                    listener.onFinishQuery();
+        //                    listener.onFailure(result.extractErrorCode());
+        //                }
+//
+        //            }
+        //        })
+        //        .errorListener(new Response.ErrorListener() {
+        //            @Override
+        //            public void onErrorResponse(VolleyError volleyError) {
+        //                listener.onFinishQuery();
+        //                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //            }
+        //        });
+//
+        //executeRequest(request.build());
 
     }
 
@@ -161,38 +212,60 @@ public class UserService extends AbstractService {
 
     public void getAllFriends(String localUserId, final RequestFuture<List<SearchUser>> listener) {
         listener.onStartQuery();
-        final BackendRequest request = new BackendRequest(ROUTE_FRIENDS_GET_ALL)
-                .param(APPLICATION_USER_USER_ID, localUserId)
-                .errorListener(new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        listener.onFinishQuery();
-                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                    }
-                }).responseListener(new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        ResultWrapper result = new ResultWrapper(context, jsonObject);
-                        if(result.isOk()){
 
-                            List<SearchUser> friends = result.extractArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS);
-
-
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_FRIENDS_GET_ALL)
+                    .addParam(APPLICATION_USER_USER_ID, localUserId)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
                             listener.onFinishQuery();
-                            if(friends==null){
-                                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+                            if(response.isOk()){
+                                listener.onSuccess(response.getArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS));
                             }else {
-                                listener.onSuccess(friends);
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
                             }
-
-                        }else {
-                            listener.onFinishQuery();
-                            listener.onFailure(result.extractErrorCode());
                         }
-                    }
-                });
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
 
-        executeRequest(request.build());
+
+        //final BackendRequest request = new BackendRequest(ROUTE_FRIENDS_GET_ALL)
+        //        .param(APPLICATION_USER_USER_ID, localUserId)
+        //        .errorListener(new Response.ErrorListener() {
+        //            @Override
+        //            public void onErrorResponse(VolleyError volleyError) {
+        //                listener.onFinishQuery();
+        //                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //            }
+        //        }).responseListener(new Response.Listener<JSONObject>() {
+        //            @Override
+        //            public void onResponse(JSONObject jsonObject) {
+        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                if(result.isOk()){
+//
+        //                    List<SearchUser> friends = result.extractArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS);
+//
+//
+        //                    listener.onFinishQuery();
+        //                    if(friends==null){
+        //                        listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
+        //                    }else {
+        //                        listener.onSuccess(friends);
+        //                    }
+//
+        //                }else {
+        //                    listener.onFinishQuery();
+        //                    listener.onFailure(result.extractErrorCode());
+        //                }
+        //            }
+        //        });
+//
+        //executeRequest(request.build());
 
 
     }

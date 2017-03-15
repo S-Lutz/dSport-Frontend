@@ -69,7 +69,7 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
             }
 
             @Override
-            public void onFailure(String errorCode) {
+            public void onFailure(int errorCode,String errorMessage) {
                 //TODO
 
             }
