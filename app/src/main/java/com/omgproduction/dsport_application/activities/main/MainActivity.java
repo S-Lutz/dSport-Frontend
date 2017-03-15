@@ -71,6 +71,7 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
         viewPagerAdapter.addFragments(exerciseUnitFragment,getString(R.string.exercise_units));
         viewPagerAdapter.addFragments(eventFragment,getString(R.string.events));
         viewPagerAdapter.addFragments(chatFragment,getString(R.string.chats));
+        viewPager.setOffscreenPageLimit(3);
 
         currentFragment = socialFragment;
         socialFragment.onSetActive(true);

@@ -84,7 +84,7 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onFailure(String ErrorCode) {
+            public void onFailure(int errorCode,String errorMessage) {
                 //TODO Errorhandling
             }
 
@@ -318,8 +318,8 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         savePicture(thePic);
@@ -352,8 +352,8 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveEmail(email);
@@ -387,8 +387,8 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveFirstname(firstname);
@@ -421,8 +421,8 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveLastname(lastname);
@@ -458,8 +458,8 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         savePassword(password);
@@ -493,8 +493,8 @@ public class ProfileActivity extends AbstractNavigationActivity {
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.profile_container, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         saveUsername(username);

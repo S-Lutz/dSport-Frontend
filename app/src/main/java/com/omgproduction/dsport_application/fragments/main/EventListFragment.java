@@ -12,7 +12,9 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.EventAdapter;
 import com.omgproduction.dsport_application.fragments.helper.EventMenuFragment;
 import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.Event;
+import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.EventService;
 
@@ -57,8 +59,32 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
     }
 
     @Override
-    public void onEventLike(EventAdapter.EventViewHolder holder, Event e) {
+    public void onEventLike(final EventAdapter.EventViewHolder holder, final Event e) {
 
+        User user = getLocalUser();
+        eventService.likeEvent(user.getId(), e.getEvent_id(), new RequestFuture<LikeResult>(){
+            @Override
+            public void onStartQuery() {
+                showProgressBar(true);
+            }
+
+            @Override
+            public void onSuccess(LikeResult result) {
+                e.setLiked(result.isLiked());
+                e.setLikeCount(result.getLikeCount());
+                holder.getTv_likes().setText(e.getLikeString(getContext()));
+            }
+
+            @Override
+            public void onFailure(int errorCode, String errorValue) {
+                printError(getView(), getView().findViewById(getView().getId()), errorValue);
+            }
+
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
+            }
+        });
     }
 
     @Override
@@ -73,7 +99,9 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
 
     @Override
     public EventAdapter getAdapter(List<Event> events) {
-        return new EventAdapter(events);
+        EventAdapter adapter = new EventAdapter(events);
+        adapter.addOnEventClickedListener(this);
+        return adapter;
     }
 
     @Override

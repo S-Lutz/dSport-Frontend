@@ -102,8 +102,8 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.activity_create_post, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.activity_create_post, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         savePost();

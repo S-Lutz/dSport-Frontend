@@ -179,8 +179,8 @@ public class CreateEventActivity extends AbstractFragmentActivity implements Cre
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.activity_create_event, errorCode, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.activity_create_event, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         saveEvent();

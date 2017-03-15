@@ -98,9 +98,9 @@ public abstract class UniversalListFragment<T, A extends RecyclerView.Adapter> e
     public abstract A getAdapter(List<T> values);
 
     @Override
-    public void onFailure(String errorCode) {
+    public void onFailure(int errorCode,String errorMessage) {
         if(getView()!=null){
-            printError(getView(), getView(), errorCode);
+            printError(getView(), getView(), errorMessage);
         }
     }
 

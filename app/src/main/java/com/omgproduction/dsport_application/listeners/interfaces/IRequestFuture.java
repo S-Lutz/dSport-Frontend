@@ -23,11 +23,7 @@ public interface IRequestFuture<T> {
      */
     void onSuccess(T result);
 
-    /**
-     * This Method is called if the Backend sent some ErrorCode
-     * @param errorCode The Code the Backend sent
-     */
-    void onFailure(String errorCode);
+    void onFailure(int errorCode, String errorMessage);
 
     /**
      * Called in EVERY Case the Method Finish... is Called before any other Method is called

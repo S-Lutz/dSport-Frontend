@@ -45,36 +45,28 @@ public class SearchService extends AbstractService{
     public void searchQuery(final String localUserID, final String query, final IRequestFuture<SearchResultHolder> listener){
 
         listener.onStartQuery();
+
         try {
-            JSONRequest request = new JSONRequest(ROUTE_SEARCH_ALL)
+            final JSONRequest request = new JSONRequest(ROUTE_SEARCH_ALL)
                     .setDebug(true)
                     .addParam(APPLICATION_USER_USER_ID, localUserID)
                     .addParam(APPLICATION_QUERY, query)
                     .setOnResultListener(new JSONRequest.OnResultListener() {
                         @Override
                         public void onResult(JSONResponse response) {
-                            if (!response.isOk()) return;
-                            ResultWrapper result = new ResultWrapper(context, response.getJsonObject());
-                            if (result.isOk()) {
-
-                                SearchResultHolder resultHolder = result.extractValue(ConverterFactory.createJsonToSearchResultHolderConverter());
-
-                                listener.onFinishQuery();
-                                if (resultHolder == null) {
-                                    listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-                                } else {
-                                    listener.onSuccess(resultHolder);
-                                }
+                            listener.onFinishQuery();
+                            if (response.isOk()){
+                                listener.onSuccess(response.getValue(ConverterFactory.createJsonToSearchResultHolderConverter()));
                             } else {
-                                listener.onFinishQuery();
-                                listener.onFailure(result.extractErrorCode());
+                                listener.onFailure(response.getResponseCode(),response.getResponseMessage());
                             }
 
-                        }
-                    });
+                        }});
+
             request.execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            listener.onFinishQuery();
         }
 
 

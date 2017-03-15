@@ -71,8 +71,8 @@ public class FriendListActivity extends AbstractNavigationActivity implements Se
             }
 
             @Override
-            public void onFailure(String errorCode) {
-                printError(R.id.friend_list_container,errorCode);
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.friend_list_container,errorMessage);
             }
 
             @Override

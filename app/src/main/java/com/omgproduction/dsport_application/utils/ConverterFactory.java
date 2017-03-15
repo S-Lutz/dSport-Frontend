@@ -1,5 +1,6 @@
 package com.omgproduction.dsport_application.utils;
 
+import com.herbornsoftware.omnet.ResultConverter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.holder.SearchResultHolder;
 import com.omgproduction.dsport_application.models.Comment;
@@ -25,8 +26,8 @@ import java.util.List;
 
 public class ConverterFactory implements ApplicationKeys {
 
-    public static Converter<JSONObject, User> createJsonToUserConverter() {
-        return new Converter<JSONObject, User>() {
+    public static ResultConverter<JSONObject, User> createJsonToUserConverter() {
+        return new ResultConverter<JSONObject, User>() {
             @Override
             public User convert(JSONObject input) {
                 try {
@@ -48,8 +49,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, Post> createJsonToPostConverter() {
-        return new Converter<JSONObject, Post>() {
+    public static ResultConverter<JSONObject, Post> createJsonToPostConverter() {
+        return new ResultConverter<JSONObject, Post>() {
             @Override
             public Post convert(JSONObject input) {
                 try {
@@ -75,8 +76,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, Event> createJsonToEventConverter() {
-        return new Converter<JSONObject, Event>() {
+    public static ResultConverter<JSONObject, Event> createJsonToEventConverter() {
+        return new ResultConverter<JSONObject, Event>() {
             @Override
             public Event convert(JSONObject input) {
                 try {
@@ -106,8 +107,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, Comment> createJsonToCommentConverter() {
-        return new Converter<JSONObject, Comment>() {
+    public static ResultConverter<JSONObject, Comment> createJsonToCommentConverter() {
+        return new ResultConverter<JSONObject, Comment>() {
             @Override
             public Comment convert(JSONObject input) {
                 try {
@@ -129,8 +130,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, LikeResult> createJsonToPostLikeResultConverter() {
-        return new Converter<JSONObject, LikeResult>() {
+    public static ResultConverter<JSONObject, LikeResult> createJsonToPostLikeResultConverter() {
+        return new ResultConverter<JSONObject, LikeResult>() {
             @Override
             public LikeResult convert(JSONObject input) {
                 try {
@@ -145,8 +146,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, LikeResult> createJsonToCommentLikeResultConverter() {
-        return new Converter<JSONObject, LikeResult>() {
+    public static ResultConverter<JSONObject, LikeResult> createJsonToCommentLikeResultConverter() {
+        return new ResultConverter<JSONObject, LikeResult>() {
             @Override
             public LikeResult convert(JSONObject input) {
                 try {
@@ -161,8 +162,24 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, Like> createJsonToLikeConverter() {
-        return new Converter<JSONObject, Like>() {
+    public static ResultConverter<JSONObject, LikeResult> createJsonToEventLikeResultConverter() {
+        return new ResultConverter<JSONObject, LikeResult>() {
+            @Override
+            public LikeResult convert(JSONObject input) {
+                try {
+                    return new LikeResult(
+                            Integer.parseInt(input.getString(APPLICATION_EVENT_LIKED)) == 1,
+                            input.getString(APPLICATION_EVENT_LIKECOUNT));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
+
+    public static ResultConverter<JSONObject, Like> createJsonToLikeConverter() {
+        return new ResultConverter<JSONObject, Like>() {
             @Override
             public Like convert(JSONObject input) {
                 try {
@@ -177,8 +194,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, SearchResultHolder> createJsonToSearchResultHolderConverter(){
-        return new Converter<JSONObject, SearchResultHolder>() {
+    public static ResultConverter<JSONObject, SearchResultHolder> createJsonToSearchResultHolderConverter(){
+        return new ResultConverter<JSONObject, SearchResultHolder>() {
             @Override
             public SearchResultHolder convert(JSONObject input) {
 
@@ -188,9 +205,9 @@ public class ConverterFactory implements ApplicationKeys {
                     JSONArray eventList = input.getJSONArray(APPLICATION_EVENTS);
                     JSONArray studioList = input.getJSONArray(APPLICATION_STUDIOS);
 
-                    Converter<JSONObject, SearchUser> searchUserConverter = createJsonToSearchUserConverter();
-                    Converter<JSONObject, SearchEvent> searchEventConverter = createJsonToSearchEventConverter();
-                    Converter<JSONObject, SearchStudio> searchStudioConverter = createJsonToSearchStudioConverter();
+                    ResultConverter<JSONObject, SearchUser> searchUserConverter = createJsonToSearchUserConverter();
+                    ResultConverter<JSONObject, SearchEvent> searchEventConverter = createJsonToSearchEventConverter();
+                    ResultConverter<JSONObject, SearchStudio> searchStudioConverter = createJsonToSearchStudioConverter();
 
                     ArrayList<SearchUser> users = new ArrayList<>();
                     for (int i = 0; i < userList.length(); i++) {
@@ -215,8 +232,8 @@ public class ConverterFactory implements ApplicationKeys {
     }
 
 
-    public static Converter<JSONObject, SearchUser> createJsonToSearchUserConverter(){
-        return new Converter<JSONObject, SearchUser>() {
+    public static ResultConverter<JSONObject, SearchUser> createJsonToSearchUserConverter(){
+        return new ResultConverter<JSONObject, SearchUser>() {
             @Override
             public SearchUser convert(JSONObject input) {
                 try {
@@ -237,8 +254,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, SearchStudio> createJsonToSearchStudioConverter(){
-        return new Converter<JSONObject, SearchStudio>() {
+    public static ResultConverter<JSONObject, SearchStudio> createJsonToSearchStudioConverter(){
+        return new ResultConverter<JSONObject, SearchStudio>() {
             @Override
             public SearchStudio convert(JSONObject input) {
                 return new SearchStudio();
@@ -246,8 +263,8 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
-    public static Converter<JSONObject, SearchEvent> createJsonToSearchEventConverter(){
-        return new Converter<JSONObject, SearchEvent>() {
+    public static ResultConverter<JSONObject, SearchEvent> createJsonToSearchEventConverter(){
+        return new ResultConverter<JSONObject, SearchEvent>() {
             @Override
             public SearchEvent convert(JSONObject input) {
                 return new SearchEvent();

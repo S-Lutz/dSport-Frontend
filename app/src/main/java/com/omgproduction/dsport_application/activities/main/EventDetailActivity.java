@@ -1,6 +1,5 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,30 +20,30 @@ import android.widget.EditText;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.CommentAdapter;
 import com.omgproduction.dsport_application.adapters.LikeAdapter;
-import com.omgproduction.dsport_application.config.CreatePostStartValues;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
+import com.omgproduction.dsport_application.models.Event;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
-import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.services.PostService;
+import com.omgproduction.dsport_application.services.EventService;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.DateConverter;
+import com.omgproduction.dsport_application.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class PostDetailActivity extends AbstractFragmentActivity implements CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
+public class EventDetailActivity extends AbstractFragmentActivity implements CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
 
     private RecyclerView commentsRecycler, likeRecycler;
     private CommentAdapter commentAdapter;
     private RecyclerView.LayoutManager commentLayoutManager, likeLayoutManager;
     private LikeAdapter likeAdapter;
-    private Post post;
+    private Event event;
     private boolean createNewCommentShown = false;
     private boolean likesShown = false;
     private boolean commentsShown = false;
@@ -53,61 +51,61 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
     private DateConverter dateConverter;
 
-    private PostService postService;
+    private EventService eventService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_post_detail);
-        setRefresher((SwipeRefreshLayout) findViewById(R.id.post_detail_refresher));
+        setContentView(R.layout.layout_activity_event_detail);
+        setRefresher((SwipeRefreshLayout) findViewById(R.id.event_detail_refresher));
 
         dateConverter = new DateConverter();
-        postService = new PostService(this);
+        eventService = new EventService(this);
 
-        setPostValues((Post) getIntent().getSerializableExtra(INTENT_POST));
+        setEventValues((Event) getIntent().getSerializableExtra(INTENT_EVENT));
         showComments(true);
         update();
     }
 
-    private void setPostValues(Post post){
-        this.post = post;
+    private void setEventValues(Event event){
+        this.event = event;
 
-        setText(R.id.post_detail_title,post.getTitle());
-        setText(R.id.post_detail_comment_count,post.getCommentCount());
-        setText(R.id.post_detail_like_count,post.getLikeString(this));
-        setText(R.id.post_detail_share_count,post.getShareCount());
-        setText(R.id.post_detail_username,post.getUsername());
-        setText(R.id.post_detail_text,post.getText());
-        setText(R.id.post_detail_date, dateConverter.convertString(this,post.getCreated()));
+        setText(R.id.event_detail_title,event.getTitle());
+        setText(R.id.event_detail_comment_count,event.getCommentCount());
+        setText(R.id.event_detail_like_count,event.getLikeString(this));
+        setText(R.id.event_detail_share_count,event.getShareCount());
+        setText(R.id.event_detail_username,event.getUsername());
+        setText(R.id.event_detail_text,event.getText());
+        setText(R.id.event_detail_date, dateConverter.convertString(this,event.getCreated()));
 
-        findViewById(R.id.post_detail_new_comment_button).setOnClickListener(this);
-        findViewById(R.id.post_detail_likes_button).setOnClickListener(this);
-        findViewById(R.id.post_detail_comments_button).setOnClickListener(this);
-        findViewById(R.id.post_detail_create_comment_button).setOnClickListener(this);
+        findViewById(R.id.event_detail_new_comment_button).setOnClickListener(this);
+        findViewById(R.id.event_detail_likes_button).setOnClickListener(this);
+        findViewById(R.id.event_detail_comments_button).setOnClickListener(this);
+        findViewById(R.id.event_detail_create_comment_button).setOnClickListener(this);
 
 
-        findViewById(R.id.post_detail_create_comment_gallery_button).setOnClickListener(this);
-        findViewById(R.id.post_detail_create_comment_camera_button).setOnClickListener(this);
+        findViewById(R.id.event_detail_create_comment_gallery_button).setOnClickListener(this);
+        findViewById(R.id.event_detail_create_comment_camera_button).setOnClickListener(this);
 
-        findViewById(R.id.post_detail_like_count).setOnClickListener(this);
-        findViewById(R.id.post_detail_share_count).setOnClickListener(this);
+        findViewById(R.id.event_detail_like_count).setOnClickListener(this);
+        findViewById(R.id.event_detail_share_count).setOnClickListener(this);
 
-        setPicture(post.getBitmapPicture());
-        setPostPicture(post.getBitmapPostPicture());
+        setPicture(event.getBitmapPicture(this));
+        setEventPicture(event.getBitmapEventPicture(this));
     }
 
-    private void setPostPicture(Bitmap postPicture){
-        if(postPicture!=null){
-            findViewById(R.id.post_detail_post_picture).setVisibility(View.VISIBLE);
-            setPic(R.id.post_detail_post_picture,postPicture);
+    private void setEventPicture(Bitmap eventPicture){
+        if(eventPicture!=null){
+            findViewById(R.id.event_detail_event_picture).setVisibility(View.VISIBLE);
+            setPic(R.id.event_detail_event_picture,eventPicture);
         }else{
-            findViewById(R.id.post_detail_post_picture).setVisibility(View.GONE);
+            findViewById(R.id.event_detail_event_picture).setVisibility(View.GONE);
         }
     }
 
     private void setPicture(Bitmap picture){
         if(picture!=null){
-            setPic(R.id.post_detail_picture,picture);
+            setPic(R.id.event_detail_picture,picture);
         }
     }
 
@@ -115,21 +113,21 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
         User user = getLocalUser();
 
-        postService.getPostDetail(user.getId(), post.getPost_id(), new RequestFuture<Post>(){
+        eventService.getEventDetail(user.getId(), event.getEvent_id(), new RequestFuture<Event>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(Post result) {
-                post = result;
-                setPostValues(post);
+            public void onSuccess(Event result) {
+                event = result;
+                setEventValues(event);
             }
 
             @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.post_detail_relative_layout, errorMessage);
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.event_detail_relative_layout, errorValue);
             }
 
             @Override
@@ -143,7 +141,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     }
 
     private void loadComments(){
-        postService.getAllComments(post.getPost_id(), new RequestFuture<List<Comment>>(){
+        eventService.getAllComments(event.getEvent_id(), new RequestFuture<List<Comment>>(){
 
             @Override
             public void onStartQuery() {
@@ -152,18 +150,18 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
             @Override
             public void onSuccess(List<Comment> comments) {
-                commentsRecycler = (RecyclerView) findViewById(R.id.post_detail_comment_recycler);
-                commentLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
+                commentsRecycler = (RecyclerView) findViewById(R.id.event_detail_comment_recycler);
+                commentLayoutManager = new LinearLayoutManager(EventDetailActivity.this);
                 commentsRecycler.setNestedScrollingEnabled(false);
                 commentsRecycler.setLayoutManager(commentLayoutManager);
                 commentAdapter = new CommentAdapter(comments);
-                commentAdapter.addOnLikeClickedListener(PostDetailActivity.this);
+                commentAdapter.addOnLikeClickedListener(EventDetailActivity.this);
                 commentsRecycler.setAdapter(commentAdapter);
             }
 
             @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.post_detail_relative_layout, errorMessage);
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.event_detail_relative_layout, errorValue);
             }
             @Override
             public void onFinishQuery() {
@@ -173,7 +171,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     }
 
     private void loadLikes(){
-        postService.getAllLikes(post.getPost_id(), new RequestFuture<List<Like>>(){
+        eventService.getAllLikes(event.getEvent_id(), new RequestFuture<List<Like>>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -181,18 +179,18 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
             @Override
             public void onSuccess(List<Like> likes) {
-                likeRecycler = (RecyclerView) findViewById(R.id.post_detail_like_recycler);
-                likeLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
+                likeRecycler = (RecyclerView) findViewById(R.id.event_detail_like_recycler);
+                likeLayoutManager = new LinearLayoutManager(EventDetailActivity.this);
                 likeRecycler.setNestedScrollingEnabled(false);
                 likeRecycler.setLayoutManager(likeLayoutManager);
                 likeAdapter = new LikeAdapter(likes);
-                likeAdapter.addOnLikeClickedListener(PostDetailActivity.this);
+                likeAdapter.addOnLikeClickedListener(EventDetailActivity.this);
                 likeRecycler.setAdapter(likeAdapter);
             }
 
             @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.post_detail_relative_layout, errorMessage);
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.event_detail_relative_layout, errorValue);
             }
             @Override
             public void onFinishQuery() {
@@ -214,25 +212,25 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.post_detail_new_comment_button:
+            case R.id.event_detail_new_comment_button:
                 showNewComment(!createNewCommentShown);
                 break;
-            case R.id.post_detail_create_comment_button:
+            case R.id.event_detail_create_comment_button:
                 onCreateCommentClick();
                 break;
-            case R.id.post_detail_like_count:
-                onLikePost();
+            case R.id.event_detail_like_count:
+                onLikeEvent();
                 break;
-            case R.id.post_detail_likes_button:
+            case R.id.event_detail_likes_button:
                 showLikes(!likesShown);
                 break;
-            case R.id.post_detail_comments_button:
+            case R.id.event_detail_comments_button:
                 showComments(!commentsShown);
                 break;
-            case R.id.post_detail_create_comment_camera_button:
+            case R.id.event_detail_create_comment_camera_button:
                 onCameraButtonPressed();
                 break;
-            case R.id.post_detail_create_comment_gallery_button:
+            case R.id.event_detail_create_comment_gallery_button:
                 onGalleryButtonPressed();
                 break;
         }
@@ -248,7 +246,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
     private void onCreateCommentClick() {
 
-        final String text = ((EditText)findViewById(R.id.post_detail_create_comment_text)).getText().toString();
+        final String text = ((EditText)findViewById(R.id.event_detail_create_comment_text)).getText().toString();
         String bmp="";
         if(newCommentBitmap!=null){
             bmp = BitmapUtils.getStringFromBitmap(newCommentBitmap);
@@ -257,7 +255,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
         User user = getLocalUser();
 
-        postService.createComment(user.getId(), post.getPost_id(),picture,text, new RequestFuture<Void>(){
+        eventService.createComment(user.getId(), event.getEvent_id(),picture,text, new RequestFuture<Void>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -270,8 +268,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             }
 
             @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.activity_create_post, errorMessage, R.string.retry, new View.OnClickListener() {
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.activity_create_event, errorValue, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onCreateCommentClick();
@@ -287,16 +285,16 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     }
 
     private void clearNewComment() {
-        ((AppCompatEditText)findViewById(R.id.post_detail_create_comment_text)).setText("");
-        ((AppCompatImageView)findViewById(R.id.post_detail_create_comment_post_picture)).setImageBitmap(null);
-        findViewById(R.id.post_detail_create_comment_post_picture).setVisibility(View.GONE);
+        ((AppCompatEditText)findViewById(R.id.event_detail_create_comment_text)).setText("");
+        ((AppCompatImageView)findViewById(R.id.event_detail_create_comment_event_picture)).setImageBitmap(null);
+        findViewById(R.id.event_detail_create_comment_event_picture).setVisibility(View.GONE);
 
         showNewComment(false);
     }
 
     private void showComments(boolean flag) {
-        final View commentsContainer = findViewById(R.id.post_detail_comment_recycler);
-        final AppCompatButton button = (AppCompatButton) findViewById(R.id.post_detail_comments_button);
+        final View commentsContainer = findViewById(R.id.event_detail_comment_recycler);
+        final AppCompatButton button = (AppCompatButton) findViewById(R.id.event_detail_comments_button);
         if(!flag){
             button.setCompoundDrawablesWithIntrinsicBounds(  0, 0,R.drawable.ic_arrow, 0);
             Animation out_anim = AnimationUtils.loadAnimation(this,R.anim.extrude_y_anim_out);
@@ -309,7 +307,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             commentsContainer.startAnimation(out_anim);
         }else{
             button.setCompoundDrawablesWithIntrinsicBounds(  0, 0,R.drawable.ic_expand, 0);
-            Animation in_anim = AnimationUtils.loadAnimation(PostDetailActivity.this,R.anim.extrude_y_anim_in);
+            Animation in_anim = AnimationUtils.loadAnimation(EventDetailActivity.this,R.anim.extrude_y_anim_in);
             commentsContainer.startAnimation(in_anim);
             commentsContainer.setVisibility(View.VISIBLE);
         }
@@ -318,8 +316,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     }
 
     private void showLikes(boolean flag) {
-        final View likesContainer = findViewById(R.id.post_detail_like_recycler);
-        final AppCompatButton button = (AppCompatButton) findViewById(R.id.post_detail_likes_button);
+        final View likesContainer = findViewById(R.id.event_detail_like_recycler);
+        final AppCompatButton button = (AppCompatButton) findViewById(R.id.event_detail_likes_button);
         if(!flag){
             button.setCompoundDrawablesWithIntrinsicBounds(  0, 0,R.drawable.ic_arrow, 0);
             Animation out_anim = AnimationUtils.loadAnimation(this,R.anim.extrude_y_anim_out);
@@ -333,7 +331,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
         }else{
             button.setCompoundDrawablesWithIntrinsicBounds(  0, 0,R.drawable.ic_expand, 0);
             loadLikes();
-            Animation in_anim = AnimationUtils.loadAnimation(PostDetailActivity.this,R.anim.extrude_y_anim_in);
+            Animation in_anim = AnimationUtils.loadAnimation(EventDetailActivity.this,R.anim.extrude_y_anim_in);
             likesContainer.startAnimation(in_anim);
             likesContainer.setVisibility(View.VISIBLE);
         }
@@ -341,8 +339,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     }
 
     private void showNewComment(boolean flag) {
-        final View newCommentLayout = findViewById(R.id.post_detail_new_comment_layout);
-        final AppCompatButton button = (AppCompatButton) findViewById(R.id.post_detail_new_comment_button);
+        final View newCommentLayout = findViewById(R.id.event_detail_new_comment_layout);
+        final AppCompatButton button = (AppCompatButton) findViewById(R.id.event_detail_new_comment_button);
         if(!flag){
             button.setCompoundDrawablesWithIntrinsicBounds(  0, 0,R.drawable.ic_arrow, 0);
             Animation out_anim = AnimationUtils.loadAnimation(this,R.anim.extrude_y_anim_out);
@@ -362,11 +360,11 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
         createNewCommentShown = flag;
     }
 
-    private void onLikePost() {
+    private void onLikeEvent() {
 
         User user = getLocalUser();
 
-        postService.likePost(user.getId(), post.getPost_id(), new RequestFuture<LikeResult>(){
+        eventService.likeEvent(user.getId(), event.getEvent_id(), new RequestFuture<LikeResult>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -374,13 +372,13 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
             @Override
             public void onSuccess(LikeResult result) {
-                post.setLiked(result.isLiked());
-                post.setLikeCount(result.getLikeCount());
+                event.setLiked(result.isLiked());
+                event.setLikeCount(result.getLikeCount());
                 //update();
             }
 
             @Override
-            public void onFailure(int errorCode,String errorMessage) {printError(R.id.post_detail_relative_layout, errorMessage);}
+            public void onFailure(int errorCode, String errorValue) {printError(R.id.event_detail_relative_layout, errorValue);}
 
             @Override
             public void onFinishQuery() {
@@ -394,7 +392,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
         User user = getLocalUser();
 
-        postService.likeComment(user.getId(), comment.getComment_id(), new RequestFuture<LikeResult>(){
+        eventService.likeComment(user.getId(), comment.getComment_id(), new RequestFuture<LikeResult>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
@@ -404,11 +402,11 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
             public void onSuccess(LikeResult result) {
                 comment.setLiked(result.isLiked());
                 comment.setLikeCount(result.getLikeCount());
-                holder.getTv_likes().setText(comment.getLikeString(PostDetailActivity.this));
+                holder.getTv_likes().setText(comment.getLikeString(EventDetailActivity.this));
             }
 
             @Override
-            public void onFailure(int errorCode,String errorMessage) {printError(R.id.post_detail_relative_layout, errorMessage);}
+            public void onFailure(int errorCode, String errorValue) {printError(R.id.event_detail_relative_layout, errorValue);}
 
             @Override
             public void onFinishQuery() {
@@ -430,8 +428,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
     public void onCameraResult(Bitmap bitmap, File file) {
         showNewComment(true);
-        findViewById(R.id.post_detail_create_comment_post_picture).setVisibility(View.VISIBLE);
-        setPic(R.id.post_detail_create_comment_post_picture,bitmap);
+        findViewById(R.id.event_detail_create_comment_event_picture).setVisibility(View.VISIBLE);
+        setPic(R.id.event_detail_create_comment_event_picture,bitmap);
         newCommentBitmap = bitmap;
     }
 
