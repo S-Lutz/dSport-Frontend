@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,6 @@ public class UserResultFragment extends AbstractFragment implements SwipeRefresh
     @Override
     public void onStart() {
         super.onStart();
-        update();
     }
 
     @Override
@@ -44,6 +44,7 @@ public class UserResultFragment extends AbstractFragment implements SwipeRefresh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.e("Fragment", "On Create");
         final View view = inflater.inflate(R.layout.layout_fragment_search_user, container, false);
         refresher = (SwipeRefreshLayout) view.findViewById(R.id.search_user_refresher);
         refresher.setOnRefreshListener(this);
