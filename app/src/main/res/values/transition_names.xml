@@ -9,12 +9,20 @@
     <string name="transition_post_buttons">post_buttons</string>
     <string name="transition_post_date">post_date</string>
 
+    <string name="transition_event_picture">event_picture</string>
+    <string name="transition_event_event_picture">event_event_picture</string>
     <string name="transition_event_username">event_username</string>
     <string name="transition_event_picture_overlay">event_picture_overlay</string>
     <string name="transition_event_title">event_title</string>
     <string name="transition_event_text">event_text</string>
     <string name="transition_event_buttons">event_buttons</string>
     <string name="transition_event_date">event_date</string>
-    <string name="transition_event_location">event_location</string>
+    <string name="transition_event_location_name">event_location_name</string>
+    <string name="transition_event_location_adress">event_location_adress</string>
     <string name="transition_event_event_date">event_event_date</string>
+    <string name="transition_event_member">event_member</string>
+    <string name="transition_event_date_image">event_date_image</string>
+    <string name="transition_event_member_image">event_member_image</string>
+    <string name="transition_event_location_image">event_location_image</string>
+
 </resources>

@@ -68,6 +68,7 @@
                 android:adjustViewBounds="true"
                 android:visibility="gone"
                 android:id="@+id/post_detail_post_picture"/>
+
             <android.support.v7.widget.AppCompatTextView
                 style="@style/body"
                 android:layout_below="@id/post_detail_post_picture"
