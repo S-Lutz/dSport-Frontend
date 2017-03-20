@@ -162,8 +162,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     private class OnPostClicked implements View.OnClickListener{
+
         final Post post;
         final PostViewHolder holder;
+
         private OnPostClicked(final PostViewHolder holder, final Post post){
             this.holder = holder;
             this.post = post;

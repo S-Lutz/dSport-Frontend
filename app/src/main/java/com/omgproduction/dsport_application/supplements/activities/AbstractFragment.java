@@ -43,10 +43,10 @@ public abstract class AbstractFragment extends Fragment implements SwipeRefreshL
      * @param errorCode ErrorCode (See in error_codes)
      */
     protected void printError(View rootView, View layout, String errorCode){
-        String packageName = rootView.getContext().getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
+        //String packageName = rootView.getContext().getPackageName();
+        //int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(layout, getString(resId), Snackbar.LENGTH_LONG);
+                .make(layout, errorCode, Snackbar.LENGTH_LONG);
 
         snackbar.show();
     }
@@ -58,10 +58,10 @@ public abstract class AbstractFragment extends Fragment implements SwipeRefreshL
      * @param listener OnClickListener for Button-Click
      */
     protected void printError(View rootView, View layout, String errorCode, int buttonLabelId, View.OnClickListener listener){
-        String packageName = rootView.getContext().getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
+        //String packageName = rootView.getContext().getPackageName();
+        //int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(layout, getString(resId), Snackbar.LENGTH_LONG)
+                .make(layout, errorCode, Snackbar.LENGTH_LONG)
                 .setAction(getString(buttonLabelId), listener);
 
         snackbar.show();
