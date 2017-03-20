@@ -24,6 +24,9 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketAddress;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -82,24 +85,24 @@ public class JSONRequest extends AsyncTask<Void, String, Void>{
                 }
                 log("connection",con.toString());
 
-                BufferedInputStream in = new BufferedInputStream(con.getInputStream());
-                final JSONResponse response = new JSONResponse(con.getResponseMessage(), con.getResponseCode(), new JSONObject(readStream(in)));
-                log("Result Code", String.valueOf(response.getResponseCode()));
-                log("Result Message", response.getResponseMessage());
-
-                if(onResultListener!=null) {
-
-                    if(response.isOk()){
-                        new Handler(Looper.getMainLooper()).post(
-                            new Runnable() {
-                                 @Override
-                                 public void run() {
-                                     onResultListener.onResult(response);
-                                 }
-                             }
-                        );
-                    }
+                JSONResponse response = null;
+                try {
+                    response = new JSONResponse(con.getResponseMessage(), con.getResponseCode(), null);
+                }catch (SocketTimeoutException e){
+                    response = new JSONResponse("Timeout",HttpURLConnection.HTTP_CLIENT_TIMEOUT, null);
                 }
+
+                if(con.getResponseCode()==HttpURLConnection.HTTP_OK){
+
+                    BufferedInputStream in = new BufferedInputStream(con.getInputStream());
+                    response = new JSONResponse(con.getResponseMessage(), con.getResponseCode(), new JSONObject(readStream(in)));
+                    log("Result Code", String.valueOf(response.getResponseCode()));
+                    log("Result Message", response.getResponseMessage());
+
+
+                }
+
+                onResult(response);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -110,6 +113,19 @@ public class JSONRequest extends AsyncTask<Void, String, Void>{
             }
         }
         return null;
+    }
+
+    private void onResult(final JSONResponse response) {
+        if(onResultListener!=null) {
+            new Handler(Looper.getMainLooper()).post(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            onResultListener.onResult(response);
+                        }
+                    }
+            );
+        }
     }
 
     private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {

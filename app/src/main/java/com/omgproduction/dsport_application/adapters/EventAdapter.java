@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.models.Event;
+import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.DateConverter;
 
 import java.util.ArrayList;
@@ -69,8 +70,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         holder.tv_likes.setOnClickListener(new OnEventClicked(holder,event));
         holder.tv_shares.setOnClickListener(new OnEventClicked(holder,event));
 
-        Bitmap eventPicture = event.getBitmapEventPicture(holder.contextView.getContext());
-        Bitmap picture = event.getBitmapPicture(holder.contextView.getContext());
+        Bitmap eventPicture = BitmapUtils.getBitmapFromString(event.getEventPicture());
+        Bitmap picture = BitmapUtils.getBitmapFromString(event.getPicture());
         if(picture!=null){
             holder.iv_picture.setImageBitmap(picture);
         }
@@ -93,13 +94,22 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         private TextView tv_username, tv_text, tv_likes, tv_comments, tv_shares, tv_date, tv_title, tv_event_date, tv_address_location,tv_name_location, tv_event_member;
         private final View contextView;
         private LinearLayout event_buttons;
+        private LinearLayout event_date_img;
+
+
+
+        private LinearLayout event_member_img;
+        private LinearLayout event_location_img;
         private RelativeLayout event_layout;
+
+
 
         public EventViewHolder(View view) {
             super(view);
             contextView = view;
             iv_picture = (ImageView) view.findViewById(R.id.event_picture);
             iv_event_picture = (ImageView) view.findViewById(R.id.event_event_picture);
+
             tv_username = (TextView) view.findViewById(R.id.event_username);
             tv_text = (TextView) view.findViewById(R.id.event_text);
             tv_likes = (TextView) view.findViewById(R.id.event_like_count);
@@ -111,7 +121,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             tv_date = (TextView) view.findViewById(R.id.event_date);
             tv_title = (TextView) view.findViewById(R.id.event_title);
             event_buttons = (LinearLayout) view.findViewById(R.id.event_option_container);
-            iv_event_picture_overlay = (ImageView) view.findViewById(R.id.event_picture_overlay);
+            event_date_img = (LinearLayout) view.findViewById(R.id.event_date_container);
+            event_member_img = (LinearLayout) view.findViewById(R.id.event_member_container);
+            event_location_img = (LinearLayout) view.findViewById(R.id.event_location_container);
             tv_event_member =(TextView) view.findViewById(R.id.event_member_tv );
             event_layout = (RelativeLayout) view.findViewById(R.id.event_relative_layout);
         }
@@ -160,6 +172,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             return event_buttons;
         }
 
+        public LinearLayout getEvent_date_img() {
+            return event_date_img;
+        }
+
+        public LinearLayout getEvent_member_img() {
+            return event_member_img;
+        }
+
+        public LinearLayout getEvent_location_img() {
+            return event_location_img;
+        }
+
         public ImageView getIv_event_picture_overlay() {
             return iv_event_picture_overlay;
         }
@@ -167,11 +191,27 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         public RelativeLayout getEvent_layout() {
             return event_layout;
         }
+
+        public TextView getTv_event_date() {
+            return tv_event_date;
+        }
+
+        public TextView getTv_address_location() {
+            return tv_address_location;
+        }
+
+        public TextView getTv_name_location() {
+            return tv_name_location;
+        }
+
+        public TextView getTv_event_member() {
+            return tv_event_member;
+        }
     }
 
     private class OnEventClicked implements View.OnClickListener{
         final Event event;
-        final EventAdapter.EventViewHolder holder;
+        final EventViewHolder holder;
         private OnEventClicked(final EventViewHolder holder, final Event event){
             this.holder = holder;
             this.event = event;
@@ -196,8 +236,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     }
                     break;
                 default:
-                    for (OnEventClickedListener onEventClickedListener: onEventClickedListeners){
-                        onEventClickedListener.onEventClicked(holder,event);
+                    for (OnEventClickedListener onEventClickedListener: onEventClickedListeners){onEventClickedListener.onEventClicked(holder,event);
                     }
                     break;
             }

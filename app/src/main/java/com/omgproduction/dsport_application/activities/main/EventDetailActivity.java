@@ -12,10 +12,12 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.CommentAdapter;
@@ -77,6 +79,10 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
         setText(R.id.event_detail_username,event.getUsername());
         setText(R.id.event_detail_text,event.getText());
         setText(R.id.event_detail_date, dateConverter.convertString(this,event.getCreated()));
+        setText(R.id.event_date_tv, dateConverter.convertString(this,event.getEventDate()));
+        setText(R.id.event_member_tv, event.getEventMember());
+        setText(R.id.event_location_name_tv, event.getLocationName());
+        setText(R.id.event_location_address_tv, event.getLocationAddress());
 
         findViewById(R.id.event_detail_new_comment_button).setOnClickListener(this);
         findViewById(R.id.event_detail_likes_button).setOnClickListener(this);
@@ -90,22 +96,22 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
         findViewById(R.id.event_detail_like_count).setOnClickListener(this);
         findViewById(R.id.event_detail_share_count).setOnClickListener(this);
 
-        setPicture(event.getBitmapPicture(this));
-        setEventPicture(event.getBitmapEventPicture(this));
+        setPicture(event.getPicture());
+        setEventPicture(event.getEventPicture());
     }
 
-    private void setEventPicture(Bitmap eventPicture){
-        if(eventPicture!=null){
-            findViewById(R.id.event_detail_event_picture).setVisibility(View.VISIBLE);
-            setPic(R.id.event_detail_event_picture,eventPicture);
+    private void setEventPicture(String eventPicture){
+        if(eventPicture!=null&&!eventPicture.trim().isEmpty()){
+            findViewById(R.id.event_event_detail_picture).setVisibility(View.VISIBLE);
+            setPic(R.id.event_event_detail_picture,BitmapUtils.getBitmapFromString(eventPicture));
         }else{
-            findViewById(R.id.event_detail_event_picture).setVisibility(View.GONE);
+            findViewById(R.id.event_event_detail_picture).setVisibility(View.GONE);
         }
     }
 
-    private void setPicture(Bitmap picture){
-        if(picture!=null){
-            setPic(R.id.event_detail_picture,picture);
+    private void setPicture(String picture){
+        if(picture!=null&&!picture.trim().isEmpty()){
+            setPic(R.id.event_detail_picture,BitmapUtils.getBitmapFromString(picture));
         }
     }
 

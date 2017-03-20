@@ -163,6 +163,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
             @Override
             public void onFailure(int errorCode,String errorMessage) {
+                Log.e("Error",errorMessage);
                 printError(R.id.post_detail_relative_layout, errorMessage);
             }
             @Override

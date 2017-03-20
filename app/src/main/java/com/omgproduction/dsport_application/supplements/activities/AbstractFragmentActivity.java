@@ -52,10 +52,10 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
      * @param errorCode ErrorCode (See in error_codes)
      */
     protected void printError(int layoutID, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
+        //String packageName = getPackageName();
+        //int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(findViewById(layoutID), getString(resId), Snackbar.LENGTH_LONG);
+                .make(findViewById(layoutID), errorCode, Snackbar.LENGTH_LONG);
 
         snackbar.show();
     }
@@ -67,10 +67,10 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
      * @param listener OnClickListener for Button-Click
      */
     protected void printError(int layoutID, String errorCode, int buttonLabelId, View.OnClickListener listener){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
+        //String packageName = getPackageName();
+        //int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(findViewById(layoutID), getString(resId), Snackbar.LENGTH_LONG)
+                .make(findViewById(layoutID), errorCode, Snackbar.LENGTH_LONG)
                 .setAction(getString(buttonLabelId), listener);
 
         snackbar.show();
@@ -82,11 +82,11 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
      * @param errorCode Errorcode to print Error-Messsage (See in error_code)
      */
     protected void printInputError(int id, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
+        //String packageName = getPackageName();
+        //int resId = getResources().getIdentifier(errorCode, "string", packageName);
         TextInputLayout til = (TextInputLayout) findViewById(id);
         til.setErrorEnabled(true);
-        til.setError(getString(resId));
+        til.setError(errorCode);
     }
 
     /**

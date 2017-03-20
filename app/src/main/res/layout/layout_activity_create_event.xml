@@ -180,7 +180,7 @@
                 android:orientation="vertical">
                 <android.support.v7.widget.AppCompatTextView
                     style="@style/body"
-                    android:transitionName="@string/transition_event_location"
+                    android:transitionName="@string/transition_event_location_name"
                     android:id="@+id/event_location_name_tv"
                     android:layout_gravity="center"
                     android:layout_margin="0dp">
@@ -188,7 +188,7 @@
 
                 <android.support.v7.widget.AppCompatTextView
                     style="@style/body"
-                    android:transitionName="@string/transition_event_location"
+                    android:transitionName="@string/transition_event_location_adress"
                     android:id="@+id/event_location_address_tv"
                     android:layout_gravity="center"
                     android:layout_margin="0dp">

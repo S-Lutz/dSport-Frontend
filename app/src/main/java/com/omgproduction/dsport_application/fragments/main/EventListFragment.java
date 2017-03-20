@@ -1,6 +1,9 @@
 package com.omgproduction.dsport_application.fragments.main;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.activities.main.EventDetailActivity;
 import com.omgproduction.dsport_application.adapters.EventAdapter;
 import com.omgproduction.dsport_application.fragments.helper.EventMenuFragment;
 import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
@@ -55,7 +59,29 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
 
     @Override
     public void onEventClicked(EventAdapter.EventViewHolder holder, Event e) {
+        Intent i = new Intent(getContext(), EventDetailActivity.class);
+        i.putExtra(INTENT_EVENT, e);
 
+        Pair<View, String> p1 = Pair.create((View) holder.getIv_picture(), getString(R.string.transition_event_picture));
+        Pair<View, String> p2 = Pair.create((View) holder.getTv_username(), getString(R.string.transition_event_username));
+        Pair<View, String> p3 = Pair.create((View) holder.getTv_title(), getString(R.string.transition_event_title));
+        Pair<View, String> p4 = Pair.create((View) holder.getTv_text(), getString(R.string.transition_event_text));
+        Pair<View, String> p5 = Pair.create((View) holder.getEvent_buttons(), getString(R.string.transition_event_buttons));
+        Pair<View, String> p6 = Pair.create((View) holder.getTv_date(), getString(R.string.transition_event_date));
+        Pair<View, String> p7 = Pair.create((View) holder.getTv_event_date(), getString(R.string.transition_event_event_date));
+        Pair<View, String> p8 = Pair.create((View) holder.getIv_event_picture(), getString(R.string.transition_event_event_picture));
+        Pair<View, String> p9 = Pair.create((View) holder.getTv_event_member(), getString(R.string.transition_event_member));
+        Pair<View, String> p10 = Pair.create((View) holder.getTv_name_location(), getString(R.string.transition_event_location_name));
+        Pair<View, String> p11 = Pair.create((View) holder.getTv_address_location(), getString(R.string.transition_event_location_adress));
+        Pair<View, String> p12 = Pair.create((View) holder.getEvent_date_img(), getString(R.string.transition_event_date_image));
+        Pair<View, String> p13 = Pair.create((View) holder.getEvent_member_img(), getString(R.string.transition_event_member_image));
+        Pair<View, String> p14 = Pair.create((View) holder.getEvent_location_img(), getString(R.string.transition_event_location_image));
+
+        ActivityOptionsCompat options;
+
+        options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14);
+
+        startActivity(i, options.toBundle());
     }
 
     @Override

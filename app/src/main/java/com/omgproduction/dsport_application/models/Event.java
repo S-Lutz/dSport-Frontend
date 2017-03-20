@@ -26,7 +26,6 @@ public class Event implements Serializable {
     private String locationName;
     private String locationAddress;
 
-
     /**
      *
      * @param event_id
@@ -165,24 +164,6 @@ public class Event implements Serializable {
     }
 
     public String getEventDate() { return eventDate; }
-
-    public Bitmap getBitmapPicture(Context context){
-
-        if(picture.isEmpty()){
-            return null;
-        }
-        return BitmapUtils.getBitmapFromString(picture);
-    }
-
-
-    public Bitmap getBitmapEventPicture(Context context){
-
-        if(eventPicture.isEmpty()){
-            return null;
-        }
-        return BitmapUtils.getBitmapFromString(eventPicture);
-    }
-
 
     public String getLikeString(Context context) {
         StringBuilder sb = new StringBuilder();
