@@ -7,6 +7,8 @@ import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Event;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
+import com.omgproduction.dsport_application.models.Participate;
+import com.omgproduction.dsport_application.models.ParticipateResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.SearchEvent;
 import com.omgproduction.dsport_application.models.SearchStudio;
@@ -146,6 +148,22 @@ public class ConverterFactory implements ApplicationKeys {
         };
     }
 
+    public static ResultConverter<JSONObject, ParticipateResult> createJsonToEventParticipateResultConverter() {
+        return new ResultConverter<JSONObject, ParticipateResult>() {
+            @Override
+            public ParticipateResult convert(JSONObject input) {
+                try {
+                    return new ParticipateResult(
+                            Integer.parseInt(input.getString(APPLICATION_EVENT_PARTICIPATING)) == 1,
+                            input.getString(APPLICATION_EVENT_MEMBERCOUNT));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
+
     public static ResultConverter<JSONObject, LikeResult> createJsonToCommentLikeResultConverter() {
         return new ResultConverter<JSONObject, LikeResult>() {
             @Override
@@ -184,6 +202,22 @@ public class ConverterFactory implements ApplicationKeys {
             public Like convert(JSONObject input) {
                 try {
                     return new Like(
+                            input.getString(APPLICATION_USER_USER_ID),
+                            input.getString(APPLICATION_USER_USERNAME));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
+
+    public static ResultConverter<JSONObject, Participate> createJsonToParticipateConverter() {
+        return new ResultConverter<JSONObject, Participate>() {
+            @Override
+            public Participate convert(JSONObject input) {
+                try {
+                    return new Participate(
                             input.getString(APPLICATION_USER_USER_ID),
                             input.getString(APPLICATION_USER_USERNAME));
                 } catch (JSONException e) {

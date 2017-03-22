@@ -37,6 +37,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.main.CreateExerciseActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.main.MainActivity"
             android:screenOrientation="portrait" />
@@ -72,9 +76,6 @@
         <activity
             android:name=".activities.main.FriendActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.helper.CameraActivity"
-            android:screenOrientation="portrait"></activity>
 
         <service android:name=".services.NotificationReceiver">
             <intent-filter>

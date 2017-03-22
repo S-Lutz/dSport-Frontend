@@ -66,6 +66,9 @@ public interface ApplicationKeys {
     String APPLICATION_EVENT_SHARECOUNT = "sharecount";
     String APPLICATION_EVENT_MEMBERCOUNT = "membercount";
 
+    String APPLICATION_EXERCISE_EXERCISE_NAME = "erxercise_name";
+    String APPLICATION_EXERCISE_EXERCISE_TYPE = "erxercise_type";
+
     String APPLICATION_CONNECTION_USER_ID = "user_id";
 
     String APPLICATION_CONNECTION_TOKEN = "token";
@@ -77,6 +80,7 @@ public interface ApplicationKeys {
     String APPLICATION_USERS = "users";
     String APPLICATION_FRIENDS = "friends";
     String APPLICATION_EVENTS = "events";
+    String APPLICATION_MEMBERS = "members";
     String APPLICATION_STUDIOS = "studios";
     String APPLICATION_LIKES = "likes";
 

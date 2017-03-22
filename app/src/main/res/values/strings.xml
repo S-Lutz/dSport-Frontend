@@ -68,10 +68,21 @@
     <string name="comments">Comments</string>
     <string name="new_comment">New Comment</string>
     <string name="likes">Likes</string>
+    <string name="participant">Participant</string>
+    <string name="event_detail_participate_text">Teilnehmen</string>
+
 
     <string name="you_plus">You + </string>
     <string name="users">Users</string>
     <string name="studios">Studios</string>
     <string name="unknown">unknown</string>
+
+
+    <string name="create_exrercise_text_hint">Exercise Name</string>
+    <string-array name="exercise_type_array">
+        <item>Weight</item>
+        <item>Distance</item>
+        <item>Timed</item>
+    </string-array>
 
 </resources>

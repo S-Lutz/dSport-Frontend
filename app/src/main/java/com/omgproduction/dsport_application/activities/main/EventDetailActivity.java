@@ -1,11 +1,16 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.provider.MediaStore;
+import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -22,34 +27,39 @@ import android.widget.ImageView;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.CommentAdapter;
 import com.omgproduction.dsport_application.adapters.LikeAdapter;
+import com.omgproduction.dsport_application.adapters.ParticipateAdapter;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Event;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
+import com.omgproduction.dsport_application.models.Participate;
+import com.omgproduction.dsport_application.models.ParticipateResult;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.EventService;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 import com.omgproduction.dsport_application.utils.DateConverter;
-import com.omgproduction.dsport_application.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-public class EventDetailActivity extends AbstractFragmentActivity implements CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
+public class EventDetailActivity extends AbstractFragmentActivity implements CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener, ParticipateAdapter.OnParticipateClickedListener{
 
-    private RecyclerView commentsRecycler, likeRecycler;
+    private RecyclerView commentsRecycler, likeRecycler, participantRecycler;
     private CommentAdapter commentAdapter;
-    private RecyclerView.LayoutManager commentLayoutManager, likeLayoutManager;
+    private RecyclerView.LayoutManager commentLayoutManager, likeLayoutManager, participantLayoutManager;
     private LikeAdapter likeAdapter;
+    private ParticipateAdapter participantAdapter;
     private Event event;
     private boolean createNewCommentShown = false;
     private boolean likesShown = false;
     private boolean commentsShown = false;
+    private boolean participantShown = false;
     private Bitmap newCommentBitmap;
+    private boolean currentStatus;
 
     private DateConverter dateConverter;
 
@@ -85,9 +95,11 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
         setText(R.id.event_location_address_tv, event.getLocationAddress());
 
         findViewById(R.id.event_detail_new_comment_button).setOnClickListener(this);
+        findViewById(R.id.event_detail_participate_button).setOnClickListener(this);
         findViewById(R.id.event_detail_likes_button).setOnClickListener(this);
         findViewById(R.id.event_detail_comments_button).setOnClickListener(this);
         findViewById(R.id.event_detail_create_comment_button).setOnClickListener(this);
+        findViewById(R.id.participate).setOnClickListener(this);
 
 
         findViewById(R.id.event_detail_create_comment_gallery_button).setOnClickListener(this);
@@ -98,6 +110,41 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
 
         setPicture(event.getPicture());
         setEventPicture(event.getEventPicture());
+        setColorAndText(event);
+
+        loadMember();
+        loadLikes();
+    }
+
+
+    private void setColorAndText(Event event) {
+        int colorFrom = 0, colorTo = 0;
+        boolean animate =  false;
+        if (event.isParticipating() && !currentStatus) {
+            colorFrom = getResources().getColor(R.color.colorParticipate);
+            colorTo = getResources().getColor(R.color.colorNotParticipate);
+            setText(R.id.participate, "Absagen");
+            currentStatus = true;
+            animate = true;
+        }else if (!event.isParticipating() && currentStatus){
+            colorFrom = getResources().getColor(R.color.colorNotParticipate);
+            colorTo = getResources().getColor(R.color.colorParticipate);
+            setText(R.id.participate,"Teilnehmen");
+            currentStatus = false;
+            animate = true;
+        }
+
+        if (animate) {
+            ValueAnimator valueAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    findViewById(R.id.participate).setBackgroundColor((int) valueAnimator.getAnimatedValue());
+                }
+            });
+
+            valueAnimator.start();
+        }
     }
 
     private void setEventPicture(String eventPicture){
@@ -142,12 +189,16 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             }
         });
 
+
+
         loadComments();
 
     }
 
     private void loadComments(){
+
         eventService.getAllComments(event.getEvent_id(), new RequestFuture<List<Comment>>(){
+
 
             @Override
             public void onStartQuery() {
@@ -205,6 +256,35 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
         });
     }
 
+    private void loadMember(){
+        eventService.getAllMember(event.getEvent_id(), new RequestFuture<List<Participate>>(){
+            @Override
+            public void onStartQuery() {
+                showProgressBar(true);
+            }
+
+            @Override
+            public void onSuccess(List<Participate> participant) {
+                participantRecycler = (RecyclerView) findViewById(R.id.event_detail_participate_recycler);
+                participantLayoutManager = new LinearLayoutManager(EventDetailActivity.this);
+                participantRecycler.setNestedScrollingEnabled(false);
+                participantRecycler.setLayoutManager(participantLayoutManager);
+                participantAdapter = new ParticipateAdapter(participant);
+                participantAdapter.addOnParticipateClickedListener(EventDetailActivity.this);
+                participantRecycler.setAdapter(participantAdapter);
+            }
+
+            @Override
+            public void onFailure(int errorCode, String errorValue) {
+                printError(R.id.event_detail_relative_layout, errorValue);
+            }
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
+            }
+        });
+    }
+
     @Override
     protected void removeAllErrors() {
 
@@ -230,6 +310,9 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             case R.id.event_detail_likes_button:
                 showLikes(!likesShown);
                 break;
+            case R.id.event_detail_participate_button:
+                showMember(!participantShown);
+                break;
             case R.id.event_detail_comments_button:
                 showComments(!commentsShown);
                 break;
@@ -239,8 +322,12 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             case R.id.event_detail_create_comment_gallery_button:
                 onGalleryButtonPressed();
                 break;
+            case R.id.participate:
+                onParticipateEvent();
+                break;
         }
     }
+
 
     private void onGalleryButtonPressed() {
         openGallery();
@@ -253,13 +340,16 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
     private void onCreateCommentClick() {
 
         final String text = ((EditText)findViewById(R.id.event_detail_create_comment_text)).getText().toString();
+
         String bmp="";
+
         if(newCommentBitmap!=null){
             bmp = BitmapUtils.getStringFromBitmap(newCommentBitmap);
         }
         final String picture = bmp;
 
         User user = getLocalUser();
+
 
         eventService.createComment(user.getId(), event.getEvent_id(),picture,text, new RequestFuture<Void>(){
             @Override
@@ -275,7 +365,7 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
 
             @Override
             public void onFailure(int errorCode, String errorValue) {
-                printError(R.id.activity_create_event, errorValue, R.string.retry, new View.OnClickListener() {
+                printError(R.id.activity_event_detail, errorValue, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onCreateCommentClick();
@@ -344,6 +434,29 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
         likesShown = flag;
     }
 
+    private void showMember(boolean flag) {
+        final View memberContainer = findViewById(R.id.event_detail_participate_recycler);
+        final AppCompatButton button = (AppCompatButton) findViewById(R.id.event_detail_participate_button);
+        if(!flag){
+            button.setCompoundDrawablesWithIntrinsicBounds(  0, 0,R.drawable.ic_arrow, 0);
+            Animation out_anim = AnimationUtils.loadAnimation(this,R.anim.extrude_y_anim_out);
+            out_anim.setAnimationListener(new AnimationAdapter(){
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    memberContainer.setVisibility(View.GONE);
+                }
+            });
+            memberContainer.startAnimation(out_anim);
+        }else{
+            button.setCompoundDrawablesWithIntrinsicBounds(  0, 0,R.drawable.ic_expand, 0);
+            loadMember();
+            Animation in_anim = AnimationUtils.loadAnimation(EventDetailActivity.this,R.anim.extrude_y_anim_in);
+            memberContainer.startAnimation(in_anim);
+            memberContainer.setVisibility(View.VISIBLE);
+        }
+        participantShown = flag;
+    }
+
     private void showNewComment(boolean flag) {
         final View newCommentLayout = findViewById(R.id.event_detail_new_comment_layout);
         final AppCompatButton button = (AppCompatButton) findViewById(R.id.event_detail_new_comment_button);
@@ -380,7 +493,33 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
             public void onSuccess(LikeResult result) {
                 event.setLiked(result.isLiked());
                 event.setLikeCount(result.getLikeCount());
-                //update();
+                update();
+            }
+
+            @Override
+            public void onFailure(int errorCode, String errorValue) {printError(R.id.event_detail_relative_layout, errorValue);}
+
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
+            }
+        });
+    }
+
+    private void onParticipateEvent() {
+        User user = getLocalUser();
+
+        eventService.participateEvent(user.getId(), event.getEvent_id(), new RequestFuture<ParticipateResult>(){
+            @Override
+            public void onStartQuery() {
+                showProgressBar(true);
+            }
+
+            @Override
+            public void onSuccess(ParticipateResult result) {
+                event.setParticipating(result.isParticipating());
+                event.setEventMember(result.getMembercount());
+                update();
             }
 
             @Override
@@ -428,8 +567,8 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
     }
 
     @Override
-    public void onLikeSelected(Like like) {
-        //TODO OPEN USER WHO LIKED
+    public void onParticipateSelected(Participate participate) {
+        //TODO OPEN USER WHO IS PARTICIPATING
     }
 
     public void onCameraResult(Bitmap bitmap, File file) {
@@ -496,4 +635,9 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
         startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), SELECT_PICTURE);
     }
 
+
+    @Override
+    public void onLikeSelected(Like like) {
+
+    }
 }

@@ -9,6 +9,7 @@
 
     <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/activity_event_detail"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
         <RelativeLayout
@@ -43,14 +44,14 @@
                 android:layout_below="@id/event_detail_title"
                 android:textSize="24sp"
                 android:height="56dp"
-                android:background="#88ff0000"
                 android:textColor="#ffffff"
                 android:textStyle="bold"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:gravity="center"
-                android:id="@+id/participate"
-                android:text="Absagen"/>
+                android:background="@color/colorParticipate"
+                android:text="@string/event_detail_participate_text"
+                android:id="@+id/participate"/>
 
 
             <LinearLayout
@@ -261,13 +262,36 @@
                     android:id="@+id/event_detail_like_recycler"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/event_detail_like_layout"
+                android:id="@+id/event_detail_participate_layout"
+                android:orientation="vertical">
+                <android.support.v7.widget.AppCompatButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/participant"
+                    android:drawableRight="@drawable/ic_arrow"
+                    android:id="@+id/event_detail_participate_button"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:gravity="left|center"/>
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:id="@+id/event_detail_participate_recycler"/>
+            </LinearLayout>
+
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/new_comment"
                 android:drawableRight="@drawable/ic_arrow"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:layout_below="@id/event_detail_like_layout"
+                android:layout_below="@id/event_detail_participate_layout"
                 android:gravity="left|center"
                 android:id="@+id/event_detail_new_comment_button">
             </android.support.v7.widget.AppCompatButton>

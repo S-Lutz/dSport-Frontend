@@ -19,6 +19,7 @@ import com.omgproduction.dsport_application.fragments.helper.UniversalListFragme
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.Event;
 import com.omgproduction.dsport_application.models.LikeResult;
+import com.omgproduction.dsport_application.models.ParticipateResult;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.EventService;
 
@@ -33,6 +34,13 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
         eventService = new EventService(getContext());
         eventMenuFragment = new EventMenuFragment();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        update();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +50,8 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
 
         return view;
     }
+
+
 
     @Override
     protected void updatePrivate() {
@@ -114,13 +124,18 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
     }
 
     @Override
+    public void onParticipateEvent(final EventAdapter.EventViewHolder holder, final Event e) {
+        onEventClicked(holder, e);
+    }
+
+    @Override
     public void onEventShare(EventAdapter.EventViewHolder holder, Event e) {
 
     }
 
     @Override
     public void onEventComment(EventAdapter.EventViewHolder holder, Event e) {
-
+        onEventClicked(holder, e);
     }
 
     @Override
@@ -132,7 +147,6 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
 
     @Override
     public void onSetActive(boolean flag) {
-        Log.e("EventFragment", "Activeated");
         menuManager.setMenuFragment(flag?eventMenuFragment:null);
     }
 }

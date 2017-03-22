@@ -29,6 +29,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public interface OnEventClickedListener{
         void onEventClicked(EventViewHolder holder, Event e);
         void onEventLike(EventViewHolder holder, Event e);
+        void onParticipateEvent(EventViewHolder holder, Event e);
         void onEventShare(EventViewHolder holder, Event e);
         void onEventComment(EventViewHolder holder, Event e);
     }
@@ -223,6 +224,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 case R.id.event_like_count:
                     for (OnEventClickedListener onEventClickedListener: onEventClickedListeners){
                         onEventClickedListener.onEventLike(holder,event);
+                    }
+                    break;
+                case R.id.participate:
+                    for (OnEventClickedListener onEventClickedListener: onEventClickedListeners){
+                        onEventClickedListener.onParticipateEvent(holder,event);
                     }
                     break;
                 case R.id.event_share_count:
