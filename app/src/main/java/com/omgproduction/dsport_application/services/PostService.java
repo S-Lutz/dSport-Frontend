@@ -16,10 +16,12 @@ import com.omgproduction.dsport_application.utils.Converter;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
 import com.omgproduction.dsport_application.utils.ResultWrapper;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**

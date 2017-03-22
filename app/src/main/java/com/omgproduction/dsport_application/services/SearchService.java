@@ -14,8 +14,6 @@ import com.herbornsoftware.omnet.ResultConverter;
 import com.omgproduction.dsport_application.builder.BackendRequest;
 import com.omgproduction.dsport_application.holder.SearchResultHolder;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
-import com.omgproduction.dsport_application.models.SearchEvent;
-import com.omgproduction.dsport_application.models.SearchStudio;
 import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.Converter;

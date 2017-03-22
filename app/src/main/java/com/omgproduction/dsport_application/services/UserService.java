@@ -15,6 +15,7 @@ import com.omgproduction.dsport_application.models.SearchUser;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.utils.ResultWrapper;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
+import com.omgproduction.dsport_application.utils.Triple;
 
 import org.json.JSONObject;
 
@@ -206,11 +207,38 @@ public class UserService extends AbstractService {
         return localUser;
     }
 
+
+
+    public void getUser(String userID, final IRequestFuture<User> listener) {
+
+        listener.onStartQuery();
+
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_GET_USER)
+                    .addParam(APPLICATION_USER_USER_ID, userID)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
+                            listener.onFinishQuery();
+                            if (response.isOk()) {
+                                listener.onSuccess(response.getValue(ConverterFactory.createJsonToUserConverter()));
+                            } else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
+                        }
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
+    }
+
     public boolean isAvailable(User user){
         return user != null && !user.getId().equals(UNKNOWN_VALUE) && !user.getId().trim().isEmpty();
     }
 
-    public void getAllFriends(String localUserId, final RequestFuture<List<SearchUser>> listener) {
+    public void getAllFriends(String localUserId, final RequestFuture<Triple<List<SearchUser>, List<SearchUser>, List<SearchUser>>> listener) {
         listener.onStartQuery();
 
         try {
@@ -221,7 +249,13 @@ public class UserService extends AbstractService {
                         public void onResult(JSONResponse response) {
                             listener.onFinishQuery();
                             if(response.isOk()){
-                                listener.onSuccess(response.getArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS));
+
+                                List<SearchUser> friends = response.getArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS);
+                                List<SearchUser> received = response.getArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS_RECEIVED);
+                                List<SearchUser> sended = response.getArray(ConverterFactory.createJsonToSearchUserConverter(), APPLICATION_FRIENDS_SENDED);
+
+
+                                listener.onSuccess(new Triple(friends,received, sended));
                             }else {
                                 listener.onFailure(response.getResponseCode(), response.getResponseMessage());
                             }
@@ -268,5 +302,105 @@ public class UserService extends AbstractService {
         //executeRequest(request.build());
 
 
+    }
+
+    public void declineFriendship(String localUserId, String friendId, final RequestFuture<Void> listener) {
+        listener.onStartQuery();
+
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_FRIENDS_DECLINE)
+                    .addParam(APPLICATION_USER_USER_ID, localUserId)
+                    .addParam(APPLICATION_FRIEND_ID, friendId)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
+                            listener.onFinishQuery();
+                            if(response.isOk()){
+                                listener.onSuccess(null);
+                            }else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
+                        }
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
+    }
+
+    public void acceptFriendship(String localUserId, String friendId, final RequestFuture<Void> listener) {
+        listener.onStartQuery();
+
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_FRIENDS_ACCEPT)
+                    .addParam(APPLICATION_USER_USER_ID, localUserId)
+                    .addParam(APPLICATION_FRIEND_ID, friendId)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
+                            listener.onFinishQuery();
+                            if(response.isOk()){
+                                listener.onSuccess(null);
+                            }else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
+                        }
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
+    }
+
+    public void sendFriendshipRequest(String localUserId, String friendId, final RequestFuture<Void> listener) {
+        listener.onStartQuery();
+
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_FRIENDS_SEND)
+                    .addParam(APPLICATION_USER_USER_ID, localUserId)
+                    .addParam(APPLICATION_FRIEND_ID, friendId)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
+                            listener.onFinishQuery();
+                            if(response.isOk()){
+                                listener.onSuccess(null);
+                            }else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
+                        }
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
+    }
+
+    public void deleteFriendship(String localUserId, String friendId, final RequestFuture<Void> listener) {
+        listener.onStartQuery();
+
+        try {
+            JSONRequest request = new JSONRequest(ROUTE_FRIENDS_DELETE)
+                    .addParam(APPLICATION_USER_USER_ID, localUserId)
+                    .addParam(APPLICATION_FRIEND_ID, friendId)
+                    .setOnResultListener(new JSONRequest.OnResultListener() {
+                        @Override
+                        public void onResult(JSONResponse response) {
+                            listener.onFinishQuery();
+                            if(response.isOk()){
+                                listener.onSuccess(null);
+                            }else {
+                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
+                            }
+                        }
+                    });
+            request.execute();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            listener.onFinishQuery();
+        }
     }
 }

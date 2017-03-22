@@ -6,9 +6,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <uses-feature android:name="android.hardware.camera2.full" />
 
@@ -19,11 +19,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAHcO3HcjndPyb3PnJIUQmgMmbfsVNIzZc"/>
+            android:value="AIzaSyAHcO3HcjndPyb3PnJIUQmgMmbfsVNIzZc" />
 
         <activity
             android:name=".activities.main.LoginActivity"
@@ -31,11 +29,11 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity
             android:name=".activities.main.MainActivity"
@@ -72,9 +70,6 @@
         <activity
             android:name=".activities.main.FriendActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.helper.CameraActivity"
-            android:screenOrientation="portrait"></activity>
 
         <service android:name=".services.NotificationReceiver">
             <intent-filter>
@@ -87,6 +82,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".services.GPS_Service"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.omgproduction.dsport_application.fileprovider"
@@ -97,7 +94,15 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".activities.main.FriendListActivity"></activity>
+        <activity android:name=".activities.main.FriendListActivity" />
+        <activity android:name=".activities.main.RouteTrackingActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

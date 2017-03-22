@@ -20,13 +20,18 @@ import com.omgproduction.dsport_application.supplements.activities.AbstractFragm
 
 import java.util.ArrayList;
 
-public class UserResultFragment extends AbstractFragment implements SwipeRefreshLayout.OnRefreshListener, SearchUserAdapter.OnSearchUserClicked {
+public class UserResultFragment extends AbstractFragment implements SwipeRefreshLayout.OnRefreshListener, SearchUserAdapter.OnUpdateTrigger {
 
     private RecyclerView searchUserRecycler;
     private SearchUserAdapter searchUserAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private SwipeRefreshLayout refresher;
     private ArrayList<SearchUser> searchUsers = new ArrayList<>();
+
+    private SearchUserAdapter.OnUpdateTrigger onUpdateTrigger;
+
+    public void setOnUpdateTrigger(SearchUserAdapter.OnUpdateTrigger onUpdateTrigger) {
+        this.onUpdateTrigger = onUpdateTrigger;
+    }
 
     public UserResultFragment() {
     }
@@ -46,25 +51,19 @@ public class UserResultFragment extends AbstractFragment implements SwipeRefresh
                              Bundle savedInstanceState) {
         Log.e("Fragment", "On Create");
         final View view = inflater.inflate(R.layout.layout_fragment_search_user, container, false);
-        refresher = (SwipeRefreshLayout) view.findViewById(R.id.search_user_refresher);
-        refresher.setOnRefreshListener(this);
+        setRefresher((SwipeRefreshLayout) view.findViewById(R.id.search_user_refresher));
         return view;
     }
 
     private void update() {
-
+        if(onUpdateTrigger!=null)
+            onUpdateTrigger.onUpdate();
     }
 
     @Override
     public void onRefresh() {
+        showProgressBar(false);
         update();
-    }
-
-    @Override
-    public void onSearchUserClicked(SearchUser searchUser) {
-        Intent i = new Intent(getContext(), FriendActivity.class);
-        i.putExtra(ApplicationKeys.APPLICATION_FRIEND_FRIEND,searchUser);
-        startActivity(i);
     }
 
     public ArrayList<SearchUser> getSearchUsers() {
@@ -77,9 +76,13 @@ public class UserResultFragment extends AbstractFragment implements SwipeRefresh
         layoutManager = new LinearLayoutManager(getContext());
         searchUserRecycler.setLayoutManager(layoutManager);
         searchUserRecycler.setHasFixedSize(true);
-        searchUserAdapter = new SearchUserAdapter(searchUsers);
-        searchUserAdapter.addOnSearchUserClicked(UserResultFragment.this);
+        searchUserAdapter = new SearchUserAdapter(searchUsers, this);
         searchUserRecycler.setAdapter(searchUserAdapter);
 
+    }
+
+    @Override
+    public void onUpdate() {
+        update();
     }
 }

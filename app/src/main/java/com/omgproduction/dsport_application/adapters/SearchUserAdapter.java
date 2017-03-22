@@ -1,6 +1,9 @@
 package com.omgproduction.dsport_application.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -9,9 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.activities.main.FriendActivity;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.SearchUser;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.UserService;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.util.ArrayList;
@@ -21,29 +30,30 @@ import java.util.List;
  * Created by Florian on 01.12.2016.
  */
 
-public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.SearchUserHolder> {
+public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.SearchUserHolder>{
 
     private List<SearchUser> searchUsers = new ArrayList<>();
 
-    public interface OnSearchUserClicked {
-        void onSearchUserClicked(SearchUser searchUser);
+    public interface OnUpdateTrigger{
+        void onUpdate();
     }
 
-    private final ArrayList<OnSearchUserClicked> onSearchUserClickedListeners = new ArrayList<>();
+    private final OnUpdateTrigger onUpdateTrigger;
 
-    public SearchUserAdapter(List<SearchUser> searchUsers) {
+    public SearchUserAdapter(List<SearchUser> searchUsers, OnUpdateTrigger onUpdateTrigger) {
         this.searchUsers = searchUsers;
+        this.onUpdateTrigger = onUpdateTrigger;
     }
 
     @Override
-    public SearchUserAdapter.SearchUserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchUserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_user_layout, parent, false);
-        SearchUserAdapter.SearchUserHolder viewHolder = new SearchUserAdapter.SearchUserHolder(view);
+        SearchUserHolder viewHolder = new SearchUserHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(SearchUserAdapter.SearchUserHolder holder, int position) {
+    public void onBindViewHolder(SearchUserHolder holder, int position) {
         SearchUser searchUser = searchUsers.get(position);
         holder.tv_username.setText(searchUser.getUsername());
         holder.iv_userpic.setImageBitmap(BitmapUtils.getBitmapFromString(searchUser.getPicture()));
@@ -54,7 +64,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Se
         }else if(searchUser.isRequest_received()){
             holder.iv_progress.setImageDrawable(holder.context.getResources().getDrawable(R.drawable.ic_friendship_received));
         }
-        holder.tv_username.setOnClickListener(new SearchUserClicked(searchUser));
+        holder.tv_username.setOnClickListener(new SearchUserClicked(searchUser, holder.getContext()));
+        holder.tv_username.setOnLongClickListener(new SearchUserLongClicked(searchUser, holder.getContext()));
     }
 
     @Override
@@ -94,16 +105,190 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Se
 
     private class SearchUserClicked implements View.OnClickListener {
         final SearchUser user;
+        final Context context;
 
-        private SearchUserClicked(final SearchUser user) {
+        private SearchUserClicked(final SearchUser user, final Context context) {
             this.user = user;
+            this.context = context;
         }
 
         @Override
         public void onClick(View v) {
-            for (OnSearchUserClicked searchUserClicked : onSearchUserClickedListeners) {
-                searchUserClicked.onSearchUserClicked(user);
+
+
+            if(user.isFriend()){
+                Intent i = new Intent(context, FriendActivity.class);
+                i.putExtra(ApplicationKeys.APPLICATION_FRIEND_FRIEND,user);
+                context.startActivity(i);
+            }else if(user.isRequest_received()){
+                acceptFriendship(user, context);
+            }else if(user.isRequest_sended()){
+                alreadySended(user,context);
+            }else{
+                addFriend(user, context);
             }
+
+
+        }
+    }
+
+    private void addFriend(final SearchUser user, final Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.add_friend)
+                .setMessage(context.getResources().getQuantityString(R.plurals.add_user_as_friend, 1, user.getUsername()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        UserService service = new UserService(context);
+                        User localUser = service.getLocalUser();
+
+                        service.sendFriendshipRequest(localUser.getId(),user.getId(),new RequestFuture<Void>(){
+                            @Override
+                            public void onSuccess(Void result) {
+                                onUpdateTrigger.onUpdate();
+                            }
+
+                            @Override
+                            public void onFailure(int errorCode, String errorMessage) {
+                                Toast.makeText(context, context.getResources().getQuantityString(R.plurals.add_friend_failed, 1, user.getUsername())+" "+errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        declineFriendship(user, context);
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+
+    private void acceptFriendship(final SearchUser user,final Context context){
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.accept_friend)
+                .setMessage(context.getResources().getQuantityString(R.plurals.add_user_as_friend, 1, user.getUsername()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        UserService service = new UserService(context);
+                        User localUser = service.getLocalUser();
+
+                        service.acceptFriendship(localUser.getId(),user.getId(),new RequestFuture<Void>(){
+                            @Override
+                            public void onSuccess(Void result) {
+                                onUpdateTrigger.onUpdate();
+                            }
+                            @Override
+                            public void onFailure(int errorCode, String errorMessage) {
+                                Toast.makeText(context, context.getResources().getQuantityString(R.plurals.accept_friend_failed, 1, user.getUsername())+" "+errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        declineFriendship(user, context);
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void declineFriendship(final SearchUser user, final Context context){
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.decline_friend)
+                .setMessage(context.getResources().getQuantityString(R.plurals.decline_user_as_friend, 1, user.getUsername()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        UserService service = new UserService(context);
+                        User localUser = service.getLocalUser();
+
+                        service.declineFriendship(localUser.getId(),user.getId(),new RequestFuture<Void>(){
+                            @Override
+                            public void onSuccess(Void result) {
+                                onUpdateTrigger.onUpdate();
+                            }
+                            @Override
+                            public void onFailure(int errorCode, String errorMessage) {
+                                Toast.makeText(context, context.getResources().getQuantityString(R.plurals.decline_friend_failed, 1, user.getUsername())+" "+errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void deleteFriend(final SearchUser user, final Context context){
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.delete_friendship)
+                .setMessage(context.getResources().getQuantityString(R.plurals.delete_user_as_friend, 1, user.getUsername()))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        UserService service = new UserService(context);
+                        User localUser = service.getLocalUser();
+
+                        service.deleteFriendship(localUser.getId(),user.getId(),new RequestFuture<Void>(){
+                            @Override
+                            public void onSuccess(Void result) {
+                                onUpdateTrigger.onUpdate();
+                            }
+                            @Override
+                            public void onFailure(int errorCode, String errorMessage) {
+                                Toast.makeText(context, context.getResources().getQuantityString(R.plurals.delete_friend_failed, 1, user.getUsername())+" "+errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private void alreadySended(final SearchUser user, final Context context){
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.send_request)
+                .setMessage(context.getResources().getQuantityString(R.plurals.already_sended, 1, user.getUsername()))
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    private class SearchUserLongClicked implements View.OnLongClickListener {
+        final SearchUser user;
+        final Context context;
+
+        private SearchUserLongClicked(final SearchUser user, final Context context) {
+            this.user = user;
+            this.context = context;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if(user.isFriend()){
+                deleteFriend(user,context);
+            }else if(user.isRequest_received()){
+                acceptFriendship(user, context);
+            }else if(user.isRequest_sended()){
+                alreadySended(user,context);
+            }else{
+                addFriend(user,context);
+            }
+            return false;
+
         }
     }
 
@@ -113,13 +298,5 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Se
 
     public void setSearchUsers(ArrayList<SearchUser> searchUsers) {
         this.searchUsers = searchUsers;
-    }
-
-    public void addOnSearchUserClicked(OnSearchUserClicked onSearchUserClicked) {
-        this.onSearchUserClickedListeners.add(onSearchUserClicked);
-    }
-
-    public void removeOnSearchUserClicked(OnSearchUserClicked onSearchUserClicked) {
-        this.onSearchUserClickedListeners.remove(onSearchUserClicked);
     }
 }

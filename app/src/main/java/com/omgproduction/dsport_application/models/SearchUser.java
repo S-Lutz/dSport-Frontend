@@ -7,11 +7,12 @@ import java.io.Serializable;
  */
 
 public class SearchUser  implements Serializable{
-    private String id, username, picture, firstname, lastname;
+    private String id, username, picture, firstname, lastname, email;
     private boolean friend, request_received, request_sended;
 
-    public SearchUser(String id, String username, String picture, String firstname, String lastname, boolean friend, boolean request_received, boolean request_sended) {
+    public SearchUser(String id, String username, String email, String picture, String firstname, String lastname, boolean friend, boolean request_received, boolean request_sended) {
         this.id = id;
+        this.email = email;
         this.username = username;
         this.picture = picture;
         this.firstname = firstname;
@@ -83,5 +84,13 @@ public class SearchUser  implements Serializable{
 
     public void setRequest_sended(boolean request_sended) {
         this.request_sended = request_sended;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

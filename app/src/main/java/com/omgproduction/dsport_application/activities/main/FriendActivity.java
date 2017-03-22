@@ -68,6 +68,7 @@ public class FriendActivity  extends AbstractNavigationActivity implements TabLa
         socialFragment.setOwner(friend);
 
         UserFragment userFragment = new UserFragment();
+        userFragment.setUser(friend);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragments(socialFragment,getString(R.string.nav_pinboard));

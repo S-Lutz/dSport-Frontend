@@ -40,6 +40,38 @@
         <item quantity="one">Hello, %1$s!\nCheck your Emails to verify your account.</item>
     </plurals>
 
+    <plurals name="add_user_as_friend">
+        <item quantity="one">Do you really want to add %1$s as friend?</item>
+    </plurals>
+
+    <plurals name="add_friend_failed">
+        <item quantity="one">Add %1$s as friend failed!</item>
+    </plurals>
+
+    <plurals name="delete_friend_failed">
+        <item quantity="one">Delete %1$s as friend failed!</item>
+    </plurals>
+
+    <plurals name="decline_friend_failed">
+        <item quantity="one">Decline %1$s as friend failed!</item>
+    </plurals>
+
+    <plurals name="accept_friend_failed">
+        <item quantity="one">Accept %1$s as friend failed!</item>
+    </plurals>
+
+    <plurals name="decline_user_as_friend">
+        <item quantity="one">Do you want to decline %1$s as friend?</item>
+    </plurals>
+
+    <plurals name="delete_user_as_friend">
+        <item quantity="one">Do you really want to delete %1$s as friend?</item>
+    </plurals>
+
+    <plurals name="already_sended">
+        <item quantity="one">You already sent a friend request to %1$s!</item>
+    </plurals>
+
     <string name="new_username_hint">New Username</string>
     <string name="new_firstname_hint">New Firstname</string>
     <string name="new_lastname_hint">New Lastname</string>
@@ -73,5 +105,27 @@
     <string name="users">Users</string>
     <string name="studios">Studios</string>
     <string name="unknown">unknown</string>
+    <string name="friends_requested">Friends requested</string>
+    <string name="friend_invitations">Friend invitations</string>
+    <string name="accept_friend">Accept Friend</string>
+    <string name="decline_friend">Decline Friendship</string>
+    <string name="send_request">Send Request</string>
+    <string name="add_friend">Add friend</string>
+    <string name="delete_friendship">Delete Friendship</string>
+    <string name="no_gps_permission">No GPS Permission!</string>
+    <string name="finish_tracking">Finish Tracking</string>
+    <string name="pause_tracking">Pause Tracking</string>
+    <string name="start_tracking">Start Tracking</string>
+    <string name="hour">h</string>
+    <string name="minutes">min</string>
+    <string name="seconds">s</string>
+    <string name="meter">m</string>
+    <string name="kilometer">km</string>
+    <string name="reset">Reset</string>
+    <string name="really_reset_session">Do you really want to reset the current Tracking?</string>
+    <string name="close_session">This Button will finally close the current Session! To close the Session press Yes!</string>
+    <string name="finish">Finish</string>
+    <string name="save_session">Save Session</string>
+    <string name="start_new_session">Start new Session</string>
 
 </resources>

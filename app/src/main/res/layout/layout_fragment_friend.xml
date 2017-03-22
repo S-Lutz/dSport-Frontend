@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.SwipeRefreshLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/friend_refresher"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:id="@+id/friend_profile_pic"
+                />
+
+            <!--USERNAME START-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:paddingLeft="16dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingRight="16dp"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/friend_username_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:alpha="0.74"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_profile" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerVertical="true">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/friend_username_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="Max Mustermann"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#212121" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="@string/hint_username"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#727272" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+            <!--USERNAME END-->
+
+
+
+            <!--FIRSTNAME START-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:paddingLeft="16dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingRight="16dp"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/friend_firstname_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:alpha="0.74"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_passboard" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerVertical="true">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/friend_firstname_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="Max"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#212121" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="@string/hint_firstname"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#727272" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+            <!--FIRSTNAME END-->
+
+
+
+            <!--LASTNAME START-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:paddingLeft="16dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingRight="16dp"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/friend_lastname_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:alpha="0.74"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_passboard" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerVertical="true">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/friend_lastname_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="Mustermann"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#212121" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="@string/hint_lastname"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#727272" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+            <!--LASTNAME END-->
+
+
+
+            <!--EMAIL START-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:paddingLeft="16dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingRight="16dp"
+                android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:id="@+id/friend_email_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="72dp"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:alpha="0.74"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_mail" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_centerVertical="true">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/friend_email_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="MaxMustermann@dsport.de"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#212121" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="56dp"
+                            android:text="@string/hint_email"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#727272" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+            <!--EMAIL END-->
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

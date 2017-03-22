@@ -9,25 +9,24 @@ import android.util.Log;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.adapters.SearchUserAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.SearchService;
 import com.omgproduction.dsport_application.fragments.search.EventsResultFragment;
-import com.omgproduction.dsport_application.fragments.search.StudioResultFragment;
 import com.omgproduction.dsport_application.fragments.search.UserResultFragment;
 import com.omgproduction.dsport_application.holder.SearchResultHolder;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
-public class SearchResultActivity extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener{
+public class SearchResultActivity extends AbstractNavigationActivity implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener, SearchUserAdapter.OnUpdateTrigger{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
     private String query;
     private UserResultFragment userResultFragment;
-    private StudioResultFragment studioResultFragment;
     private EventsResultFragment eventsResultFragment;
 
     private SearchService searchService;
@@ -66,6 +65,7 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
             @Override
             public void onSuccess(SearchResultHolder result) {
                 userResultFragment.setSearchUsers(result.getUsers());
+                eventsResultFragment.setEvents(result.getEvents());
             }
 
             @Override
@@ -90,13 +90,13 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
         userResultFragment = new UserResultFragment();
+        userResultFragment.setOnUpdateTrigger(this);
         eventsResultFragment = new EventsResultFragment();
-        studioResultFragment = new StudioResultFragment();
+        eventsResultFragment.setOnUpdateTrigger(this);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragments(userResultFragment,getString(R.string.users));
         viewPagerAdapter.addFragments(eventsResultFragment,getString(R.string.events));
-        viewPagerAdapter.addFragments(studioResultFragment,getString(R.string.studios));
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -138,7 +138,11 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
 
     @Override
     public void onRefresh() {
-        showProgressBar(false);
+        update();
+    }
+
+    private void update() {
+        searchResults(query);
     }
 
     @Override
@@ -168,4 +172,8 @@ public class SearchResultActivity extends AbstractNavigationActivity implements 
         return false;
     }
 
+    @Override
+    public void onUpdate() {
+        update();
+    }
 }

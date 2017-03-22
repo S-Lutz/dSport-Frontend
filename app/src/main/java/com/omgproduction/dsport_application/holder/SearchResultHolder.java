@@ -1,7 +1,6 @@
 package com.omgproduction.dsport_application.holder;
 
-import com.omgproduction.dsport_application.models.SearchEvent;
-import com.omgproduction.dsport_application.models.SearchStudio;
+import com.omgproduction.dsport_application.models.Event;
 import com.omgproduction.dsport_application.models.SearchUser;
 
 import java.util.ArrayList;
@@ -12,13 +11,11 @@ import java.util.ArrayList;
 
 public class SearchResultHolder {
     private ArrayList<SearchUser> users;
-    private ArrayList<SearchEvent> events;
-    private ArrayList<SearchStudio> studios;
+    private ArrayList<Event> events;
 
-    public SearchResultHolder(ArrayList<SearchUser> users, ArrayList<SearchEvent> events, ArrayList<SearchStudio> studios) {
+    public SearchResultHolder(ArrayList<SearchUser> users, ArrayList<Event> events) {
         this.users = users;
         this.events = events;
-        this.studios = studios;
     }
 
     public ArrayList<SearchUser> getUsers() {
@@ -29,19 +26,11 @@ public class SearchResultHolder {
         this.users = users;
     }
 
-    public ArrayList<SearchEvent> getEvents() {
+    public ArrayList<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(ArrayList<SearchEvent> events) {
+    public void setEvents(ArrayList<Event> events) {
         this.events = events;
-    }
-
-    public ArrayList<SearchStudio> getStudios() {
-        return studios;
-    }
-
-    public void setStudios(ArrayList<SearchStudio> studios) {
-        this.studios = studios;
     }
 }

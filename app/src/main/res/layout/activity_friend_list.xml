@@ -72,6 +72,34 @@
                     android:orientation="vertical"
                     android:id="@+id/friend_list_linear_layout"
                     xmlns:android="http://schemas.android.com/apk/res/android">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:text="@string/friends_requested"
+                        android:background="#ADADAD"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/friend_list_recycler_view_sended">
+                    </android.support.v7.widget.RecyclerView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#ffffff"
+                        android:text="@string/friend_invitations"
+                        android:background="#ADADAD"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/friend_list_recycler_view_received">
+                    </android.support.v7.widget.RecyclerView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/friends"
+                        android:textColor="#ffffff"
+                        android:background="#ADADAD"/>
                     <android.support.v7.widget.RecyclerView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
