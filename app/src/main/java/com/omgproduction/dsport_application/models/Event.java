@@ -19,10 +19,8 @@ public class Event implements Serializable {
 
     private String event_id, username, userid, picture, eventPicture, text, created, eventDate, likeCount, commentCount, shareCount, title, eventMember;
     private boolean liked;
-
-
-
     private boolean participating;
+
     private String locationName;
     private String locationAddress;
 
@@ -119,6 +117,14 @@ public class Event implements Serializable {
         return participating;
     }
 
+    public void setEventMember(String eventMember) {
+        this.eventMember = eventMember;
+    }
+
+    public void setParticipating(boolean participating) {
+        this.participating = participating;
+    }
+
     public void setLocationName(CharSequence name){
         this.locationName = String.valueOf(name);
     }
@@ -175,6 +181,19 @@ public class Event implements Serializable {
             likes = likes-1;
         }
         sb.append(likes);
+        return sb.toString();
+    }
+
+    public String getMembercountString(Context context) {
+        StringBuilder sb = new StringBuilder();
+        int membercount = Integer.parseInt(getEventMember());
+        if(isParticipating()){
+            String youPlus = context.getResources().getString(R.string.you_plus);
+            sb.append(youPlus);
+            sb.append(" ");
+            membercount = membercount-1;
+        }
+        sb.append(membercount);
         return sb.toString();
     }
 

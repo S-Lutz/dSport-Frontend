@@ -12,18 +12,14 @@ import android.view.View;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.fragments.helper.MenuFragment;
 import com.omgproduction.dsport_application.fragments.helper.MenuManager;
 import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
 import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
-import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
 import com.omgproduction.dsport_application.fragments.main.ChatFragment;
 import com.omgproduction.dsport_application.fragments.main.EventListFragment;
 import com.omgproduction.dsport_application.fragments.main.ExerciseUnitListFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialListFragment;
-import com.omgproduction.dsport_application.interfaces.FloatingMenu;
-import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 

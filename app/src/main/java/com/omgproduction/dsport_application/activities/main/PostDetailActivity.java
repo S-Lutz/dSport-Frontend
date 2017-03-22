@@ -251,6 +251,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
         final String text = ((EditText)findViewById(R.id.post_detail_create_comment_text)).getText().toString();
         String bmp="";
+
         if(newCommentBitmap!=null){
             bmp = BitmapUtils.getStringFromBitmap(newCommentBitmap);
         }
@@ -272,7 +273,7 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
 
             @Override
             public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.activity_create_post, errorMessage, R.string.retry, new View.OnClickListener() {
+                printError(R.id.activity_post_detail, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onCreateCommentClick();

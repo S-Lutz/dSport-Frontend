@@ -20,11 +20,15 @@ public interface Routes {
     String ROUTE_COMMENT_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/comment";
     String ROUTE_SHARE_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/share";
     String ROUTE_GET_EVENTBOARD = ROUTE_HOST + ROUTE_HOME +"/events/getEventBoard";
-    //String ROUTE_GET_EVENT_COMMENTS = ROUTE_HOST + ROUTE_HOME + "/events/comments/getAll";
-    //String ROUTE_GET_EVENT_LIKES = ROUTE_HOST + ROUTE_HOME + "/events/likes/getAll";
-    String ROUTE_CREATEANDPOST_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/createAndPost";
+    String ROUTE_GET_EVENT_COMMENTS = ROUTE_HOST + ROUTE_HOME + "/events/comments/getAll";
+    String ROUTE_GET_EVENT_LIKES = ROUTE_HOST + ROUTE_HOME + "/events/likes/getAll";
     String ROUTE_GET_EVENTS = ROUTE_HOST + ROUTE_HOME +"/events/getAll";
+    String ROUTE_GET_EVENT_DETAIL = ROUTE_HOST + ROUTE_HOME +"/events/getDetail";
+    String ROUTE_PARTICIPATE_EVENT = ROUTE_HOST + ROUTE_HOME + "/events/participate ";
     String ROUTE_POST_EVENT = ROUTE_HOST + ROUTE_HOME +"/posts/event";
+    String ROUTE_GET_MEMBERS = ROUTE_HOST + ROUTE_HOME + "/events/members/getAll  ";
+
+    String ROUTE_CREATE_EXERCISE = ROUTE_HOST + ROUTE_HOME +"/exercises/create";
 
     String ROUTE_CREATEANDPOST_EXERCISE_UNIT = ROUTE_HOST + ROUTE_HOME +"/exercise_unit/createAndPost";
     String ROUTE_CREATE_EXERCISE_UNIT = ROUTE_HOST + ROUTE_HOME +"/exercise_unit/create";
