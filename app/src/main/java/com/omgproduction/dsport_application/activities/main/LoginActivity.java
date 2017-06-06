@@ -1,8 +1,12 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +31,36 @@ public class LoginActivity extends AbstractFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_login);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        1);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
+        onCreateAfterPermission();
+    }
+
+    private void onCreateAfterPermission() {
 
         Log.e("LoginActivity", "started");
 
@@ -44,7 +77,6 @@ public class LoginActivity extends AbstractFragmentActivity {
         if((username = i.getStringExtra(INTENT_USERNAME))!=null){
             ((EditText)findViewById(R.id.login_username)).setText(username);
         }
-
     }
 
     private void checkLogin() {
@@ -132,6 +164,11 @@ public class LoginActivity extends AbstractFragmentActivity {
     protected void removeAllErrors(){
         removeInputError(R.id.login_layout_username);
         removeInputError(R.id.login_layout_password);
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_activity_login;
     }
 
     @Override

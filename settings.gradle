@@ -1,1 +1,1 @@
-include ':app', ':omnet'
+include ':app'

@@ -58,7 +58,6 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_post_detail);
         setRefresher((SwipeRefreshLayout) findViewById(R.id.post_detail_refresher));
 
         dateConverter = new DateConverter();
@@ -205,6 +204,11 @@ public class PostDetailActivity extends AbstractFragmentActivity implements Comm
     @Override
     protected void removeAllErrors() {
 
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_activity_post_detail;
     }
 
     @Override

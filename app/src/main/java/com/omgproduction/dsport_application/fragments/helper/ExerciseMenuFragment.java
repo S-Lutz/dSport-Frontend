@@ -1,13 +1,10 @@
 package com.omgproduction.dsport_application.fragments.helper;
 
-import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.activities.main.CreateEventActivity;
-import com.omgproduction.dsport_application.activities.main.CreateExerciseActivity;
+import com.omgproduction.dsport_application.activities.main.CreateExerciseUnitActivity;
 
 /**
  * Created by Strik on 22.03.2017.
@@ -45,7 +42,7 @@ public class ExerciseMenuFragment extends MenuFragment implements View.OnClickLi
 
     @Override
     public void show() {
-        Intent intent = new Intent(getContext(), CreateExerciseActivity.class);
+        Intent intent = new Intent(getContext(), CreateExerciseUnitActivity.class);
         startActivity(intent);
     }
 

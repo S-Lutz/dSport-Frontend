@@ -44,11 +44,6 @@ public class EventsResultFragment extends AbstractFragment implements EventAdapt
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -56,7 +51,6 @@ public class EventsResultFragment extends AbstractFragment implements EventAdapt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.e("Fragment", "On Create");
         final View view = inflater.inflate(R.layout.layout_fragment_event, container, false);
         setRefresher((SwipeRefreshLayout) view.findViewById(R.id.event_refresher));
         return view;
@@ -152,12 +146,17 @@ public class EventsResultFragment extends AbstractFragment implements EventAdapt
     }
 
     @Override
-    public void onEventShare(EventAdapter.EventViewHolder holder, Event e) {
-
+    public void onParticipateEvent(final EventAdapter.EventViewHolder holder, final Event e) {
+        onEventClicked(holder, e);
     }
 
     @Override
     public void onEventComment(EventAdapter.EventViewHolder holder, Event e) {
+        onEventClicked(holder, e);
+    }
 
+    @Override
+    public void onEventShare(EventAdapter.EventViewHolder holder, Event e) {
+        onEventClicked(holder, e);
     }
 }

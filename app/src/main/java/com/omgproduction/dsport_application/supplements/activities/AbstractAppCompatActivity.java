@@ -43,10 +43,10 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
      * @param errorCode ErrorCode (See in error_codes)
      */
     protected void printError(int layoutID, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
+        //String packageName = getPackageName();
+        //int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(findViewById(layoutID), getString(resId), Snackbar.LENGTH_LONG);
+                .make(findViewById(layoutID), errorCode, Snackbar.LENGTH_LONG);
 
         snackbar.show();
     }
@@ -61,7 +61,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         String packageName = getPackageName();
         int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(findViewById(layoutID), getString(resId), Snackbar.LENGTH_LONG)
+                .make(findViewById(layoutID), errorCode, Snackbar.LENGTH_LONG)
                 .setAction(getString(buttonLabelId), listener);
 
         snackbar.show();
@@ -73,11 +73,9 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
      * @param errorCode Errorcode to print Error-Messsage (See in error_code)
      */
     protected void printInputError(int id, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
         TextInputLayout til = (TextInputLayout) findViewById(id);
         til.setErrorEnabled(true);
-        til.setError(getString(resId));
+        til.setError(errorCode);
     }
 
     /**
@@ -95,7 +93,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     protected abstract void removeAllErrors();
 
     /**
-     * Set Text to a TextView with id
+     * WeightSet Text to a TextView with id
      * @param id id of the TextView
      * @param text text to put in
      */
@@ -104,14 +102,14 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     /**
-     * Set Text to a TextView with id
+     * WeightSet Text to a TextView with id
      * @param id id of the TextView
      */
     protected String getTVText(int id){
         return ((EditText)findViewById(id)).getText().toString();
     }
     /**
-     * Set Drawable to a ImageView with id
+     * WeightSet Drawable to a ImageView with id
      * @param id id of the ImageView
      * @param drawable id of Drawable
      */
@@ -119,7 +117,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         ((ImageView)findViewById(id)).setImageDrawable(getResources().getDrawable(drawable));
     }
     /**
-     * Set Bitmap to a ImageView with id
+     * WeightSet Bitmap to a ImageView with id
      * @param id id of the ImageView
      * @param bitmap bitmap to put in
      */

@@ -6,8 +6,8 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.herbornsoftware.omnet.JSONRequest;
-import com.herbornsoftware.omnet.JSONResponse;
+import com.omgproduction.dsport_application.utils.JSONRequest;
+import com.omgproduction.dsport_application.utils.JSONResponse;
 import com.omgproduction.dsport_application.activities.main.LoginActivity;
 import com.omgproduction.dsport_application.builder.BackendRequest;
 import com.omgproduction.dsport_application.builder.Preferences;

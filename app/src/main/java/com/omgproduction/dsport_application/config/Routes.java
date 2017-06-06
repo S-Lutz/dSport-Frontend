@@ -5,8 +5,8 @@ package com.omgproduction.dsport_application.config;
  */
 
 public interface Routes {
-    //String ROUTE_HOST = "http://www.daily-sport.de:9000";
-    String ROUTE_HOST = "http://5.189.141.187:9001";
+    String ROUTE_HOST = "http://5.189.141.187:9000";
+    //String ROUTE_HOST = "http://5.189.141.187:9001";
     String ROUTE_HOME = "/dsport";
     String ROUTE_LOGIN = ROUTE_HOST + ROUTE_HOME +"/users/login";
     String ROUTE_REGISTER = ROUTE_HOST + ROUTE_HOME +"/users/signup";
@@ -24,15 +24,9 @@ public interface Routes {
     String ROUTE_GET_EVENT_LIKES = ROUTE_HOST + ROUTE_HOME + "/events/likes/getAll";
     String ROUTE_GET_EVENTS = ROUTE_HOST + ROUTE_HOME +"/events/getAll";
     String ROUTE_GET_EVENT_DETAIL = ROUTE_HOST + ROUTE_HOME +"/events/getDetail";
-    String ROUTE_PARTICIPATE_EVENT = ROUTE_HOST + ROUTE_HOME + "/events/participate ";
+    String ROUTE_PARTICIPATE_EVENT = ROUTE_HOST + ROUTE_HOME + "/events/participate";
     String ROUTE_POST_EVENT = ROUTE_HOST + ROUTE_HOME +"/posts/event";
-    String ROUTE_GET_MEMBERS = ROUTE_HOST + ROUTE_HOME + "/events/members/getAll  ";
-
-    String ROUTE_CREATE_EXERCISE = ROUTE_HOST + ROUTE_HOME +"/exercises/create";
-
-    String ROUTE_CREATEANDPOST_EXERCISE_UNIT = ROUTE_HOST + ROUTE_HOME +"/exercise_unit/createAndPost";
-    String ROUTE_CREATE_EXERCISE_UNIT = ROUTE_HOST + ROUTE_HOME +"/exercise_unit/create";
-    String ROUTE_POST_EXERCISE_UNIT = ROUTE_HOST + ROUTE_HOME +"/posts/exercise_unit";
+    String ROUTE_GET_MEMBERS = ROUTE_HOST + ROUTE_HOME + "/events/members/getAll";
 
     String ROUTE_DISCARD_TOKEN = ROUTE_HOST + ROUTE_HOME +"/token/discard";
 
@@ -56,4 +50,13 @@ public interface Routes {
     String ROUTE_FRIENDS_SEND = ROUTE_HOST + ROUTE_HOME +"/friends/request/send ";
     String ROUTE_FRIENDS_ACCEPT = ROUTE_HOST + ROUTE_HOME +"/friends/request/accept ";
     String ROUTE_FRIENDS_DECLINE= ROUTE_HOST + ROUTE_HOME +"/friends/request/decline ";
+
+    String ROUTE_EXERCISES_CREATE  =  ROUTE_HOST + ROUTE_HOME +"/exercises/create";
+    String ROUTE_EXERCISES_GET_ALL  =  ROUTE_HOST + ROUTE_HOME +"/exercises/getAll";
+
+    String ROUTE_EXERCISE_UNIT_CREATE_TYPE0  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/create/type0";
+    String ROUTE_EXERCISE_UNIT_CREATE_TYPE1  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/create/type1";
+    String ROUTE_EXERCISE_UNIT_CREATE_TYPE2  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/create/type2";
+    String ROUTE_EXERCISE_UNIT_GET_ALL  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/getAll";
+    String ROUTE_EXERCISE_UNIT_LIKE =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/like";
 }

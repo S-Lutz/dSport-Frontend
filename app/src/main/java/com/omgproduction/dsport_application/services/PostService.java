@@ -4,8 +4,6 @@ import android.content.Context;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.herbornsoftware.omnet.JSONRequest;
-import com.herbornsoftware.omnet.JSONResponse;
 import com.omgproduction.dsport_application.builder.BackendRequest;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
@@ -14,6 +12,9 @@ import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.utils.Converter;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
+import com.omgproduction.dsport_application.utils.DateConverter;
+import com.omgproduction.dsport_application.utils.JSONRequest;
+import com.omgproduction.dsport_application.utils.JSONResponse;
 import com.omgproduction.dsport_application.utils.ResultWrapper;
 
 import org.json.JSONArray;
@@ -162,6 +163,7 @@ public class PostService extends AbstractService{
                     .addParam(APPLICATION_POST_TEXT, text)
                     .addParam(APPLICATION_POST_TITLE, title)
                     .addParam(APPLICATION_POST_PICTURE, picture)
+                    .addParam(APPLICATION_POST_CREATED, new DateConverter().convertNow())
                     .setOnResultListener(new JSONRequest.OnResultListener() {
                         @Override
                         public void onResult(JSONResponse response) {
@@ -458,6 +460,7 @@ public class PostService extends AbstractService{
                     .addParam(APPLICATION_POST_POST_ID, post_id)
                     .addParam(APPLICATION_COMMENT_PICTURE, picture)
                     .addParam(APPLICATION_COMMENT_TEXT, text)
+                    .addParam(APPLICATION_COMMENT_CREATED, new DateConverter().convertNow())
                     .setOnResultListener(new JSONRequest.OnResultListener() {
                         @Override
                         public void onResult(JSONResponse response) {

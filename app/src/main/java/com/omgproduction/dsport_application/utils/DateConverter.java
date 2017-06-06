@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -21,20 +22,27 @@ public class DateConverter implements ApplicationConfig{
     private SimpleDateFormat dateFormat;
 
     public DateConverter(){
-        dateFormat = new SimpleDateFormat(APPLICATION_CONFIG_DATE_FORMAT);
+        dateFormat = new SimpleDateFormat(APPLICATION_CONFIG_DATE_FORMAT, Locale.getDefault());
     }
     public String convertString(Context context, String dateString){
         Calendar currentCalendar = getCurrentCalendar();
         Calendar postCalendar;
 
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
+
         try{
             Date postDate = dateFormat.parse(dateString);
+            long offset = timeZone.getOffset(postDate.getTime());
             postCalendar = Calendar.getInstance();
-            postCalendar.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
             postCalendar.setTime(postDate);
-            long offset = currentCalendar.getTimeZone().getOffset(postCalendar.getTimeInMillis())-(60*60*1000);
+            if(TimeZone.getDefault().inDaylightTime(new Date())&&!postCalendar.getTimeZone().inDaylightTime(postDate)){
+                postCalendar.add(Calendar.MILLISECOND, (int) offset);
+            }else if(!TimeZone.getDefault().inDaylightTime(new Date())&&postCalendar.getTimeZone().inDaylightTime(postDate)){
+                postCalendar.add(Calendar.MILLISECOND, (int) offset + (-1));
+            }
 
-            CharSequence timeAgo = android.text.format.DateUtils.getRelativeTimeSpanString(postCalendar.getTimeInMillis()+offset,currentCalendar.getTimeInMillis(),10000);
+
+            CharSequence timeAgo = android.text.format.DateUtils.getRelativeTimeSpanString(postCalendar.getTimeInMillis(),currentCalendar.getTimeInMillis(),10000);
 
             return timeAgo.toString();
         } catch (ParseException e) {
@@ -43,6 +51,10 @@ public class DateConverter implements ApplicationConfig{
     }
     public String convertDate(Date date){
         return dateFormat.format(date);
+    }
+
+    public String convertNow(){
+        return convertDate(new Date());
     }
 
     public String getFormatedDate(Date date, Context context){

@@ -161,7 +161,7 @@ public abstract class AbstractNavigationActivity extends AbstractAppCompatActivi
             case R.id.nav_profile: performProfileClick();break;
             case R.id.nav_friends: performFriendClick(); break;
             case R.id.nav_logout: logoutUser(); break;
-            case R.id.nav_settings: break;
+            //case R.id.nav_settings: break;
         }
 
         closeDrawer();

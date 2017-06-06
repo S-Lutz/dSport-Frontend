@@ -1,11 +1,7 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentActivity;
@@ -16,16 +12,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.config.CameraOptions;
 import com.omgproduction.dsport_application.config.IntentKeys;
 import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.services.SessionService;
 import com.omgproduction.dsport_application.services.UserService;
-
-import java.io.File;
-import java.io.IOException;
 
 
 /**
@@ -41,6 +33,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(getLayout());
 
         userService = new UserService(this);
         sessionService = new SessionService(this);
@@ -104,7 +97,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
     protected abstract void removeAllErrors();
 
     /**
-     * Set Text to a TextView with id
+     * WeightSet Text to a TextView with id
      * @param id id of the TextView
      * @param text text to put in
      */
@@ -113,14 +106,14 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
     }
 
     /**
-     * Set Text to a TextView with id
+     * WeightSet Text to a TextView with id
      * @param id id of the TextView
      */
     protected String getTVText(int id){
         return ((EditText)findViewById(id)).getText().toString();
     }
     /**
-     * Set Drawable to a ImageView with id
+     * WeightSet Drawable to a ImageView with id
      * @param id id of the ImageView
      * @param drawable id of Drawable
      */
@@ -128,7 +121,7 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
         ((ImageView)findViewById(id)).setImageDrawable(getResources().getDrawable(drawable));
     }
     /**
-     * Set Bitmap to a ImageView with id
+     * WeightSet Bitmap to a ImageView with id
      * @param id id of the ImageView
      * @param bitmap bitmap to put in
      */
@@ -160,4 +153,5 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
         sessionService.logout();
     }
 
+    public abstract int getLayout();
 }

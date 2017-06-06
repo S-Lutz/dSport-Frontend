@@ -36,7 +36,6 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_create_post);
 
         preparePostData();
 
@@ -54,6 +53,11 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
     @Override
     protected void removeAllErrors() {
 
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_activity_create_post;
     }
 
     @Override

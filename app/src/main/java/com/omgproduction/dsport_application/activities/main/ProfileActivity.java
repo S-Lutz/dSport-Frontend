@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.CameraOptions;
 import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
@@ -30,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class ProfileActivity extends AbstractNavigationActivity {
+public class ProfileActivity extends AbstractNavigationActivity implements CameraOptions{
 
     private FloatingActionButton fabEdit, fabGallery, fabCamera;
     private Animation fabOpen, fabClose, fabClockWise, fabAntiClockWise, fabOpenBig;
@@ -729,8 +730,8 @@ public class ProfileActivity extends AbstractNavigationActivity {
             cropIntent.putExtra("openCrop", "true");
             cropIntent.putExtra("aspectX", 2);
             cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1024);
+            cropIntent.putExtra("outputX", CAMERA_DEFAULT_CAPTURE_WIDTH);
+            cropIntent.putExtra("outputY", CAMERA_DEFAULT_CAPTURE_HEIGHT);
             cropIntent.putExtra("return-data", false);
             cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             startActivityForResult(cropIntent, PIC_CROP);

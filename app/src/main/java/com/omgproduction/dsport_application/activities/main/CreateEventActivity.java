@@ -90,7 +90,6 @@ public class CreateEventActivity extends AbstractFragmentActivity implements Cre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_create_event);
 
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -131,6 +130,11 @@ public class CreateEventActivity extends AbstractFragmentActivity implements Cre
     @Override
     protected void removeAllErrors() {
 
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_activity_create_event;
     }
 
     @Override

@@ -41,6 +41,8 @@ public interface ApplicationKeys {
     String APPLICATION_POST_POST_ID = "post_id";
     String APPLICATION_POST_TITLE = "title";
     String APPLICATION_POST_LIKED = "liked";
+    String APPLICATION_EXERCISE_UNIT_LIKED = "liked";
+    String APPLICATION_EXERCISE_UNIT_LIKECOUNT = "likecount";
 
     String APPLICATION_COMMENTS = "comments";
     String APPLICATION_COMMENT_TEXT = "text";
@@ -66,9 +68,6 @@ public interface ApplicationKeys {
     String APPLICATION_EVENT_SHARECOUNT = "sharecount";
     String APPLICATION_EVENT_MEMBERCOUNT = "membercount";
 
-    String APPLICATION_EXERCISE_EXERCISE_NAME = "erxercise_name";
-    String APPLICATION_EXERCISE_EXERCISE_TYPE = "erxercise_type";
-
     String APPLICATION_CONNECTION_USER_ID = "user_id";
 
     String APPLICATION_CONNECTION_TOKEN = "token";
@@ -93,4 +92,25 @@ public interface ApplicationKeys {
     String APPLICATION_FRIEND_ID = "friend_id";
 
     String APPLICATION_QUERY = "query";
+
+    String APPLICATION_EXERCISE_ID = "exercise_id";
+    String APPLICATION_EXERCISE_TITLE = "title";
+    String APPLICATION_EXERCISE_TYPE = "type";
+
+    String APPLICATION_EXERCISES = "exercises";
+
+    String APPLICATION_EXERCISE_UNITS = "exerciseUnits";
+    String APPLICATION_EXERCISE_UNIT_TYPE = "type";
+    String APPLICATION_EXERCISE_UNIT_ID = "exerciseUnit_id";
+    String APPLICATION_EXERCISE_UNIT_CREATED = "created";
+    String APPLICATION_EXERCISE_UNIT_TITLE = "title";
+    String APPLICATION_EXERCISE_UNIT_EXERCISE_ID = "exercise_id";
+    String APPLICATION_EXERCISE_UNIT_SETS = "sets";
+    String APPLICATION_EXERCISE_UNIT_WEIGHT = "weight";
+    String APPLICATION_EXERCISE_UNIT_REPEATS = "repeats";
+    String APPLICATION_EXERCISE_UNIT_TIME = "time";
+
+    String APPLICATION_EXERCISE_DISTANCE = "distance";
+
+
 }

@@ -133,6 +133,9 @@
 
 
     <string name="create_exrercise_text_hint">Exercise Name</string>
+    <string name="create_new_exercise">Create new Exercise</string>
+    <string name="start_timed_set">Start timed Set</string>
+    <string name="stop_timed_set">Stop timed Set</string>
     <string-array name="exercise_type_array">
         <item>Weight</item>
         <item>Distance</item>

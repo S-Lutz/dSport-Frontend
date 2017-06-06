@@ -37,7 +37,6 @@ public class RegisterActivity extends AbstractFragmentActivity implements Connec
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_register);
 
         setRefresher((SwipeRefreshLayout)findViewById(R.id.register_refresher));
 
@@ -186,6 +185,11 @@ public class RegisterActivity extends AbstractFragmentActivity implements Connec
         removeInputError(R.id.register_layout_password_confirm);
         removeInputError(R.id.register_layout_username);
         removeInputError(R.id.register_layout_email);
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_activity_register;
     }
 
     @Override

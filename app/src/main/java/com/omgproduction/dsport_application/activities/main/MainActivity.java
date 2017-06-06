@@ -16,7 +16,6 @@ import com.omgproduction.dsport_application.fragments.helper.MenuManager;
 import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
 import com.omgproduction.dsport_application.listeners.adapters.DrawerListenerAdapter;
 import com.omgproduction.dsport_application.adapters.ViewPagerAdapter;
-import com.omgproduction.dsport_application.fragments.main.ChatFragment;
 import com.omgproduction.dsport_application.fragments.main.EventListFragment;
 import com.omgproduction.dsport_application.fragments.main.ExerciseUnitListFragment;
 import com.omgproduction.dsport_application.fragments.main.SocialListFragment;
@@ -32,7 +31,6 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
     private SocialListFragment socialFragment;
     private ExerciseUnitListFragment exerciseUnitFragment;
     private EventListFragment eventFragment;
-    private ChatFragment chatFragment;
     private UniversalListFragment currentFragment;
 
     @Override
@@ -58,15 +56,12 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
         exerciseUnitFragment.setMenuManager(menuManager);
         eventFragment = new EventListFragment();
         eventFragment.setMenuManager(menuManager);
-        chatFragment = new ChatFragment();
-        chatFragment.setMenuManager(menuManager);
 
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setOnPageChangeListener(this);
         viewPagerAdapter.addFragments(socialFragment,getString(R.string.social));
         viewPagerAdapter.addFragments(exerciseUnitFragment,getString(R.string.exercise_units));
         viewPagerAdapter.addFragments(eventFragment,getString(R.string.events));
-        viewPagerAdapter.addFragments(chatFragment,getString(R.string.chats));
         viewPager.setOffscreenPageLimit(3);
 
         currentFragment = socialFragment;
@@ -170,7 +165,6 @@ public class MainActivity extends AbstractNavigationActivity implements TabLayou
             case 0: currentFragment = socialFragment; break;
             case 1: currentFragment = exerciseUnitFragment; break;
             case 2: currentFragment = eventFragment; break;
-            case 3: currentFragment = chatFragment; break;
         }
         if(currentFragment!=null)
             currentFragment.onSetActive(true);

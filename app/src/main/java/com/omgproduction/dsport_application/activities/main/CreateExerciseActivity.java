@@ -37,7 +37,6 @@ public class CreateExerciseActivity extends AbstractFragmentActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_create_exercise);
         exerciseService = new ExerciseService(this);
 
         prepareSpinner();
@@ -67,6 +66,11 @@ public class CreateExerciseActivity extends AbstractFragmentActivity{
     }
 
     @Override
+    public int getLayout() {
+        return R.layout.layout_activity_create_exercise;
+    }
+
+    @Override
     public void onRefresh() {
 
     }
@@ -82,11 +86,11 @@ public class CreateExerciseActivity extends AbstractFragmentActivity{
     }
 
     private void saveExercise() {
-        final String selectedType = String.valueOf(spinner.getSelectedItemPosition());
+        final int selectedType = spinner.getSelectedItemPosition();
         final String exerciseName = ((EditText)findViewById(R.id.create_new_exercise)).getText().toString();
 
         if(exerciseName.trim().isEmpty()){
-            Toast.makeText(this, "You did not enter a username", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "You did not enter an exercise names", Toast.LENGTH_SHORT).show();
             return;
         }
 

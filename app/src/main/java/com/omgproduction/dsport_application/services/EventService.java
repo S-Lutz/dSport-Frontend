@@ -2,8 +2,6 @@ package com.omgproduction.dsport_application.services;
 
 import android.content.Context;
 
-import com.herbornsoftware.omnet.JSONRequest;
-import com.herbornsoftware.omnet.JSONResponse;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
@@ -13,6 +11,9 @@ import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Participate;
 import com.omgproduction.dsport_application.models.ParticipateResult;
 import com.omgproduction.dsport_application.utils.ConverterFactory;
+import com.omgproduction.dsport_application.utils.DateConverter;
+import com.omgproduction.dsport_application.utils.JSONRequest;
+import com.omgproduction.dsport_application.utils.JSONResponse;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -40,6 +41,7 @@ public class EventService extends AbstractService{
                     .addParam(APPLICATION_EVENT_TEXT, eventText)
                     .addParam(APPLICATION_EVENT_TITLE, title)
                     .addParam(APPLICATION_EVENT_LOCATION, location)
+                    .addParam(APPLICATION_EVENT_CREATED, new DateConverter().convertNow())
                     .setOnResultListener(new JSONRequest.OnResultListener() {
                         @Override
                         public void onResult(JSONResponse response) {
@@ -220,6 +222,7 @@ public class EventService extends AbstractService{
                     .addParam(APPLICATION_EVENT_EVENT_ID, event_id)
                     .addParam(APPLICATION_COMMENT_PICTURE, picture)
                     .addParam(APPLICATION_COMMENT_TEXT, text)
+                    .addParam(APPLICATION_COMMENT_CREATED, new DateConverter().convertNow())
                     .setOnResultListener(new JSONRequest.OnResultListener() {
                         @Override
                         public void onResult(JSONResponse response) {

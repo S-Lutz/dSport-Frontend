@@ -68,7 +68,6 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_event_detail);
         setRefresher((SwipeRefreshLayout) findViewById(R.id.event_detail_refresher));
 
         dateConverter = new DateConverter();
@@ -81,6 +80,7 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
 
     private void setEventValues(Event event){
         this.event = event;
+
 
         setText(R.id.event_detail_title,event.getTitle());
         setText(R.id.event_detail_comment_count,event.getCommentCount());
@@ -196,7 +196,6 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
     }
 
     private void loadComments(){
-
         eventService.getAllComments(event.getEvent_id(), new RequestFuture<List<Comment>>(){
 
 
@@ -288,6 +287,11 @@ public class EventDetailActivity extends AbstractFragmentActivity implements Com
     @Override
     protected void removeAllErrors() {
 
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_activity_event_detail;
     }
 
     @Override

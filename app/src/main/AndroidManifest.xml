@@ -10,7 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <uses-feature android:name="android.hardware.camera2.full" />
+    <uses-feature android:name="android.hardware.camera2.full"
+        android:required="false"/>
 
     <application
         android:name=".controller.App"
@@ -29,13 +30,12 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.main.CreateExerciseActivity"
             android:screenOrientation="portrait" />
@@ -85,8 +85,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".services.GPS_Service"/>
+        <service android:name=".services.GPS_Service" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -99,14 +98,12 @@
         </provider>
 
         <activity android:name=".activities.main.FriendListActivity" />
-        <activity android:name=".activities.main.RouteTrackingActivity">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activities.main.RouteTrackingActivity" />
+        <activity android:name=".activities.main.CreateExerciseUnitActivity" />
+        <activity
+            android:name=".activities.main.CreateWeightExerciseUnitActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.main.CreateTimedExerciseUnitActivity"></activity>
     </application>
 
 </manifest>

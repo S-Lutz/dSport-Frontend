@@ -19,10 +19,15 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.ExerciseUnitKeys;
 import com.omgproduction.dsport_application.config.LocationKeys;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
+import com.omgproduction.dsport_application.models.Exercise;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.ExerciseService;
 import com.omgproduction.dsport_application.services.GPS_Service;
 
-public class RouteTrackingActivity extends TimeTrackingActivity implements LocationKeys{
+public class RouteTrackingActivity extends TimeTrackingActivity implements LocationKeys, ExerciseUnitKeys{
 
     private TextView distanceTV, timeTV;
     private ProgressBar progressBar;
@@ -37,8 +42,13 @@ public class RouteTrackingActivity extends TimeTrackingActivity implements Locat
     private BroadcastReceiver broadcastReceiver;
     private long currentTime;
     private float currentDistance;
+    private long finalTime;
+    private float finalDistance;
     private TimeDisplayMode currentTimeMode = TimeDisplayMode.SECONDS;
     private DistanceDisplayMode currentDistanceMode = DistanceDisplayMode.M;
+
+
+    private Exercise exercise;
 
     private enum TimeDisplayMode {
         SECONDS,
@@ -72,8 +82,8 @@ public class RouteTrackingActivity extends TimeTrackingActivity implements Locat
         setContentView(R.layout.activity_route_tracking);
 
         distanceTV = (TextView) findViewById(R.id.tracking_distance_tv);
-        timeTV = (TextView) findViewById(R.id.tracking_time_tv);
-        progressBar = (ProgressBar) findViewById(R.id.tracking_progress);
+        timeTV = (TextView) findViewById(R.id.create_weight_exercise_unit_time_tv);
+        progressBar = (ProgressBar) findViewById(R.id.create_weight_exercise_unit_progress);
         runImg = (ImageView) findViewById(R.id.tracking_run_img);
 
         startBtn = (Button) findViewById(R.id.tracking_start_btn);
@@ -81,6 +91,9 @@ public class RouteTrackingActivity extends TimeTrackingActivity implements Locat
         timeTV.setOnClickListener(this);
         distanceTV.setOnClickListener(this);
         runImg.setOnClickListener(this);
+
+
+        exercise = (Exercise) getIntent().getSerializableExtra(EXERCISE);
 
         progressBar.setVisibility(View.INVISIBLE);
         enableButtons(false, startBtn, finishBtn);
@@ -139,7 +152,7 @@ public class RouteTrackingActivity extends TimeTrackingActivity implements Locat
             case R.id.tracking_finish_btn:
                 stopPressed();
                 break;
-            case R.id.tracking_time_tv:
+            case R.id.create_weight_exercise_unit_time_tv:
                 nextTimeMode();
                 break;
             case R.id.tracking_distance_tv:
@@ -185,8 +198,11 @@ public class RouteTrackingActivity extends TimeTrackingActivity implements Locat
                             public void onClick(DialogInterface dialog, int which) {
                                 startBtn.setText(R.string.start_new_session);
                                 finishBtn.setText(R.string.save_session);
+                                finished = true;
                                 started = false;
                                 progressBar.setVisibility(View.INVISIBLE);
+                                finalDistance = currentDistance;
+                                finalTime = currentTime;
                                 stopTimeTracking();
                                 Intent i = new Intent(getApplicationContext(), GPS_Service.class);
                                 stopService(i);
@@ -206,7 +222,30 @@ public class RouteTrackingActivity extends TimeTrackingActivity implements Locat
     }
 
     private void saveSession() {
+        ExerciseService exerciseService = new ExerciseService(this);
+        User localUser = getLocalUser();
+        exerciseService.saveDistanceExerciseUnit(localUser.getId(), Integer.parseInt(exercise.getId()),exercise.getTitle(),finalTime, finalDistance, new RequestFuture<Void>(){
+            @Override
+            public void onStartQuery() {
+                finishBtn.setEnabled(false);
+            }
 
+            @Override
+            public void onSuccess(Void result) {
+                RouteTrackingActivity.super.onBackPressed();
+                RouteTrackingActivity.super.finish();
+            }
+
+            @Override
+            public void onFailure(int errorCode, String errorMessage) {
+                printError(R.id.route_tracking_activity,errorMessage);
+            }
+
+            @Override
+            public void onFinishQuery() {
+                finishBtn.setEnabled(true);
+            }
+        });
     }
 
     private void startPressed() {
