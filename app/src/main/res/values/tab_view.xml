@@ -4,7 +4,16 @@
         <item>@drawable/ic_social</item>
         <item>@drawable/ic_exercise_unit</item>
         <item>@drawable/ic_event</item>
-        <item>@drawable/ic_chat</item>
+    </integer-array>
+
+    <integer-array name="search_result_icons">
+        <item>@drawable/ic_users</item>
+        <item>@drawable/ic_event</item>
+    </integer-array>
+
+    <integer-array name="user_activity_icons">
+        <item>@drawable/ic_social</item>
+        <item>@drawable/ic_profile</item>
     </integer-array>
 
 

@@ -82,7 +82,6 @@
             android:src="@drawable/ic_text"
             app:backgroundTint="#FF9800"
             android:tint="#000000"
-            android:transitionName="options_fab"
             app:pressedTranslationZ="12dp"
             app:fabSize="mini"
 

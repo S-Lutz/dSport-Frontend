@@ -11,9 +11,10 @@ import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.models.Comment;
-import com.omgproduction.dsport_application.utils.DateUtils;
+import com.omgproduction.dsport_application.utils.DateConverter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Florian on 01.12.2016.
@@ -22,11 +23,11 @@ import java.util.ArrayList;
 public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.CommentViewHolder>{
 
 
-    private ArrayList<Comment> comments = new ArrayList<>();
+    private List<Comment> comments = new ArrayList<>();
 
     private final ArrayList<OnLikeClickedListener> onLikeClickedListeners = new ArrayList<>();
 
-    public CommentAdapter(ArrayList<Comment> comments) {
+    public CommentAdapter(List<Comment> comments) {
         this.comments = comments;
     }
 
@@ -44,12 +45,15 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.Comment
     @Override
     public void onBindViewHolder(CommentAdapter.CommentViewHolder holder, int position) {
         Comment comment = comments.get(position);
-        holder.tv_date.setText(DateUtils.convertString(holder.context,comment.getCreated()));
-        holder.tv_likes.setText(comment.getLikeString());
+
+        DateConverter dateConverter = new DateConverter();
+
+        holder.tv_date.setText(dateConverter.convertString(holder.contextView.getContext(),comment.getCreated()));
+        holder.tv_likes.setText(comment.getLikeString(holder.contextView.getContext()));
         holder.tv_text.setText(comment.getText());
         holder.tv_username.setText(comment.getUsername());
 
-        holder.contextView.setOnClickListener(new OnLikeClicked(comment, holder));
+        holder.tv_likes.setOnClickListener(new OnLikeClicked(comment, holder));
 
         Bitmap commentPicture = comment.getBitmapCommentPicture(holder.contextView.getContext());
         if(commentPicture!=null){
@@ -87,40 +91,20 @@ public class CommentAdapter extends  RecyclerView.Adapter<CommentAdapter.Comment
             return iv_comment_picture;
         }
 
-        public void setIv_comment_picture(ImageView iv_comment_picture) {
-            this.iv_comment_picture = iv_comment_picture;
-        }
-
         public TextView getTv_username() {
             return tv_username;
-        }
-
-        public void setTv_username(TextView tv_username) {
-            this.tv_username = tv_username;
         }
 
         public TextView getTv_text() {
             return tv_text;
         }
 
-        public void setTv_text(TextView tv_text) {
-            this.tv_text = tv_text;
-        }
-
         public TextView getTv_likes() {
             return tv_likes;
         }
 
-        public void setTv_likes(TextView tv_likes) {
-            this.tv_likes = tv_likes;
-        }
-
         public TextView getTv_date() {
             return tv_date;
-        }
-
-        public void setTv_date(TextView tv_date) {
-            this.tv_date = tv_date;
         }
 
         public View getContextView() {

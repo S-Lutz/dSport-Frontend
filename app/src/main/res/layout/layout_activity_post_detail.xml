@@ -8,6 +8,7 @@
 
     <android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/activity_post_detail"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
         <RelativeLayout
@@ -68,6 +69,7 @@
                 android:adjustViewBounds="true"
                 android:visibility="gone"
                 android:id="@+id/post_detail_post_picture"/>
+
             <android.support.v7.widget.AppCompatTextView
                 style="@style/body"
                 android:layout_below="@id/post_detail_post_picture"

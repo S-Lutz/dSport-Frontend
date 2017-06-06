@@ -1,22 +1,21 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
-
-import org.json.JSONObject;
 
 
 /**
@@ -27,19 +26,47 @@ import org.json.JSONObject;
  */
 public class LoginActivity extends AbstractFragmentActivity {
 
-    //Activity-Context
-    private Context context;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_login);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_CONTACTS)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_CONTACTS},
+                        1);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
+        onCreateAfterPermission();
+    }
+
+    private void onCreateAfterPermission() {
+
+        Log.e("LoginActivity", "started");
 
         setRefresher((SwipeRefreshLayout)findViewById(R.id.login_refresher));
 
         checkLogin();
-
-        context = this;
 
         findViewById(R.id.registration_link).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
@@ -47,14 +74,14 @@ public class LoginActivity extends AbstractFragmentActivity {
 
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(ApplicationKeys.USER_USERNAME))!=null){
+        if((username = i.getStringExtra(INTENT_USERNAME))!=null){
             ((EditText)findViewById(R.id.login_username)).setText(username);
         }
-
     }
 
     private void checkLogin() {
-        if(SessionController.getInstance().checkLogin(this)){
+        User user = userService.getLocalUser();
+        if(userService.isAvailable(user)){
             startMainActivity(this);
         }
     }
@@ -85,56 +112,28 @@ public class LoginActivity extends AbstractFragmentActivity {
         //Check if Password is not Empty
         if(username.trim().isEmpty()
                 ||password.trim().isEmpty()){
-            printInputError(R.id.login_layout_username, ErrorCodes.FIELD_EMPTY);
+            printInputError(R.id.login_layout_username, FIELD_EMPTY_ERROR);
             return;
         }
 
 
         //Process login with Backend
         //Send request to Backend and wait for response
-        SessionController.getInstance().loginUser(this,username, password, new OnResultAdapter<JSONObject>(){
+        sessionService.validateUser(username, password, new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
                 showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(JSONObject jsonObject) {
-                SessionController.getInstance().saveLocalUser(context,jsonObject, new OnResultAdapter<User>(){
-                    @Override
-                    public void onStartQuery() {
-                        showProgressBar(true);
-                    }
-
-                    @Override
-                    public void onSuccess(User result) {
-                        startMainActivity(context);
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        showProgressBar(false);
-                    }
-                });
+            public void onSuccess(User user) {
+                userService.saveLocalUser(user);
+                startMainActivity(LoginActivity.this);
             }
 
             @Override
-            public void onConnectionError(VolleyError e) {
-                printError(R.id.login_layout,ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        loginUser();
-                    }
-                });
-            }
-
-            @Override
-            public void onBackendError(String errorCode) {
-                //Check Errorcode (See it in error_codes.xml
-                switch (errorCode){
-                    case "e303": printInputError(R.id.login_layout_password,errorCode); break;
-                    default: printError(R.id.login_layout,ErrorCodes.SOMETHING_WENT_WRONG);
-                }
+            public void onFailure(int errorCode,String errorMessage) {
+                printInputError(R.id.login_layout_password,errorMessage);
             }
 
             @Override
@@ -153,7 +152,7 @@ public class LoginActivity extends AbstractFragmentActivity {
 
     private void startRegistrationActivity(Context context){
         Intent i = new Intent(context, RegisterActivity.class);
-        i.putExtra(ApplicationKeys.USER_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
+        i.putExtra(INTENT_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);
@@ -168,7 +167,12 @@ public class LoginActivity extends AbstractFragmentActivity {
     }
 
     @Override
-    public void onRefresh() {
+    public int getLayout() {
+        return R.layout.layout_activity_login;
+    }
 
+    @Override
+    public void onRefresh() {
+        showProgressBar(false);
     }
 }

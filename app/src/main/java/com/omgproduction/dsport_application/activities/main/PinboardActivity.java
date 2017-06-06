@@ -1,21 +1,22 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.support.design.widget.FloatingActionButton;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.fragments.helper.SocialMenuFragment;
-import com.omgproduction.dsport_application.fragments.main.SocialFragment;
+import com.omgproduction.dsport_application.fragments.helper.UniversalListFragment;
+import com.omgproduction.dsport_application.fragments.main.SocialListFragment;
 import com.omgproduction.dsport_application.interfaces.FloatingMenu;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
 import com.omgproduction.dsport_application.models.User;
 import com.omgproduction.dsport_application.supplements.activities.AbstractNavigationActivity;
 
 
-public class PinboardActivity extends AbstractNavigationActivity {
+public class PinboardActivity extends AbstractNavigationActivity implements SearchView.OnQueryTextListener {
 
     private SocialMenuFragment socialMenuFragment;
 
@@ -35,11 +36,13 @@ public class PinboardActivity extends AbstractNavigationActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SocialFragment socialFragment = new SocialFragment();
-        socialFragment.setFilter(SocialFragment.Filter.PRIVATE);
+        SocialListFragment socialFragment = new SocialListFragment();
+        socialFragment.setMode(UniversalListFragment.Mode.PRIVATE);
+
+        ((SearchView)findViewById(R.id.toolbar_search)).setOnQueryTextListener(this);
 
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.pinboard_fragment_container, socialFragment).commit();
@@ -50,18 +53,9 @@ public class PinboardActivity extends AbstractNavigationActivity {
     }
 
     private void loadData() {
-        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
-            @Override
-            public void onSuccess(User user) {
-                //setPic(R.id.profile_pic, user.getBitmap(PinboardActivity.this));
-                socialMenuFragment.setPinboardOwner(user.getId());
-            }
 
-            @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(PinboardActivity.this);
-            }
-        });
+        User user = getLocalUser();
+        socialMenuFragment.setOwner(user.getId());
 
     }
 
@@ -120,5 +114,19 @@ public class PinboardActivity extends AbstractNavigationActivity {
     @Override
     public void onRefresh() {
 
+    }
+
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Intent i = new Intent(this, SearchResultActivity.class);
+        i.putExtra(ApplicationKeys.APPLICATION_QUERY, query);
+        startActivity(i);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

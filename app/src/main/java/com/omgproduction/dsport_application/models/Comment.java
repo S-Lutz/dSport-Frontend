@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.controller.ApplicationController;
+import com.omgproduction.dsport_application.controller.App;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
 
 import java.io.Serializable;
@@ -62,7 +62,7 @@ public class Comment implements Serializable{
         if(commentPicture.isEmpty()){
             return null;
         }
-        return BitmapUtils.getBitmapFromString(context, commentPicture);
+        return BitmapUtils.getBitmapFromString( commentPicture);
     }
 
     public boolean isLiked() {
@@ -77,11 +77,11 @@ public class Comment implements Serializable{
         this.likeCount = likeCount;
     }
 
-    public String getLikeString() {
+    public String getLikeString(Context context) {
         StringBuilder sb = new StringBuilder();
         int likes = Integer.parseInt(getLikeCount());
         if(isLiked()){
-            String youPlus = ApplicationController.getInstance().getApplicationContext().getResources().getString(R.string.you_plus);
+            String youPlus = context.getResources().getString(R.string.you_plus);
             sb.append(youPlus);
             sb.append(" ");
             likes = likes-1;

@@ -1,44 +1,45 @@
 package com.omgproduction.dsport_application.activities.main;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
-import com.android.volley.VolleyError;
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.CommentAdapter;
 import com.omgproduction.dsport_application.adapters.LikeAdapter;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.ErrorCodes;
-import com.omgproduction.dsport_application.controller.PostController;
-import com.omgproduction.dsport_application.controller.SessionController;
-import com.omgproduction.dsport_application.controller.UserController;
+import com.omgproduction.dsport_application.config.CreatePostStartValues;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
-import com.omgproduction.dsport_application.listeners.adapters.OnResultAdapter;
-import com.omgproduction.dsport_application.listeners.interfaces.OnResultListener;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.Comment;
 import com.omgproduction.dsport_application.models.Like;
 import com.omgproduction.dsport_application.models.LikeResult;
 import com.omgproduction.dsport_application.models.Post;
 import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.PostService;
 import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
 import com.omgproduction.dsport_application.utils.BitmapUtils;
-import com.omgproduction.dsport_application.utils.DateUtils;
+import com.omgproduction.dsport_application.utils.DateConverter;
 
-import org.json.JSONException;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
-import java.util.ArrayList;
-
-public class PostDetailActivity extends AbstractFragmentActivity implements OnResultListener<ArrayList<Comment>>, CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
+public class PostDetailActivity extends AbstractFragmentActivity implements CommentAdapter.OnLikeClickedListener, LikeAdapter.OnLikeClickedListener{
 
     private RecyclerView commentsRecycler, likeRecycler;
     private CommentAdapter commentAdapter;
@@ -50,14 +51,19 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     private boolean commentsShown = false;
     private Bitmap newCommentBitmap;
 
+    private DateConverter dateConverter;
+
+    private PostService postService;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_post_detail);
         setRefresher((SwipeRefreshLayout) findViewById(R.id.post_detail_refresher));
 
+        dateConverter = new DateConverter();
+        postService = new PostService(this);
 
-        setPostValues((Post) getIntent().getSerializableExtra(ApplicationKeys.POSTS));
+        setPostValues((Post) getIntent().getSerializableExtra(INTENT_POST));
         showComments(true);
         update();
     }
@@ -67,11 +73,11 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
 
         setText(R.id.post_detail_title,post.getTitle());
         setText(R.id.post_detail_comment_count,post.getCommentCount());
-        setText(R.id.post_detail_like_count,post.getLikeString());
+        setText(R.id.post_detail_like_count,post.getLikeString(this));
         setText(R.id.post_detail_share_count,post.getShareCount());
         setText(R.id.post_detail_username,post.getUsername());
         setText(R.id.post_detail_text,post.getText());
-        setText(R.id.post_detail_date, DateUtils.convertString(this,post.getCreated()));
+        setText(R.id.post_detail_date, dateConverter.convertString(this,post.getCreated()));
 
         findViewById(R.id.post_detail_new_comment_button).setOnClickListener(this);
         findViewById(R.id.post_detail_likes_button).setOnClickListener(this);
@@ -85,8 +91,8 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
         findViewById(R.id.post_detail_like_count).setOnClickListener(this);
         findViewById(R.id.post_detail_share_count).setOnClickListener(this);
 
-        setPicture(post.getBitmapPicture(this));
-        setPostPicture(post.getBitmapPostPicture(this));
+        setPicture(post.getBitmapPicture());
+        setPostPicture(post.getBitmapPostPicture());
     }
 
     private void setPostPicture(Bitmap postPicture){
@@ -105,103 +111,92 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     }
 
     private void update() {
-        UserController.getInstance().getLocalUserID(this,new OnResultAdapter<String>(){
+
+        User user = getLocalUser();
+
+        postService.getPostDetail(user.getId(), post.getPost_id(), new RequestFuture<Post>(){
             @Override
-            public void onSuccess(String localUserID) {
-                PostController.getInstance().getPostDetail(localUserID, post.getPost_id(), new OnResultAdapter<Post>(){
-                    @Override
-                    public void onStartQuery() {
-                        refresher.setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onSuccess(Post result) {
-                        post = result;
-                        setPostValues(post);
-                    }
-                    @Override
-                    public void onConnectionError(VolleyError e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
-                    }
-
-                    @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
-
-                    @Override
-                    public void onJSONException(JSONException e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        refresher.setRefreshing(false);
-                    }
-                });
+            public void onStartQuery() {
+                showProgressBar(true);
             }
 
             @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+            public void onSuccess(Post result) {
+                post = result;
+                setPostValues(post);
+            }
+
+            @Override
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.post_detail_relative_layout, errorMessage);
+            }
+
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
             }
         });
-        PostController.getInstance().getAllComments(PostDetailActivity.this, post.getPost_id(), PostDetailActivity.this);
+
+        loadComments();
+
+    }
+
+    private void loadComments(){
+        postService.getAllComments(post.getPost_id(), new RequestFuture<List<Comment>>(){
+
+            @Override
+            public void onStartQuery() {
+                showProgressBar(true);
+            }
+
+            @Override
+            public void onSuccess(List<Comment> comments) {
+                commentsRecycler = (RecyclerView) findViewById(R.id.post_detail_comment_recycler);
+                commentLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
+                commentsRecycler.setNestedScrollingEnabled(false);
+                commentsRecycler.setLayoutManager(commentLayoutManager);
+                commentAdapter = new CommentAdapter(comments);
+                commentAdapter.addOnLikeClickedListener(PostDetailActivity.this);
+                commentsRecycler.setAdapter(commentAdapter);
+            }
+
+            @Override
+            public void onFailure(int errorCode,String errorMessage) {
+                Log.e("Error",errorMessage);
+                printError(R.id.post_detail_relative_layout, errorMessage);
+            }
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
+            }
+        });
     }
 
     private void loadLikes(){
-
-        UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>() {
+        postService.getAllLikes(post.getPost_id(), new RequestFuture<List<Like>>(){
             @Override
             public void onStartQuery() {
-                refresher.setRefreshing(true);
+                showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(String user) {
-                PostController.getInstance().getAllLikes(PostDetailActivity.this, post.getPost_id(), new OnResultAdapter<ArrayList<Like>>(){
-                    @Override
-                    public void onStartQuery() {
-                        refresher.setRefreshing(true);
-                    }
-
-                    @Override
-                    public void onSuccess(ArrayList<Like> likes) {
-                        likeRecycler = (RecyclerView) findViewById(R.id.post_detail_like_recycler);
-                        likeLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
-                        likeRecycler.setNestedScrollingEnabled(false);
-                        likeRecycler.setLayoutManager(likeLayoutManager);
-                        likeAdapter = new LikeAdapter(likes);
-                        likeAdapter.addOnLikeClickedListener(PostDetailActivity.this);
-                        likeRecycler.setAdapter(likeAdapter);
-                    }
-                    @Override
-                    public void onConnectionError(VolleyError e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
-                    }
-
-                    @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
-
-                    @Override
-                    public void onJSONException(JSONException e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
-                    }
-                    @Override
-                    public void onUserNotFound() {SessionController.getInstance().logout(PostDetailActivity.this);}
-
-                    @Override
-                    public void onFinishQuery() {
-                        refresher.setRefreshing(false);
-                    }
-                });
+            public void onSuccess(List<Like> likes) {
+                likeRecycler = (RecyclerView) findViewById(R.id.post_detail_like_recycler);
+                likeLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
+                likeRecycler.setNestedScrollingEnabled(false);
+                likeRecycler.setLayoutManager(likeLayoutManager);
+                likeAdapter = new LikeAdapter(likes);
+                likeAdapter.addOnLikeClickedListener(PostDetailActivity.this);
+                likeRecycler.setAdapter(likeAdapter);
             }
 
             @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.post_detail_relative_layout, errorMessage);
+            }
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
             }
         });
     }
@@ -209,6 +204,11 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     @Override
     protected void removeAllErrors() {
 
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.layout_activity_post_detail;
     }
 
     @Override
@@ -251,85 +251,43 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
         openCamera();
     }
 
-    @Override
-    protected void onBitmapResult(Bitmap bitmap) {
-        findViewById(R.id.post_detail_create_comment_post_picture).setVisibility(View.VISIBLE);
-        setPic(R.id.post_detail_create_comment_post_picture,bitmap);
-        newCommentBitmap = bitmap;
-        showNewComment(true);
-    }
-
     private void onCreateCommentClick() {
 
         final String text = ((EditText)findViewById(R.id.post_detail_create_comment_text)).getText().toString();
         String bmp="";
+
         if(newCommentBitmap!=null){
             bmp = BitmapUtils.getStringFromBitmap(newCommentBitmap);
         }
         final String picture = bmp;
 
+        User user = getLocalUser();
 
-        UserController.getInstance().getLocalUser(this,new OnResultAdapter<User>(){
+        postService.createComment(user.getId(), post.getPost_id(),picture,text, new RequestFuture<Void>(){
             @Override
             public void onStartQuery() {
-                refresher.setRefreshing(true);
+                showProgressBar(true);
             }
 
             @Override
-            public void onSuccess(User user) {
-                PostController.getInstance().createComment(user.getId(), post.getPost_id(),picture,text, new OnResultAdapter<Void>(){
-                    @Override
-                    public void onStartQuery() {
-                        refresher.setRefreshing(true);
-                    }
+            public void onSuccess(Void result) {
+                update();
+                clearNewComment();
+            }
 
+            @Override
+            public void onFailure(int errorCode,String errorMessage) {
+                printError(R.id.activity_post_detail, errorMessage, R.string.retry, new View.OnClickListener() {
                     @Override
-                    public void onSuccess(Void result) {
-                        update();
-                        clearNewComment();
-                    }
-
-                    @Override
-                    public void onConnectionError(VolleyError e) {
-                        printError(R.id.activity_create_post, ErrorCodes.BACKEND_CONNECTION_FAILED, R.string.retry, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                onCreateCommentClick();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onBackendError(String errorCode) {
-                        printError(R.id.activity_create_post, errorCode, R.string.retry, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                onCreateCommentClick();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onUserNotFound() {
-                        SessionController.getInstance().logout(PostDetailActivity.this);
-                    }
-
-                    @Override
-                    public void onFinishQuery() {
-                        refresher.setRefreshing(false);
+                    public void onClick(View v) {
+                        onCreateCommentClick();
                     }
                 });
-
-            }
-
-            @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
             }
 
             @Override
             public void onFinishQuery() {
-                refresher.setRefreshing(false);
+                showProgressBar(false);
             }
         });
     }
@@ -411,116 +369,56 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     }
 
     private void onLikePost() {
-        UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>(){
+
+        User user = getLocalUser();
+
+        postService.likePost(user.getId(), post.getPost_id(), new RequestFuture<LikeResult>(){
             @Override
-            public void onSuccess(String result) {
-                PostController.getInstance().likePost(result, post.getPost_id(), new OnResultAdapter<LikeResult>(){
-                    @Override
-                    public void onSuccess(LikeResult result) {
-                        post.setLiked(result.isLiked());
-                        post.setLikeCount(result.getLikeCount());
-                        update();
-                    }
-                    @Override
-                    public void onConnectionError(VolleyError e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
-                    }
-
-                    @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
-
-                    @Override
-                    public void onJSONException(JSONException e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
-                    }
-                });
+            public void onStartQuery() {
+                showProgressBar(true);
             }
 
             @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+            public void onSuccess(LikeResult result) {
+                post.setLiked(result.isLiked());
+                post.setLikeCount(result.getLikeCount());
+                //update();
+            }
+
+            @Override
+            public void onFailure(int errorCode,String errorMessage) {printError(R.id.post_detail_relative_layout, errorMessage);}
+
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
             }
         });
     }
 
     @Override
-    public void onStartQuery() {
-        refresher.setRefreshing(true);
-    }
-
-    @Override
-    public void onSuccess(ArrayList<Comment> comments) {
-        commentsRecycler = (RecyclerView) findViewById(R.id.post_detail_comment_recycler);
-        commentLayoutManager = new LinearLayoutManager(this);
-        commentsRecycler.setNestedScrollingEnabled(false);
-        commentsRecycler.setLayoutManager(commentLayoutManager);
-        commentAdapter = new CommentAdapter(comments);
-        commentAdapter.addOnLikeClickedListener(this);
-        commentsRecycler.setAdapter(commentAdapter);
-    }
-
-    @Override
-    public void onConnectionError(VolleyError e) {
-        e.printStackTrace();
-        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
-    }
-
-    @Override
-    public void onBackendError(String errorCode) {
-        printError(R.id.post_detail_relative_layout, errorCode);
-    }
-
-    @Override
-    public void onJSONException(JSONException e) {
-        e.printStackTrace();
-        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
-    }
-
-    @Override
-    public void onUserNotFound() {
-        SessionController.getInstance().logout(this);
-    }
-    @Override
-    public void onFinishQuery() {
-        refresher.setRefreshing(false);
-    }
-
-    @Override
     public void onLikeComment(final Comment comment, final CommentAdapter.CommentViewHolder holder) {
-        UserController.getInstance().getLocalUserID(this, new OnResultAdapter<String>(){
+
+        User user = getLocalUser();
+
+        postService.likeComment(user.getId(), comment.getComment_id(), new RequestFuture<LikeResult>(){
             @Override
-            public void onSuccess(String result) {
-                PostController.getInstance().likeComment(result, comment.getComment_id(), new OnResultAdapter<LikeResult>(){
-
-                    @Override
-                    public void onSuccess(LikeResult result) {
-                        comment.setLiked(result.isLiked());
-                        comment.setLikeCount(result.getLikeCount());
-                        holder.getTv_likes().setText(comment.getLikeString());
-                    }
-
-                    @Override
-                    public void onConnectionError(VolleyError e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.BACKEND_CONNECTION_FAILED);
-                    }
-
-                    @Override
-                    public void onBackendError(String errorCode) {printError(R.id.post_detail_relative_layout, errorCode);}
-
-                    @Override
-                    public void onJSONException(JSONException e) {
-                        e.printStackTrace();
-                        printError(R.id.post_detail_relative_layout, ErrorCodes.SOMETHING_WENT_WRONG);
-                    }
-                });
+            public void onStartQuery() {
+                showProgressBar(true);
             }
 
             @Override
-            public void onUserNotFound() {
-                SessionController.getInstance().logout(PostDetailActivity.this);
+            public void onSuccess(LikeResult result) {
+                comment.setLiked(result.isLiked());
+                comment.setLikeCount(result.getLikeCount());
+                holder.getTv_likes().setText(comment.getLikeString(PostDetailActivity.this));
+            }
+
+            @Override
+            public void onFailure(int errorCode,String errorMessage) {printError(R.id.post_detail_relative_layout, errorMessage);}
+
+            @Override
+            public void onFinishQuery() {
+                showProgressBar(false);
             }
         });
     }
@@ -535,4 +433,69 @@ public class PostDetailActivity extends AbstractFragmentActivity implements OnRe
     public void onLikeSelected(Like like) {
         //TODO OPEN USER WHO LIKED
     }
+
+    public void onCameraResult(Bitmap bitmap, File file) {
+        showNewComment(true);
+        findViewById(R.id.post_detail_create_comment_post_picture).setVisibility(View.VISIBLE);
+        setPic(R.id.post_detail_create_comment_post_picture,bitmap);
+        newCommentBitmap = bitmap;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
+                openCrop(getUriFromData(data));
+            }else if(requestCode == PIC_CROP){
+                onCameraResult(getBitmapFromData( data), new File(getUriFromData(data).getPath()));
+            }
+        }else {
+        }
+    }
+    public Bitmap getBitmapFromData(Intent data){
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), getUriFromData(data));
+            return Bitmap.createScaledBitmap(bitmap, CAMERA_DEFAULT_CAPTURE_WIDTH, CAMERA_DEFAULT_CAPTURE_HEIGHT, false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Uri getUriFromData(Intent data){
+        return data.getData();
+    }
+
+    public void openCrop(Uri uri) {
+        try {
+            Intent cropIntent = new Intent("com.android.camera.action.CROP");
+            cropIntent.setDataAndType(uri, "image/*");
+            cropIntent.putExtra("openCrop", "true");
+            cropIntent.putExtra("aspectX", 2);
+            cropIntent.putExtra("aspectY", 1);
+            cropIntent.putExtra("outputX", 2048);
+            cropIntent.putExtra("outputY", 1024);
+            cropIntent.putExtra("return-data", false);
+            cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            startActivityForResult(cropIntent, PIC_CROP);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openCamera() {
+        try {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAM_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), SELECT_PICTURE);
+    }
+
 }

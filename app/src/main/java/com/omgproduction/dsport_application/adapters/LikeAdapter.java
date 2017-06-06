@@ -11,6 +11,7 @@ import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.models.Like;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Florian on 01.12.2016.
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder> {
 
-    private ArrayList<Like> likes = new ArrayList<>();
+    private List<Like> likes = new ArrayList<>();
 
     public interface OnLikeClickedListener {
         void onLikeSelected(Like like);
@@ -26,7 +27,7 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeViewHolder
 
     private final ArrayList<LikeAdapter.OnLikeClickedListener> onLikeClickedListeners = new ArrayList<>();
 
-    public LikeAdapter(ArrayList<Like> likes) {
+    public LikeAdapter(List<Like> likes) {
         this.likes = likes;
     }
 

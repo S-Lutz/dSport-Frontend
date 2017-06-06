@@ -17,4 +17,9 @@
     <color name="colorSubFab2">#E91E63</color>
     <color name="colorOkFab">#64DD17</color>
 
+    <color name="colorParticipate">#64DD17</color>
+    <color name="colorNotParticipate">#f44336</color>
+
+
+
 </resources>

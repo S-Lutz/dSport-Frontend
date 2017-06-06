@@ -4,20 +4,26 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
+    <uses-feature android:name="android.hardware.camera2.full"
+        android:required="false"/>
 
     <application
-        android:name=".controller.ApplicationController"
+        android:name=".controller.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAHcO3HcjndPyb3PnJIUQmgMmbfsVNIzZc" />
+
         <activity
             android:name=".activities.main.LoginActivity"
             android:label="@string/app_name"
@@ -30,6 +36,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.main.CreateExerciseActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.main.MainActivity"
             android:screenOrientation="portrait" />
@@ -46,12 +55,24 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.main.CreatePostActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.main.CreateEventActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.main.PostDetailActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activities.main.EventDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.main.PinboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.main.SearchResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.main.FriendActivity"
             android:screenOrientation="portrait" />
 
         <service android:name=".services.NotificationReceiver">
@@ -64,6 +85,8 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".services.GPS_Service" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.omgproduction.dsport_application.fileprovider"
@@ -71,7 +94,16 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".activities.main.FriendListActivity" />
+        <activity android:name=".activities.main.RouteTrackingActivity" />
+        <activity android:name=".activities.main.CreateExerciseUnitActivity" />
+        <activity
+            android:name=".activities.main.CreateWeightExerciseUnitActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.main.CreateTimedExerciseUnitActivity"></activity>
     </application>
+
 </manifest>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/activity_horizontal_margin"
+    android:layout_height="wrap_content"
+    android:background="@android:drawable/dialog_holo_light_frame"
+    android:id="@+id/distance_unit_view"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="56dp"
+            android:maxHeight="104dp"
+            android:src="@drawable/default_profile"
+            android:scaleType="centerCrop"
+            android:id="@+id/exercise_unit_user_picture"
+            android:adjustViewBounds="true"/>
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignTop="@+id/exercise_unit_user_picture"
+            android:id="@+id/distance_unit_picture_overlay"
+            android:layout_alignParentLeft="true"
+            android:layout_alignRight="@+id/exercise_unit_user_picture"
+            android:layout_alignBottom="@+id/exercise_unit_user_picture"
+            android:scaleType="centerCrop"
+            android:src="@drawable/post_overlay"
+            android:fitsSystemWindows="true"
+            android:cropToPadding="false"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            style="@style/header"
+            android:layout_alignLeft="@+id/exercise_unit_user_picture"
+            android:layout_margin="8dp"
+            android:textColor="#666666"
+            android:transitionName="@string/transition_post_username"
+            android:layout_alignRight="@id/exercise_unit_user_picture"
+            android:layout_alignBottom="@id/exercise_unit_user_picture"
+            android:gravity="bottom|left"
+            android:id="@+id/exercise_unit_username"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/exercise_unit_title"
+            style="@style/body"
+            android:layout_below="@id/exercise_unit_username"
+            android:textAlignment="center"
+            android:textAppearance="@style/header"
+            android:textSize="18sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/exercise_unit_time"
+            style="@style/body"
+            android:layout_below="@id/exercise_unit_title"
+            android:textAlignment="center"
+            android:width="@dimen/cast_mini_controller_icon_width"
+            android:drawablePadding="4dp"
+            android:textAppearance="@style/header"
+            android:textSize="18sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/distance_unit_distance"
+            style="@style/body"
+            android:layout_below="@id/exercise_unit_time"
+            android:textAlignment="center"
+            android:drawablePadding="4dp"
+            android:textAppearance="@style/header"
+            android:textSize="18sp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/distance_unit_distance"
+            android:drawableLeft="@drawable/ic_like"
+            android:drawablePadding="4dp"
+            android:id="@+id/exercise_unit_like_count"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:gravity="center_vertical"/>
+        <View
+            android:layout_below="@id/exercise_unit_like_count"
+            android:layout_width="match_parent"
+            android:id="@+id/devider"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            style="@style/devider"/>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/distance_unit_date"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/devider"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

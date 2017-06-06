@@ -4,38 +4,59 @@ package com.omgproduction.dsport_application.config;
  * Created by Florian on 17.11.2016.
  */
 
-public class Routes {
-    public static final String HOST = "http://www.daily-sport.de:9000";
-    //public static final String HOST = "http://5.189.141.187:9001";
-    public static final String HOME = "/dsport";
-    public static final String LOGIN = HOST+HOME+"/users/login/";
-    public static final String REGISTER = HOST+HOME+"/users/signup/";
-    public static final String GET_USER = HOST+HOME+"/users/get/";
-    public static final String EDIT_USER = HOST+HOME+"/users/edit/";
-    public static final String GET_POSTS = HOST+HOME+"/posts/getAll/";
-    public static final String CREATE_POST = HOST+HOME+"/posts/create/"; //owner_id, user_id, picture, text, title
+public interface Routes {
+    String ROUTE_HOST = "http://5.189.141.187:9000";
+    //String ROUTE_HOST = "http://5.189.141.187:9001";
+    String ROUTE_HOME = "/dsport";
+    String ROUTE_LOGIN = ROUTE_HOST + ROUTE_HOME +"/users/login";
+    String ROUTE_REGISTER = ROUTE_HOST + ROUTE_HOME +"/users/signup";
+    String ROUTE_GET_USER = ROUTE_HOST + ROUTE_HOME +"/users/get";
+    String ROUTE_EDIT_USER = ROUTE_HOST + ROUTE_HOME +"/users/edit";
+    String ROUTE_GET_POSTS = ROUTE_HOST + ROUTE_HOME +"/posts/getAll";
+    String ROUTE_CREATE_POST = ROUTE_HOST + ROUTE_HOME +"/posts/create"; //owner_id, user_id, picture, text, title
 
-    public static final String CREATEANDPOST_EVENT = HOST+HOME+"/events/createAndPost/";
-    public static final String CREATE_EVENT = HOST+HOME+"/events/create/";
-    public static final String POST_EVENT = HOST+HOME+"/posts/event/";
+    String ROUTE_CREATE_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/create";
+    String ROUTE_LIKE_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/like";
+    String ROUTE_COMMENT_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/comment";
+    String ROUTE_SHARE_EVENT = ROUTE_HOST + ROUTE_HOME +"/events/share";
+    String ROUTE_GET_EVENTBOARD = ROUTE_HOST + ROUTE_HOME +"/events/getEventBoard";
+    String ROUTE_GET_EVENT_COMMENTS = ROUTE_HOST + ROUTE_HOME + "/events/comments/getAll";
+    String ROUTE_GET_EVENT_LIKES = ROUTE_HOST + ROUTE_HOME + "/events/likes/getAll";
+    String ROUTE_GET_EVENTS = ROUTE_HOST + ROUTE_HOME +"/events/getAll";
+    String ROUTE_GET_EVENT_DETAIL = ROUTE_HOST + ROUTE_HOME +"/events/getDetail";
+    String ROUTE_PARTICIPATE_EVENT = ROUTE_HOST + ROUTE_HOME + "/events/participate";
+    String ROUTE_POST_EVENT = ROUTE_HOST + ROUTE_HOME +"/posts/event";
+    String ROUTE_GET_MEMBERS = ROUTE_HOST + ROUTE_HOME + "/events/members/getAll";
 
-    public static final String CREATEANDPOST_EXERCISE_UNIT = HOST+HOME+"/exercise_unit/createAndPost/";
-    public static final String CREATE_EXERCISE_UNIT  = HOST+HOME+"/exercise_unit/create/";
-    public static final String POST_EXERCISE_UNIT = HOST+HOME+"/posts/exercise_unit/";
+    String ROUTE_DISCARD_TOKEN = ROUTE_HOST + ROUTE_HOME +"/token/discard";
 
-    public static final String DISCARD_TOKEN = HOST+HOME+"/token/discard/";
+    String ROUTE_DELETE_USER = ROUTE_HOST + ROUTE_HOME +"/users/delete";
+    String ROUTE_GET_AGB = ROUTE_HOST + ROUTE_HOME +"/agb/get";
 
-    public static final String DELETE_USER = HOST+HOME+"/users/delete/";
-    public static final String GET_AGB = HOST+HOME+"/agb/get/";
-    public static final String GET_PINBOARD = HOST+HOME+"/posts/getPinboard/";
-    public static final String GET_POST_DETAIL = HOST+HOME+"/posts/getDetail/";
-    public static final String GET_COMMENTS = HOST + HOME + "/posts/comments/getAll/";
-    public static final String LIKE_POST = HOST + HOME + "/posts/like/";
-    public static final String SHARE_POST = HOST + HOME + "/posts/share/";
-    public static final String COMMENT_POST = HOST + HOME + "/posts/comment/";
-    public static final String GET_LIKES = HOST + HOME + "/posts/likes/getAll/";
-    public static final String LIKE_COMMENT = HOST + HOME + "/posts/comments/like/";
+    String ROUTE_GET_PINBOARD = ROUTE_HOST + ROUTE_HOME +"/posts/getPinboard";
+    String ROUTE_GET_POST_DETAIL = ROUTE_HOST + ROUTE_HOME +"/posts/getDetail";
+    String ROUTE_GET_COMMENTS = ROUTE_HOST + ROUTE_HOME + "/posts/comments/getAll";
+    String ROUTE_LIKE_POST = ROUTE_HOST + ROUTE_HOME + "/posts/like";
+    String ROUTE_SHARE_POST = ROUTE_HOST + ROUTE_HOME + "/posts/share";
+    String ROUTE_COMMENT_POST = ROUTE_HOST + ROUTE_HOME + "/posts/comment";
+    String ROUTE_LIKE_COMMENT = ROUTE_HOST + ROUTE_HOME + "/posts/comments/like";
+    String ROUTE_GET_LIKES = ROUTE_HOST + ROUTE_HOME + "/posts/likes/getAll";
 
 
-    public static final String DATE_FORMAT="yyyy.MM.dd.HH.mm.ss";
+    String ROUTE_SEARCH_ALL = ROUTE_HOST + ROUTE_HOME +"/search/all";
+
+    String ROUTE_FRIENDS_GET_ALL = ROUTE_HOST + ROUTE_HOME + "/friends/getAll";
+    String ROUTE_FRIENDS_DELETE = ROUTE_HOST + ROUTE_HOME +"/friends/delete ";
+    String ROUTE_FRIENDS_SEND = ROUTE_HOST + ROUTE_HOME +"/friends/request/send ";
+    String ROUTE_FRIENDS_ACCEPT = ROUTE_HOST + ROUTE_HOME +"/friends/request/accept ";
+    String ROUTE_FRIENDS_DECLINE= ROUTE_HOST + ROUTE_HOME +"/friends/request/decline ";
+
+    String ROUTE_EXERCISES_CREATE  =  ROUTE_HOST + ROUTE_HOME +"/exercises/create";
+    String ROUTE_EXERCISES_GET_ALL  =  ROUTE_HOST + ROUTE_HOME +"/exercises/getAll";
+
+    String ROUTE_EXERCISE_UNIT_CREATE_TYPE0  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/create/type0";
+    String ROUTE_EXERCISE_UNIT_CREATE_TYPE1  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/create/type1";
+    String ROUTE_EXERCISE_UNIT_CREATE_TYPE2  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/create/type2";
+    String ROUTE_EXERCISE_UNIT_GET_ALL  =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/getAll";
+    String ROUTE_EXERCISE_UNIT_LIKE =  ROUTE_HOST + ROUTE_HOME +"/exercises/units/like";
 }

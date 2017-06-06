@@ -1,43 +1,52 @@
 package com.omgproduction.dsport_application.supplements.activities;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.config.CameraOptions;
+import com.omgproduction.dsport_application.config.IntentKeys;
+import com.omgproduction.dsport_application.config.LocalErrorCodes;
+import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
 
 /**
  * Created by Florian on 06.11.2016.
  */
 
-public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener{
+public abstract class AbstractAppCompatActivity extends AppCompatActivity implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, LocalErrorCodes, IntentKeys, CameraOptions {
 
     protected SwipeRefreshLayout refresher;
-    private static final int CAM_REQUEST = 1;
-    private static final int PIC_CROP = 2;
-    private static final int SELECT_PICTURE = 3;
+
+    protected SessionService sessionService;
+    protected UserService userService;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sessionService = new SessionService(this);
+        userService = new UserService(this);
+    }
 
     /**
      * Print some Error with Snackbar but Without any Control-Element
      * @param errorCode ErrorCode (See in error_codes)
      */
     protected void printError(int layoutID, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
+        //String packageName = getPackageName();
+        //int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(findViewById(layoutID), getString(resId), Snackbar.LENGTH_LONG);
+                .make(findViewById(layoutID), errorCode, Snackbar.LENGTH_LONG);
 
         snackbar.show();
     }
@@ -52,7 +61,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         String packageName = getPackageName();
         int resId = getResources().getIdentifier(errorCode, "string", packageName);
         Snackbar snackbar = Snackbar
-                .make(findViewById(layoutID), getString(resId), Snackbar.LENGTH_LONG)
+                .make(findViewById(layoutID), errorCode, Snackbar.LENGTH_LONG)
                 .setAction(getString(buttonLabelId), listener);
 
         snackbar.show();
@@ -64,11 +73,9 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
      * @param errorCode Errorcode to print Error-Messsage (See in error_code)
      */
     protected void printInputError(int id, String errorCode){
-        String packageName = getPackageName();
-        int resId = getResources().getIdentifier(errorCode, "string", packageName);
         TextInputLayout til = (TextInputLayout) findViewById(id);
         til.setErrorEnabled(true);
-        til.setError(getString(resId));
+        til.setError(errorCode);
     }
 
     /**
@@ -86,7 +93,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     protected abstract void removeAllErrors();
 
     /**
-     * Set Text to a TextView with id
+     * WeightSet Text to a TextView with id
      * @param id id of the TextView
      * @param text text to put in
      */
@@ -95,14 +102,14 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     /**
-     * Set Text to a TextView with id
+     * WeightSet Text to a TextView with id
      * @param id id of the TextView
      */
     protected String getTVText(int id){
         return ((EditText)findViewById(id)).getText().toString();
     }
     /**
-     * Set Drawable to a ImageView with id
+     * WeightSet Drawable to a ImageView with id
      * @param id id of the ImageView
      * @param drawable id of Drawable
      */
@@ -110,7 +117,7 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         ((ImageView)findViewById(id)).setImageDrawable(getResources().getDrawable(drawable));
     }
     /**
-     * Set Bitmap to a ImageView with id
+     * WeightSet Bitmap to a ImageView with id
      * @param id id of the ImageView
      * @param bitmap bitmap to put in
      */
@@ -128,59 +135,17 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
         }
     }
 
-    private void openCrop(Uri uri){
-        try {
-            Intent cropIntent = new Intent("com.android.camera.action.CROP");
-            cropIntent.setDataAndType(uri, "image/*");
-            cropIntent.putExtra("openCrop", "true");
-            cropIntent.putExtra("aspectX", 2);
-            cropIntent.putExtra("aspectY", 1);
-            cropIntent.putExtra("outputX", 2048);
-            cropIntent.putExtra("outputY", 1024);
-            cropIntent.putExtra("return-data", true);
-            startActivityForResult(cropIntent, PIC_CROP);
+    protected User getLocalUser(){
+        User user = userService.getLocalUser();
+        if(userService.isAvailable(user)){
+            return user;
         }
-        catch(ActivityNotFoundException e){
-            onCameraException(e);
-        }
+        Log.e("CompatActivity", "USER NOT FOUND");
+        logoutUser();
+        return user;
     }
 
-    protected void onCameraException(ActivityNotFoundException e){};
-
-    protected void openGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                getString(R.string.select_picture)), SELECT_PICTURE);
-    }
-
-    protected void openCamera() {
-        try{
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent,CAM_REQUEST);
-        }catch(ActivityNotFoundException e){
-            onCameraException(e);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            final Bundle extras = data.getExtras();
-            if (requestCode == CAM_REQUEST || requestCode == SELECT_PICTURE) {
-                //TODO FIX QUALITY OF BITMAP
-                openCrop(data.getData());
-            }else if(requestCode == PIC_CROP){
-                //TODO FIX QUALITY OF BITMAP
-                Bitmap thePic = extras.getParcelable("data");
-                onBitmapResult(thePic);
-            }
-        }
-    }
-
-    protected void onBitmapResult(Bitmap bitmap){
-
+    protected void logoutUser(){
+        sessionService.logout();
     }
 }
