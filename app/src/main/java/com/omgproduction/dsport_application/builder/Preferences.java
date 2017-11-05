@@ -72,4 +72,8 @@ public class Preferences {
         return sharedPreferences.getBoolean(key,defaultValue);
     }
 
+    public boolean isAvailable(String key){
+        return !getStringDetail(key, "UNKNOWN").equals("UNKNOWN");
+    }
+
 }

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/layout1"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingTop="8dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/image1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pinboard" />
+
+        <TextView
+            android:layout_toEndOf="@+id/image1"
+            android:text="@string/my_pinboard_more_fragment_string"
+            android:paddingStart="42dp"
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingTop="8dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/image2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_event" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/image2"
+            android:paddingStart="42dp"
+            android:singleLine="true"
+            android:text="@string/events_more_fragment_string"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layout3"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingTop="8dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/image3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_excercises" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/image3"
+            android:paddingStart="42dp"
+            android:singleLine="true"
+            android:text="@string/excercises_more_fragment_string"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout4"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingTop="8dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/image4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_exercise_unit" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/image4"
+            android:paddingStart="42dp"
+            android:singleLine="true"
+            android:text="@string/excercise_units_more_fragment_string"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout5"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingTop="8dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/image5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout_more_fragment"
+            android:tint="@color/colorPrimary"/>
+        <TextView
+            android:text="@string/logout_more_fragment_string"
+            android:paddingStart="42dp"
+            android:singleLine="true"
+            android:layout_toEndOf="@+id/image5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"  />
+    </RelativeLayout>
+
+</LinearLayout>

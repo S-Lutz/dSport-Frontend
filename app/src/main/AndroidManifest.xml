@@ -3,18 +3,19 @@
     package="com.omgproduction.dsport_application">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <uses-feature android:name="android.hardware.camera2.full"
-        android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
-        android:name=".controller.App"
+        android:name=".aaRefactored.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -23,19 +24,12 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAHcO3HcjndPyb3PnJIUQmgMmbfsVNIzZc" />
-
         <activity
             android:name=".activities.main.LoginActivity"
             android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.main.CreateExerciseActivity"
             android:screenOrientation="portrait" />
@@ -52,7 +46,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.main.ProfileActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.main.CreatePostActivity"
             android:screenOrientation="portrait" />
@@ -103,7 +98,52 @@
         <activity
             android:name=".activities.main.CreateWeightExerciseUnitActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".activities.main.CreateTimedExerciseUnitActivity"></activity>
+        <activity android:name=".activities.main.CreateTimedExerciseUnitActivity" />
+        <activity
+            android:name=".aaRefactored.activities.MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.LoginActivity"
+            android:label="@string/app_name"
+            android:noHistory="true"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.WelcomeActivity"
+            android:noHistory="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.FriendActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.FullImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.FriendsActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".aaRefactored.activities.SearchResultActivity"></activity>
     </application>
 
 </manifest>

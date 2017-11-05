@@ -36,26 +36,27 @@ import java.util.ArrayList;
 public class ConverterFactory implements ApplicationKeys {
 
     public static ResultConverter<JSONObject, User> createJsonToUserConverter() {
-        return new ResultConverter<JSONObject, User>() {
-            @Override
-            public User convert(JSONObject input) {
-                try {
-                    return new User(
-                            input.getString(APPLICATION_USER_USER_ID),
-                            input.getString(APPLICATION_USER_USERNAME),
-                            input.getString(APPLICATION_USER_EMAIL),
-                            input.getString(APPLICATION_USER_PICTURE),
-                            input.getString(APPLICATION_USER_FIRSTNAME),
-                            input.getString(APPLICATION_USER_LASTNAME),
-                            input.getString(APPLICATION_USER_CREATED),
-                            input.getString(APPLICATION_USER_AGBVERSION)
-                    );
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        };
+      // return new ResultConverter<JSONObject, User>() {
+      //     @Override
+      //     public User convert(JSONObject input) {
+      //         try {
+      //             return new User(
+      //                     input.getString(APPLICATION_USER_USER_ID),
+      //                     input.getString(APPLICATION_USER_USERNAME),
+      //                     input.getString(APPLICATION_USER_EMAIL),
+      //                     input.getString(APPLICATION_USER_PICTURE),
+      //                     input.getString(APPLICATION_USER_FIRSTNAME),
+      //                     input.getString(APPLICATION_USER_LASTNAME),
+      //                     input.getString(APPLICATION_USER_CREATED),
+      //                     input.getString(APPLICATION_USER_AGBVERSION)
+      //             );
+      //         } catch (JSONException e) {
+      //             e.printStackTrace();
+      //             return null;
+      //         }
+      //     }
+      // };
+        return null;
     }
 
     public static ResultConverter<JSONObject, Post> createJsonToPostConverter() {

@@ -2,23 +2,21 @@ package com.omgproduction.dsport_application.services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+import com.omgproduction.dsport_application.activities.main.LoginActivity;
+import com.omgproduction.dsport_application.builder.Preferences;
+import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
+import com.omgproduction.dsport_application.listeners.callbacks.BackendCallback;
+import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
+import com.omgproduction.dsport_application.models.backendModels.RegistrationNode;
+import com.omgproduction.dsport_application.models.backendModels.UserNode;
+import com.omgproduction.dsport_application.models.uploadModels.RegistrationUser;
+import com.omgproduction.dsport_application.utils.BackendRequestExecutor;
 import com.omgproduction.dsport_application.utils.JSONRequest;
 import com.omgproduction.dsport_application.utils.JSONResponse;
-import com.omgproduction.dsport_application.activities.main.LoginActivity;
-import com.omgproduction.dsport_application.builder.BackendRequest;
-import com.omgproduction.dsport_application.builder.Preferences;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
-import com.omgproduction.dsport_application.listeners.interfaces.IRequestFuture;
-import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.utils.ResultWrapper;
-import com.omgproduction.dsport_application.utils.ConverterFactory;
-
-import org.json.JSONObject;
+import com.omgproduction.dsport_application.utils.RouteGenerator;
 
 import java.net.MalformedURLException;
 
@@ -32,152 +30,15 @@ public class SessionService extends AbstractService{
         super(context);
     }
 
-    /**
-     * Register user with the Backend System
-     * @param username Users username
-     * @param firstname Users real firstname
-     * @param lastname Users real lastname
-     * @param email Users email-address
-     * @param password Users Password
-     * @param listener Listener to do something after recieve response
-     */
-    public void registerUser(String username, String firstname, final String lastname, String email, String password, final IRequestFuture<String> listener) {
-
-        try {
-            JSONRequest request = new JSONRequest(ROUTE_REGISTER)
-                    .addParam(APPLICATION_USER_USERNAME, username)
-                    .addParam(APPLICATION_USER_FIRSTNAME, firstname)
-                    .addParam(APPLICATION_USER_LASTNAME, lastname)
-                    .addParam(APPLICATION_USER_EMAIL, email)
-                    .addParam(APPLICATION_USER_PASSWORD, password)
-                    .setOnResultListener(new JSONRequest.OnResultListener() {
-                        @Override
-                        public void onResult(JSONResponse response) {
-                            listener.onFinishQuery();
-                            if(response.isOk()){
-                                listener.onSuccess(response.getString(APPLICATION_USER_USERNAME));
-                            }else {
-                                listener.onFailure(response.getResponseCode(), response.getResponseMessage());
-                            }
-                        }
-                    });
-            request.execute();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            listener.onFinishQuery();
-        }
-
-        //final BackendRequest requestBuilder = new BackendRequest(ROUTE_REGISTER)
-        //        .param(APPLICATION_USER_USERNAME, username)
-        //        .param(APPLICATION_USER_FIRSTNAME, firstname)
-        //        .param(APPLICATION_USER_LASTNAME, lastname)
-        //        .param(APPLICATION_USER_EMAIL, email)
-        //        .param(APPLICATION_USER_PASSWORD, password)
-        //        .responseListener(new Response.Listener<JSONObject>() {
-        //            @Override
-        //            public void onResponse(JSONObject jsonObject) {
-//
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
-//
-        //                if(result.isOk()){
-//
-        //                    String username = result.extractString(APPLICATION_USER_USERNAME);
-//
-//
-        //                    onResultListener.onFinishQuery();
-        //                    if(username == null){
-        //                        onResultListener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-        //                    }else {
-        //                        onResultListener.onSuccess(username);
-        //                    }
-        //                }else{
-        //                    onResultListener.onFinishQuery();
-        //                    onResultListener.onFailure(result.extractErrorCode());
-        //                }
-        //            }
-        //        })
-        //        .errorListener(new Response.ErrorListener() {
-        //            @Override
-        //            public void onErrorResponse(VolleyError volleyError) {
-        //                onResultListener.onFinishQuery();
-        //                onResultListener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-        //            }
-        //        });
-        //executeRequest(requestBuilder.build());
-
+    public void registerUser(final RegistrationUser registrationUser, final BackendCallback<RegistrationNode> callback){
+        BackendRequestExecutor.executePostRequest(RouteGenerator.createRegisterRoute(), RegistrationNode.class, registrationUser, callback);
     }
 
-    /**
-     * Login user with the Backend System
-     * @param username Users username
-     * @param password Users Password
-     * @param onResultListener Listener to do something after recieve response
-     */
-    public void validateUser(String username, String password, final IRequestFuture<User> onResultListener) {
-        onResultListener.onStartQuery();
 
-        final String token =
-                new Preferences(context).getStringDetail(APPLICATION_TOKEN,"");
-
-
-        try {
-            JSONRequest request = new JSONRequest(ROUTE_LOGIN)
-                    .addParam(APPLICATION_USER_USERNAME, username)
-                    .addParam(APPLICATION_USER_PASSWORD, password)
-                    .addParam(APPLICATION_TOKEN, token)
-                    .setOnResultListener(new JSONRequest.OnResultListener() {
-                        @Override
-                        public void onResult(JSONResponse response) {
-                            onResultListener.onFinishQuery();
-                            if(response.isOk()){
-                                onResultListener.onSuccess(response.getValue(ConverterFactory.createJsonToUserConverter()));
-                            }else {
-                                onResultListener.onFailure(response.getResponseCode(), response.getResponseMessage());
-                            }
-                        }
-                    });
-            request.execute();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            onResultListener.onFinishQuery();
-        }
-
-
-        //final BackendRequest requestBuilder = new BackendRequest(ROUTE_LOGIN)
-        //        .param(APPLICATION_USER_USERNAME, username)
-        //        .param(APPLICATION_USER_PASSWORD, password)
-        //        .param(APPLICATION_TOKEN, token)
-        //        .errorListener(new Response.ErrorListener() {
-        //            @Override
-        //            public void onErrorResponse(VolleyError volleyError) {
-        //                onResultListener.onFinishQuery();
-        //                onResultListener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-        //            }
-        //        })
-        //        .responseListener(new Response.Listener<JSONObject>() {
-        //            @Override
-        //            public void onResponse(JSONObject jsonObject) {
-//
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
-//
-        //                if(result.isOk()){
-        //                    User user = result.extractValue(ConverterFactory.createJsonToUserConverter());
-//
-        //                    onResultListener.onFinishQuery();
-        //                    if(user == null){
-        //                        onResultListener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-        //                    }else {
-        //                        onResultListener.onSuccess(user);
-        //                    }
-        //                }else{
-        //                    onResultListener.onFinishQuery();
-        //                    onResultListener.onFailure(result.extractErrorCode());
-        //                }
-        //            }
-        //        });
-//
-        //executeRequest(requestBuilder.build());
+    public void validateUser(final UserNode user, final BackendCallback<UserNode> callback) {
+        BackendRequestExecutor.executePostRequest(RouteGenerator.generateLoginRoute(), UserNode.class, user, callback);
     }
+
 
     public void saveLocalToken(final String token) {
         Preferences preferences = new Preferences(context);
@@ -204,16 +65,20 @@ public class SessionService extends AbstractService{
 
         discardToken(new RequestFuture<Void>());
 
+        //new Preferences(context).clear().commit();
+
         new Preferences(context)
                 .putBoolean(APPLICATION_IS_LOGIN, false)
-                .putString(APPLICATION_USER_USER_ID, "")
+                .putLong(APPLICATION_USER_USER_ID, -1)
                 .putString(APPLICATION_USER_USERNAME, "")
                 .putString(APPLICATION_USER_EMAIL, "")
                 .putString(APPLICATION_USER_FIRSTNAME, "")
                 .putString(APPLICATION_USER_LASTNAME,  "")
                 .putString(APPLICATION_USER_CREATED, "")
+                .putString(APPLICATION_USER_UPDATED, "")
                 .putString(APPLICATION_USER_AGBVERSION, "")
                 .putString(APPLICATION_USER_PICTURE, "")
+                .clear()
                 .commit();
 
         Intent i = new Intent(context, LoginActivity.class);
@@ -224,9 +89,9 @@ public class SessionService extends AbstractService{
         context.startActivity(i);
     }
 
-    public void discardToken(final IRequestFuture<Void> onResultListener){
+    public void discardToken(final IRequestFuture<Void> onResultListener) {
 
-        final String token = new Preferences(context).getStringDetail(APPLICATION_TOKEN,"");
+        final String token = new Preferences(context).getStringDetail(APPLICATION_TOKEN, "");
 
         onResultListener.onStartQuery();
 
@@ -237,9 +102,9 @@ public class SessionService extends AbstractService{
                         @Override
                         public void onResult(JSONResponse response) {
                             onResultListener.onFinishQuery();
-                            if(response.isOk()){
+                            if (response.isOk()) {
                                 onResultListener.onSuccess(null);
-                            }else {
+                            } else {
                                 onResultListener.onFailure(response.getResponseCode(), response.getResponseMessage());
                             }
                         }
@@ -249,31 +114,5 @@ public class SessionService extends AbstractService{
             e.printStackTrace();
             onResultListener.onFinishQuery();
         }
-
-        //BackendRequest requestBuilder = new BackendRequest(ROUTE_DISCARD_TOKEN)
-        //        .param(APPLICATION_TOKEN, token)
-        //        .errorListener(new Response.ErrorListener() {
-        //            @Override
-        //            public void onErrorResponse(VolleyError volleyError) {
-        //                onResultListener.onFinishQuery();
-        //                onResultListener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
-        //            }
-        //        })
-        //        .responseListener(new Response.Listener<JSONObject>() {
-        //            @Override
-        //            public void onResponse(JSONObject jsonObject) {
-//
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
-//
-        //                onResultListener.onFinishQuery();
-        //                if(result.isOk()){
-        //                    onResultListener.onSuccess(null);
-        //                }else{
-        //                    onResultListener.onFailure(result.extractErrorCode());
-        //                }
-        //            }
-        //        });
-//
-        //executeRequest(requestBuilder.build());
     }
 }

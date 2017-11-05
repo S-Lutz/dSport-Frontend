@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CheckedEditText">
+        <attr name="android:text"/>
+        <attr name="android:textColor"/>
+        <attr name="android:maxLines"/>
+        <attr name="android:inputType"/>
+    </declare-styleable>
+</resources>

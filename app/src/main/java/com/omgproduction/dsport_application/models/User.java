@@ -15,9 +15,10 @@ import java.io.Serializable;
  */
 
 public class User  implements Serializable {
-    private String id, username, email, picture, firstname, lastname, created, agbversion, password = "";
+    private Long  id;
+    private String username, email, picture, firstname, lastname, created, updated, agbversion, password = "";
 
-    public User(String id, String username, String email, String picture, String firstname, String lastname, String created, String agbversion) {
+    public User(Long id, String username, String email, String picture, String firstname, String lastname, String created, String updated, String agbversion) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -25,6 +26,7 @@ public class User  implements Serializable {
         this.firstname = firstname;
         this.lastname = lastname;
         this.created = created;
+        this.updated = updated;
         this.agbversion = agbversion;
     }
 
@@ -37,8 +39,12 @@ public class User  implements Serializable {
     }
 
     public String getId() {
-        return id;
+        return "0";
     }
+
+   //public Long getId() {
+   //    return id;
+   //}
 
     public String getUsername() {
         return username;
@@ -66,5 +72,9 @@ public class User  implements Serializable {
 
     public String getAgbversion() {
         return agbversion;
+    }
+
+    public String getUpdated() {
+        return updated;
     }
 }

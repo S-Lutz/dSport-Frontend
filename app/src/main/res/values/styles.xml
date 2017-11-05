@@ -1,11 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppTheme.Base">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
     </style>
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+
+
+    <style name="AppTheme.Base" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -16,6 +23,22 @@
     <style name="AppTheme.AppBarOverlay" parent="AppTheme.Base" />
 
     <style name="AppTheme.PopupOverlay" parent="AppTheme.Base" />
+
+
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme.Base">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="AppTheme.ActionBar" parent="AppTheme.Base">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+
 
     <style name="header" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">#000000</item>

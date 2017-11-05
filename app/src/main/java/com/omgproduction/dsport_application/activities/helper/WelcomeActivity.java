@@ -2,13 +2,11 @@ package com.omgproduction.dsport_application.activities.helper;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.activities.main.LoginActivity;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
 import com.omgproduction.dsport_application.config.IntentKeys;
 
 public class WelcomeActivity extends Activity implements IntentKeys{
@@ -18,7 +16,7 @@ public class WelcomeActivity extends Activity implements IntentKeys{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_activity_welcome);
+        setContentView(R.layout.new_activity_welcome);
 
 
         Intent i = getIntent();

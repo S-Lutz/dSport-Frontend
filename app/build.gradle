@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.omgproduction.dsport_application"
@@ -10,7 +10,7 @@ android {
         targetSdkVersion 24
         versionCode 11
         versionName "1.1.1"
-        multiDexEnabled = true
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -18,20 +18,34 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+    }
 }
 
 dependencies {
+    compile 'com.google.firebase:firebase-messaging:11.4.2'
+    compile 'com.google.android.gms:play-services:11.4.2'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/volley.jar')
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:recyclerview-v7:24.2.1'
-    compile 'com.android.support:cardview-v7:24.2.1'
-    compile 'com.google.firebase:firebase-messaging:10.2.0'
-    compile 'com.google.android.gms:play-services:10.2.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.android.support:cardview-v7:25.4.0'
     compile 'com.google.api-client:google-api-client:1.22.0'
-    compile 'com.squareup.okhttp3:okhttp:3.2.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+    compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
+    //libary for multipart data
+    implementation 'org.apache.httpcomponents:httpmime:4.3.1'
+
+    //image loading libary Glide
+    compile 'com.github.bumptech.glide:glide:4.2.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
 }

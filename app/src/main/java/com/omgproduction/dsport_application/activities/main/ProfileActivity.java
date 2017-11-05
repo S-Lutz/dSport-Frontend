@@ -306,7 +306,7 @@ public class ProfileActivity extends AbstractNavigationActivity implements Camer
 
         String bitmapString = BitmapUtils.getStringFromBitmap(thePic);
 
-        userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), bitmapString, user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
+        userService.saveUser(new User(Long.valueOf(user.getId()),user.getUsername(), user.getEmail(), bitmapString, user.getFirstname(), user.getLastname(), user.getCreated(), user.getUpdated(), user.getAgbversion()), new RequestFuture<User>(){
 
             @Override
             public void onStartQuery() {
@@ -338,7 +338,8 @@ public class ProfileActivity extends AbstractNavigationActivity implements Camer
     private void saveEmail(final String email) {
         User user = getLocalUser();
 
-        userService.saveUser(new User(user.getId(),user.getUsername(), email, user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
+        //userService.saveUser(new User(user.getId(),user.getUsername(), email, user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
+        userService.saveUser(new User(Long.valueOf(user.getId()),user.getUsername(), email, user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getUpdated(), user.getAgbversion()), new RequestFuture<User>(){
             @Override
             public void onStartQuery() {
                 removeInputError(R.id.profile_email_input_layout);
@@ -371,143 +372,143 @@ public class ProfileActivity extends AbstractNavigationActivity implements Camer
 
     private void saveFirstname(final String firstname) {
 
-        User user = getLocalUser();
-
-        userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), firstname, user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
-            @Override
-            public void onStartQuery() {
-                removeInputError(R.id.profile_firstname_input_layout);
-                showProgressBar(true);
-            }
-
-            @Override
-            public void onSuccess(User user) {
-                setText(R.id.profile_firstname_text,user.getFirstname());
-                setText(R.id.profile_firstname_input,"");
-                showFirstname(false);
-            }
-
-            @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        saveFirstname(firstname);
-                    }
-                });
-            }
-
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
+       // User user = getLocalUser();
+//
+       // userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), firstname, user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
+       //     @Override
+       //     public void onStartQuery() {
+       //         removeInputError(R.id.profile_firstname_input_layout);
+       //         showProgressBar(true);
+       //     }
+//
+       //     @Override
+       //     public void onSuccess(User user) {
+       //         setText(R.id.profile_firstname_text,user.getFirstname());
+       //         setText(R.id.profile_firstname_input,"");
+       //         showFirstname(false);
+       //     }
+//
+       //     @Override
+       //     public void onFailure(int errorCode,String errorMessage) {
+       //         printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
+       //             @Override
+       //             public void onClick(View view) {
+       //                 saveFirstname(firstname);
+       //             }
+       //         });
+       //     }
+//
+       //     @Override
+       //     public void onFinishQuery() {
+       //         showProgressBar(false);
+       //     }
+       // });
     }
 
     private void saveLastname(final String lastname) {
         User user = getLocalUser();
 
-        userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), user.getFirstname(), lastname, user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
-            @Override
-            public void onStartQuery() {
-                removeInputError(R.id.profile_lastname_input_layout);
-                showProgressBar(true);
-            }
+       //userService.saveUser(new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), user.getFirstname(), lastname, user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
+       //    @Override
+       //    public void onStartQuery() {
+       //        removeInputError(R.id.profile_lastname_input_layout);
+       //        showProgressBar(true);
+       //    }
 
-            @Override
-            public void onSuccess(User user) {
-                setText(R.id.profile_lastname_text,user.getLastname());
-                setText(R.id.profile_lastname_input,"");
-                showLastname(false);
-            }
+       //    @Override
+       //    public void onSuccess(User user) {
+       //        setText(R.id.profile_lastname_text,user.getLastname());
+       //        setText(R.id.profile_lastname_input,"");
+       //        showLastname(false);
+       //    }
 
-            @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        saveLastname(lastname);
-                    }
-                });
-            }
+       //    @Override
+       //    public void onFailure(int errorCode,String errorMessage) {
+       //        printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
+       //            @Override
+       //            public void onClick(View view) {
+       //                saveLastname(lastname);
+       //            }
+       //        });
+       //    }
 
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
+       //    @Override
+       //    public void onFinishQuery() {
+       //        showProgressBar(false);
+       //    }
+       //});
     }
 
     private void savePassword(final String password) {
-        User user = getLocalUser();
-
-        user = new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion());
-        user.setPassword(password);
-        userService.saveUser(user, new RequestFuture<User>(){
-            @Override
-            public void onStartQuery() {
-                showProgressBar(true);
-                removeInputError(R.id.profile_password_input_layout);
-                removeInputError(R.id.profile_password_confirm_input_layout);
-            }
-
-            @Override
-            public void onSuccess(User user) {
-                showPassword(false);
-                setText(R.id.profile_password_input1,"");
-                setText(R.id.profile_password_input2,"");
-            }
-
-            @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        savePassword(password);
-                    }
-                });
-            }
-
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
+       // User user = getLocalUser();
+//
+       // user = new User(user.getId(),user.getUsername(), user.getEmail(), user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion());
+       // user.setPassword(password);
+       // userService.saveUser(user, new RequestFuture<User>(){
+       //     @Override
+       //     public void onStartQuery() {
+       //         showProgressBar(true);
+       //         removeInputError(R.id.profile_password_input_layout);
+       //         removeInputError(R.id.profile_password_confirm_input_layout);
+       //     }
+//
+       //     @Override
+       //     public void onSuccess(User user) {
+       //         showPassword(false);
+       //         setText(R.id.profile_password_input1,"");
+       //         setText(R.id.profile_password_input2,"");
+       //     }
+//
+       //     @Override
+       //     public void onFailure(int errorCode,String errorMessage) {
+       //         printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
+       //             @Override
+       //             public void onClick(View view) {
+       //                 savePassword(password);
+       //             }
+       //         });
+       //     }
+//
+       //     @Override
+       //     public void onFinishQuery() {
+       //         showProgressBar(false);
+       //     }
+       // });
 
     }
 
     private void saveUsername(final String username) {
-        User user = getLocalUser();
-
-        userService.saveUser(new User(user.getId(),username, user.getEmail(), user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
-            @Override
-            public void onStartQuery() {
-                removeInputError(R.id.profile_username_input_layout);
-                showProgressBar(true);
-            }
-
-            @Override
-            public void onSuccess(User user) {
-                setText(R.id.profile_username_text,user.getUsername());
-                setText(R.id.profile_username_input,"");
-                showUsername(false);
-            }
-
-            @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        saveUsername(username);
-                    }
-                });
-            }
-
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
+       // User user = getLocalUser();
+//
+       // userService.saveUser(new User(user.getId(),username, user.getEmail(), user.getPicture(), user.getFirstname(), user.getLastname(), user.getCreated(), user.getAgbversion()), new RequestFuture<User>(){
+       //     @Override
+       //     public void onStartQuery() {
+       //         removeInputError(R.id.profile_username_input_layout);
+       //         showProgressBar(true);
+       //     }
+//
+       //     @Override
+       //     public void onSuccess(User user) {
+       //         setText(R.id.profile_username_text,user.getUsername());
+       //         setText(R.id.profile_username_input,"");
+       //         showUsername(false);
+       //     }
+//
+       //     @Override
+       //     public void onFailure(int errorCode,String errorMessage) {
+       //         printError(R.id.profile_container, errorMessage, R.string.retry, new View.OnClickListener() {
+       //             @Override
+       //             public void onClick(View view) {
+       //                 saveUsername(username);
+       //             }
+       //         });
+       //     }
+//
+       //     @Override
+       //     public void onFinishQuery() {
+       //         showProgressBar(false);
+       //     }
+       // });
 
     }
 
@@ -699,6 +700,7 @@ public class ProfileActivity extends AbstractNavigationActivity implements Camer
     public void onCameraResult(Bitmap bitmap, File file) {
         savePicture(bitmap);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode == RESULT_OK){

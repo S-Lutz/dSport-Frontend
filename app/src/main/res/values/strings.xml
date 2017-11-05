@@ -1,23 +1,6 @@
 <resources>
     <string name="app_name">dSport</string>
 
-
-    <!-- Login and Register-->
-    <string name="hint_username">Username</string>
-    <string name="hint_username_email">Username/Email</string>
-    <string name="hint_email">Email</string>
-    <string name="hint_password">Password</string>
-    <string name="btn_sign_up">Login</string>
-    <string name="hint_password_confirm">Confirm Password</string>
-    <string name="hint_firstname">First Name</string>
-    <string name="hint_lastname">Last Name</string>
-    <string name="signup_link">Already a Member? Login here!</string>
-    <string name="btn_register">Sign In</string>
-    <string name="agb_link">Click here to read the AGB</string>
-    <string name="agb_accept">Accept the AGB</string>
-    <string name="registration_header">Registration</string>
-    <string name="login_header">Login</string>
-
     <!--Universal-Strings-->
     <string name="retry">Retry</string>
     <string name="agb">AGB</string>
@@ -136,6 +119,26 @@
     <string name="create_new_exercise">Create new Exercise</string>
     <string name="start_timed_set">Start timed Set</string>
     <string name="stop_timed_set">Stop timed Set</string>
+    <string name="required">This field is required</string>
+    <string name="invalid_email">The email address you use is not valid!</string>
+    <string name="fields_missmatch">Fields must match</string>
+    <string name="SignInLoadingMessage">Signing in</string>
+    <string name="RegistrationLinkText">Not a Member? Create your own Account!</string>
+    <string name="nav_settings">More</string>
+    <string name="bottomnav_title_0">Test</string>
+    <string name="ChangeProfileMsg">Changing your account information</string>
+    <string name="search_hint">Search</string>
+    <string name="search_result_string">Searching</string>
+    <string name="user_result_header_string">User</string>
+    <string name="event_result_header_string">Events</string>
+    <string name="post_result_header_string">Posts</string>
+    <string name="friend_requests_header_string">Friend requests</string>
+    <string name="friends_header_string">Friends</string>
+    <string name="logout_more_fragment_string">Logout</string>
+    <string name="excercise_units_more_fragment_string">Excercise Units</string>
+    <string name="excercises_more_fragment_string">Excercises</string>
+    <string name="events_more_fragment_string">Events</string>
+    <string name="my_pinboard_more_fragment_string">My Pinboard</string>
     <string-array name="exercise_type_array">
         <item>Weight</item>
         <item>Distance</item>

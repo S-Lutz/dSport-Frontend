@@ -73,7 +73,7 @@ public class BackendRequest implements Response.Listener<JSONObject>, Response.E
 
     public JsonObjectRequest build(){
 
-        Log.e("BUILD REQUEST",url);
+        Log.e("BUILD REQUESTED",url);
 
         request = new JsonObjectRequest(method,url, jsonObject,this, this){
             @Override

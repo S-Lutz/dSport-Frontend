@@ -140,7 +140,8 @@ public abstract class AbstractFragmentActivity extends FragmentActivity implemen
     }
 
     protected User getLocalUser(){
-        User user = userService.getLocalUser();
+        User user = new User(null,"","","","","","","","");
+
         if(userService.isAvailable(user)){
             return user;
         }

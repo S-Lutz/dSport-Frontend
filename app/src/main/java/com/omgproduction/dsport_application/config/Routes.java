@@ -5,11 +5,12 @@ package com.omgproduction.dsport_application.config;
  */
 
 public interface Routes {
-    String ROUTE_HOST = "http://5.189.141.187:9000";
+    //String ROUTE_HOST = "http://5.189.141.187:9000";
     //String ROUTE_HOST = "http://5.189.141.187:9001";
+    String ROUTE_HOST = "https://daily-sport.de:8002";
     String ROUTE_HOME = "/dsport";
-    String ROUTE_LOGIN = ROUTE_HOST + ROUTE_HOME +"/users/login";
-    String ROUTE_REGISTER = ROUTE_HOST + ROUTE_HOME +"/users/signup";
+    String ROUTE_LOGIN = ROUTE_HOST +"/login";
+    String ROUTE_REGISTER = ROUTE_HOST +"/registration";
     String ROUTE_GET_USER = ROUTE_HOST + ROUTE_HOME +"/users/get";
     String ROUTE_EDIT_USER = ROUTE_HOST + ROUTE_HOME +"/users/edit";
     String ROUTE_GET_POSTS = ROUTE_HOST + ROUTE_HOME +"/posts/getAll";

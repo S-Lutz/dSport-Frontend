@@ -83,16 +83,15 @@ public abstract class AbstractFragment extends Fragment implements SwipeRefreshL
     }
 
     protected User getLocalUser(){
-        User user = userService.getLocalUser();
+        User user = new User(null,"","","","","","","","");
+
         if(userService.isAvailable(user)){
             return user;
         }
-        Log.e("Fragment", "USER NOT FOUND");
+        Log.e("FragmentActivity", "USER NOT FOUND");
         logoutUser();
         return user;
     }
-
-
 
     protected void logoutUser(){
         sessionService.logout();

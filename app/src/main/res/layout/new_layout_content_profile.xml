@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    tools:context="com.omgproduction.dsport_application.aaRefactored.activities.ProfileActivity"
+    tools:showIn="@layout/new_layout_activity_profile">
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical">
+
+        <!--USERNAME START-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingRight="16dp"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/new_profile_username_edit"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:alpha="0.74"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_profile" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/new_profile_username_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="Max Mustermann"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="@string/hint_username"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:alpha="0.74"
+                    android:src="@drawable/ic_edit" />
+
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/new_profile_username_input_container"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="56dp"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="56dp"
+                    android:id="@+id/new_profile_username_input_layout"
+                    android:layout_height="wrap_content">
+                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                        android:layout_width="match_parent"
+                        android:id="@+id/new_profile_username_input"
+                        android:maxLines="1"
+                        android:maxLength="20"
+                        android:inputType="textPersonName|textAutoComplete"
+                        android:hint="@string/new_username_hint"
+                        android:layout_height="wrap_content" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/new_profile_username_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@color/colorOkFab"
+                    android:layout_gravity="right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_ok" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--USERNAME END-->
+
+
+
+        <!--FIRSTNAME START-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingRight="16dp"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/new_profile_firstname_edit"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:alpha="0.74"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_passboard" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/new_profile_firstname_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="Max"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="@string/hint_firstname"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:alpha="0.74"
+                    android:src="@drawable/ic_edit" />
+
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/new_profile_firstname_input_container"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="56dp"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="56dp"
+                    android:id="@+id/new_profile_firstname_input_layout"
+                    android:layout_height="wrap_content">
+                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                        android:layout_width="match_parent"
+                        android:id="@+id/new_profile_firstname_input"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textAutoComplete"
+                        android:hint="@string/new_firstname_hint"
+                        android:layout_height="wrap_content" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/new_profile_firstname_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@color/colorOkFab"
+                    android:layout_gravity="right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_ok" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--FIRSTNAME END-->
+
+
+
+        <!--LASTNAME START-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingRight="16dp"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/new_profile_lastname_edit"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:alpha="0.74"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_passboard" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/new_profile_lastname_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="Mustermann"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="@string/hint_lastname"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:alpha="0.74"
+                    android:src="@drawable/ic_edit" />
+
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/new_profile_lastname_input_container"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="56dp"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="56dp"
+                    android:id="@+id/new_profile_lastname_input_layout"
+                    android:layout_height="wrap_content">
+                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                        android:layout_width="match_parent"
+                        android:id="@+id/new_profile_lastname_input"
+                        android:maxLines="1"
+                        android:inputType="textPersonName|textAutoComplete"
+                        android:hint="@string/new_lastname_hint"
+                        android:layout_height="wrap_content" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/new_profile_lastname_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@color/colorOkFab"
+                    android:layout_gravity="right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_ok" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--LASTNAME END-->
+
+
+
+        <!--EMAIL START-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingRight="16dp"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/new_profile_email_edit"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:alpha="0.74"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_mail" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/new_profile_email_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="MaxMustermann@dsport.de"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="@string/hint_email"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:alpha="0.74"
+                    android:src="@drawable/ic_edit" />
+
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/new_profile_email_input_container"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="56dp"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="56dp"
+                    android:id="@+id/new_profile_email_input_layout"
+                    android:layout_height="wrap_content">
+                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                        android:layout_width="match_parent"
+                        android:maxLines="1"
+                        android:id="@+id/new_profile_email_input"
+                        android:inputType="textEmailAddress|textAutoComplete"
+                        android:hint="@string/new_email_hint"
+                        android:layout_height="wrap_content" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/new_profile_email_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@color/colorOkFab"
+                    android:layout_gravity="right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_ok" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--EMAIL END-->
+
+
+
+        <!--PASSWORD START-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:paddingLeft="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingRight="16dp"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/new_profile_password_edit"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:alpha="0.74"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_lock" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/new_profile_password_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="@string/hint_password"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="56dp"
+                        android:text="@string/hint_password"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="#727272" />
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:alpha="0.74"
+                    android:src="@drawable/ic_edit" />
+
+            </RelativeLayout>
+            <android.support.v4.widget.ContentLoadingProgressBar
+                style="@style/Base.Widget.AppCompat.ProgressBar"
+                android:layout_width="match_parent"
+                android:id="@+id/new_progress_bar_password"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone" />
+            <LinearLayout
+                android:id="@+id/new_profile_password_input_container"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="56dp"
+                android:visibility="gone"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="56dp"
+                    android:id="@+id/new_profile_password_input_layout"
+                    android:layout_height="wrap_content">
+                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                        android:id="@+id/new_profile_password_input1"
+                        android:layout_width="match_parent"
+                        android:maxLines="1"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/new_password_hint"
+                        android:inputType="textPassword" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginRight="56dp"
+                    android:id="@+id/profile_password_confirm_input_layout"
+                    android:layout_height="wrap_content">
+                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                        android:id="@+id/new_profile_password_input2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/confirm_new_password_hint"
+                        android:inputType="textPassword" />
+                </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/new_profile_password_confirm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:backgroundTint="@color/colorOkFab"
+                    android:layout_gravity="right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_ok" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--PASSWORD END-->
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

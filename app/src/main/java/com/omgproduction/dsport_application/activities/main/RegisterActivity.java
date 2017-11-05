@@ -3,19 +3,19 @@ package com.omgproduction.dsport_application.activities.main;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.omgproduction.dsport_application.aaRefactored.views.LoadingView;
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText;
 import com.omgproduction.dsport_application.activities.helper.WelcomeActivity;
-import com.omgproduction.dsport_application.config.ApplicationKeys;
-import com.omgproduction.dsport_application.config.ConnectionErrorCodes;
-import com.omgproduction.dsport_application.config.LocalErrorCodes;
-import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
-import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
-import com.omgproduction.dsport_application.utils.StringUtils;
+import com.omgproduction.dsport_application.services.SessionService;
+
+import static com.omgproduction.dsport_application.config.IntentKeys.INTENT_USERNAME;
 
 /**
  * Created by Florian on 17.10.2016.
@@ -31,22 +31,28 @@ import com.omgproduction.dsport_application.utils.StringUtils;
  * Password_confirm
  * Accept AGB
  */
-public class RegisterActivity extends AbstractFragmentActivity implements ConnectionErrorCodes{
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
 
+    private SessionService sessionService;
+    private LoadingView loadingView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setRefresher((SwipeRefreshLayout)findViewById(R.id.register_refresher));
-
+        setContentView(R.layout.new_activity_register);
         findViewById(R.id.signup_link).setOnClickListener(this);
         findViewById(R.id.btn_register).setOnClickListener(this);
+
+        sessionService = new SessionService(this);
+
+        loadingView  = (LoadingView) findViewById(R.id.loading_view);
+        //loadingView.hide();
 
         Intent i = getIntent();
         String username;
         if((username = i.getStringExtra(INTENT_USERNAME))!=null){
-            ((EditText)findViewById(R.id.register_username)).setText(username);
+            ((CheckedEditText)findViewById(R.id.register_username)).setText(username);
         }
     }
 
@@ -78,95 +84,55 @@ public class RegisterActivity extends AbstractFragmentActivity implements Connec
      * Use this Method to Register an User
      */
     private void registerUser() {
-        removeAllErrors();
 
         //Save User-Input in String values
-        String username = ((EditText)findViewById(R.id.register_username)).getText().toString();
-        String email = ((EditText)findViewById(R.id.register_email)).getText().toString();
-        String firstname = ((EditText)findViewById(R.id.register_firstname)).getText().toString();
-        String lastname = ((EditText)findViewById(R.id.register_lastname)).getText().toString();
-        String password_1 = ((EditText)findViewById(R.id.register_password)).getText().toString();
-        String password_2 = ((EditText)findViewById(R.id.register_password_confirm)).getText().toString();
-        boolean accepted = ((CheckBox) findViewById(R.id.cb_agb)).isChecked();
-
         //Check if Username is Empty. Show Error below the Input-Field
-        if(username.trim().isEmpty()){
-            printInputError(R.id.register_layout_username, FIELD_EMPTY_ERROR);
-            return;
-        }
-        //Check if Firstname is Empty. Show Error below the Input-Field
-        if(firstname.trim().isEmpty()){
-            printInputError(R.id.register_layout_firstname, FIELD_EMPTY_ERROR);
-            return;
-        }
-        //Check if Lastname is Empty. Show Error below the Input-Field
-        if(lastname.trim().isEmpty()){
-            printInputError(R.id.register_layout_lastname, FIELD_EMPTY_ERROR);
-            return;
-        }
-        //Check if Email is Empty. Show Error below the Input-Field
-        if(email.trim().isEmpty()) {
-            printInputError(R.id.register_layout_email, FIELD_EMPTY_ERROR);
-            return;
-        }
-        //Check if Password 1 is Empty. Show Error below the Input-Field
-        if(password_1.trim().isEmpty()){
-            printInputError(R.id.register_layout_password, FIELD_EMPTY_ERROR);
-            return;
-        }
-        //Check if Password 2 is Empty. Show Error below the Input-Field
-        if(password_2.trim().isEmpty()){
-            printInputError(R.id.register_layout_password_confirm, FIELD_EMPTY_ERROR);
-            return;
-        }
-        //Check if Password 1 equals Password 2. Show Error below the Input-Field
-        if(!password_1.equals(password_2)){
-            printInputError(R.id.register_layout_password, FIELD_EMPTY_ERROR);
-            printInputError(R.id.register_layout_password_confirm, FIELD_EMPTY_ERROR);
-            return;
-        }
-        //Check if AGB is Accepted. Show Error in Snackbar
-        if(!accepted){
-            printError(R.id.register_layout, ACCEPT_AGB_ERROR);
-            return;
-        }
-        //Check if Email is valid. Show Error below the Input-Field
-        if(!StringUtils.isValidEmail(email)){
-            printInputError(R.id.register_layout_email, INVALID_EMAIL_ERROR);
-            return;
-        }
 
-        //Show Progressbar
-        showProgressBar(true);
+
+        CheckedEditText usernameET = (CheckedEditText) findViewById(R.id.register_username);
+        if(!usernameET.checkRequired())  return;
+
+        //Check if Firstname is Empty. Show Error below the Input-Field
+        CheckedEditText firstnameET = (CheckedEditText) findViewById(R.id.register_firstname);
+        if(!firstnameET.checkRequired())  return;
+
+        //Check if Lastname is Empty. Show Error below the Input-Field
+        CheckedEditText lastnameET = (CheckedEditText) findViewById(R.id.register_lastname);
+        if(!lastnameET.checkRequired())  return;
+
+        //Check if Email is Empty. Show Error below the Input-Field
+        CheckedEditText emailET = (CheckedEditText) findViewById(R.id.register_email);
+        if(!emailET.checkRequired() || !emailET.checkEmail())  return;
+
+
+        CheckedEditText password_1ET = (CheckedEditText) findViewById(R.id.register_password);
+        CheckedEditText password_2ET = (CheckedEditText) findViewById(R.id.register_password_confirm);
+
+        if(!password_1ET.checkRequired() || !password_2ET.checkRequired() || !password_1ET.checkContentEquals(password_2ET)) return;
+
+
+
+        CheckBox agbCB = (CheckBox) findViewById(R.id.cb_agb);
+        if(!agbCB.isChecked()){
+            Toast.makeText(this, "Please read the AGB and accept it to go on!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         //Process Registration with Backend-Server
-        sessionService.registerUser(username, firstname, lastname, email, password_1, new RequestFuture<String>(){
-            @Override
-            public void onStartQuery() {
-                showProgressBar(true);
-                removeAllErrors();
-            }
-
-            @Override
-            public void onSuccess(String result) {
-                startWelcomeActivity(result);
-            }
-
-            @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                switch (errorCode){
-                    //case USERNAME_ALREADY_EXISTS_ERROR: printInputError(R.id.register_layout_username,errorMessage); break;
-                    //case EMAIL_ALREADY_EXISTS_ERROR: printInputError(R.id.register_layout_email,errorMessage); break;
-                    //On any other Error print Universal-Error e0
-                    default: printError(R.id.register_layout, LocalErrorCodes.SOMETHING_WENT_WRONG_ERROR);
-                }
-            }
-
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
+        loadingView.show();
+        //sessionService.registerUser(new RegistrationUser(usernameET.getTextString(), emailET.getTextString(), firstnameET.getTextString(), lastnameET.getTextString(), password_1ET.getTextString()), new BackendCallback<RegistrationNode>() {
+        //    @Override
+        //    public void onSuccess(RegistrationNode result, Map<String, String> responseHeader) {
+        //        loadingView.hide();
+        //        startWelcomeActivity(result.getUsername());
+        //    }
+//
+        //    @Override
+        //    public void onFailure(ErrorResponse error) {
+        //        loadingView.hide();
+        //        Toast.makeText(RegisterActivity.this,error.getErrorMessage(), Toast.LENGTH_SHORT).show();
+        //    }
+        //});
     }
 
     private void startWelcomeActivity(String username) {
@@ -178,27 +144,10 @@ public class RegisterActivity extends AbstractFragmentActivity implements Connec
         startActivity(i);
     }
 
-    protected void removeAllErrors(){
-        removeInputError(R.id.register_layout_firstname);
-        removeInputError(R.id.register_layout_lastname);
-        removeInputError(R.id.register_layout_password);
-        removeInputError(R.id.register_layout_password_confirm);
-        removeInputError(R.id.register_layout_username);
-        removeInputError(R.id.register_layout_email);
-    }
-
-    @Override
-    public int getLayout() {
-        return R.layout.layout_activity_register;
-    }
-
     @Override
     public void onBackPressed() {
         startLoginActivity(this);
     }
 
-    @Override
-    public void onRefresh() {
 
-    }
 }

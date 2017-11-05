@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_profile_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".aaRefactored.activities.MainActivity">
+
+    <include
+        android:id="@+id/toolbar_layout"
+        layout="@layout/new_layout_profile_toolbar" />
+
+
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/new_profile_refresher"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <include
+            android:id="@+id/new_contentPanel"
+            layout="@layout/new_layout_content_profile" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/profile_edit_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_edit"
+        app:layout_anchor="@id/toolbar_layout"
+        app:layout_anchorGravity="bottom|end"
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/profile_edit_fab_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_camera"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorSubFab1"
+        app:layout_anchor="@id/profile_edit_fab"
+        app:layout_anchorGravity="bottom"
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/profile_edit_fab_gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_gallery"
+        android:visibility="invisible"
+        app:backgroundTint="@color/colorSubFab2"
+        app:layout_anchor="@id/profile_edit_fab_camera"
+        app:layout_anchorGravity="bottom|end"
+        app:pressedTranslationZ="12dp"
+        app:useCompatPadding="true" />
+
+    <com.omgproduction.dsport_application.aaRefactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/loading_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:message="@string/ChangeProfileMsg" />
+
+</android.support.design.widget.CoordinatorLayout>
+
+

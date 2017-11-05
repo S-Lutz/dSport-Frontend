@@ -13,7 +13,7 @@
         Request failed:
         {
             "error":"ERROR",
-            "value":errorCode
+            "value":statusCode
         }
     -->
     <!-- Errors e0 - e299 Internal-->

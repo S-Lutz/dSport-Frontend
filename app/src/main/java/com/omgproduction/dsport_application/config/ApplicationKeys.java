@@ -7,7 +7,7 @@ package com.omgproduction.dsport_application.config;
 public interface ApplicationKeys {
     String APPLICATION_IS_LOGIN = "IsLoggedIn";
 
-
+    String APPLICATION_USER_JWT_TOKEN = "jwt";
     String APPLICATION_USER_USER_ID = "user_id";
     String APPLICATION_USER_USERNAME = "username";
     String APPLICATION_USER_FIRSTNAME = "firstname";
@@ -15,6 +15,7 @@ public interface ApplicationKeys {
     String APPLICATION_USER_EMAIL = "email";
     String APPLICATION_USER_PASSWORD = "password";
     String APPLICATION_USER_CREATED = "created";
+    String APPLICATION_USER_UPDATED = "updated";
     String APPLICATION_USER_AGBVERSION = "agbversion";
     String APPLICATION_USER_AGB_ACCEPTED = "agb_accepted";
     String APPLICATION_USER_HASH = "hash";

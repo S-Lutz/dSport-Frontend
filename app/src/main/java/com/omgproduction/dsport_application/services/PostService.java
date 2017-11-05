@@ -57,12 +57,12 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //BackendRequest request = new BackendRequest(ROUTE_GET_POSTS)
+        //BackendRequest request = BackendModels BackendRequest(ROUTE_GET_POSTS)
         //        .param(APPLICATION_USER_USER_ID,localUserID)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
 //
         //                if(result.isOk()){
         //                    List<Post> posts = result.extractArray(ConverterFactory.createJsonToPostConverter(), APPLICATION_POSTS);
@@ -79,7 +79,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -116,15 +116,15 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //BackendRequest request = new BackendRequest(ROUTE_GET_PINBOARD)
+        //BackendRequest request = BackendModels BackendRequest(ROUTE_GET_PINBOARD)
         //        .param(APPLICATION_USER_USER_ID,localUserID)
         //        .param(APPLICATION_POST_OWNER_ID,ownerUserID)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
         //                listener.onFinishQuery();
 //
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
 //
         //                if(result.isOk()){
         //                    List<Post> posts = result.extractArray(ConverterFactory.createJsonToPostConverter(), APPLICATION_POSTS);
@@ -141,7 +141,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -181,16 +181,16 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //final BackendRequest request = new BackendRequest(ROUTE_CREATE_POST)
+        //final BackendRequest request = BackendModels BackendRequest(ROUTE_CREATE_POST)
         //        .param(APPLICATION_USER_USER_ID, localUserID)
         //        .param(APPLICATION_POST_OWNER_ID, pinboardOwnerID)
         //        .param(APPLICATION_POST_TEXT, text)
         //        .param(APPLICATION_POST_TITLE, title)
         //        .param(APPLICATION_POST_PICTURE, picture)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
-        //                ResultWrapper result = new ResultWrapper(context,  jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context,  jsonObject);
 //
         //                listener.onFinishQuery();
         //                if(result.isOk()){
@@ -200,7 +200,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -234,14 +234,14 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //BackendRequest request = new BackendRequest(ROUTE_GET_COMMENTS)
+        //BackendRequest request = BackendModels BackendRequest(ROUTE_GET_COMMENTS)
         //        .param(APPLICATION_POST_POST_ID,postID)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
         //                listener.onFinishQuery();
 //
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
 //
         //                if(result.isOk()){
 //
@@ -259,7 +259,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -294,14 +294,14 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //BackendRequest request = new BackendRequest(ROUTE_LIKE_POST)
+        //BackendRequest request = BackendModels BackendRequest(ROUTE_LIKE_POST)
         //        .param(APPLICATION_POST_POST_ID,post_id)
         //        .param(APPLICATION_USER_USER_ID, localUserID)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
 //
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
 //
         //                if(result.isOk()){
         //                    LikeResult likeResult = result.extractValue(ConverterFactory.createJsonToPostLikeResultConverter());
@@ -319,7 +319,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -354,15 +354,15 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //BackendRequest request = new BackendRequest(ROUTE_LIKE_COMMENT)
+        //BackendRequest request = BackendModels BackendRequest(ROUTE_LIKE_COMMENT)
         //        .param(APPLICATION_COMMENT_ID,comment_id)
         //        .param(APPLICATION_USER_USER_ID, localUserID)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
         //                listener.onFinishQuery();
 //
-        //                ResultWrapper result = new ResultWrapper(context,jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context,jsonObject);
 //
         //                if(result.isOk()){
         //                    LikeResult likeResult = result.extractValue(ConverterFactory.createJsonToCommentLikeResultConverter());
@@ -379,7 +379,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -414,14 +414,14 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //final BackendRequest request = new BackendRequest(ROUTE_GET_LIKES)
+        //final BackendRequest request = BackendModels BackendRequest(ROUTE_GET_LIKES)
         //        .param(APPLICATION_POST_POST_ID,postID)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
         //                listener.onFinishQuery();
 //
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
 //
         //                if(result.isOk()){
 //
@@ -440,7 +440,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -479,16 +479,16 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //BackendRequest request = new BackendRequest(ROUTE_COMMENT_POST)
+        //BackendRequest request = BackendModels BackendRequest(ROUTE_COMMENT_POST)
         //        .param(APPLICATION_USER_USER_ID, localUserID)
         //        .param(APPLICATION_POST_POST_ID, post_id)
         //        .param(APPLICATION_COMMENT_PICTURE, picture)
         //        .param(APPLICATION_COMMENT_TEXT, text)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
 //
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
 //
         //                listener.onFinishQuery();
         //                if(result.isOk()){
@@ -498,7 +498,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
@@ -533,14 +533,14 @@ public class PostService extends AbstractService{
             listener.onFinishQuery();
         }
 
-        //final BackendRequest request = new BackendRequest(ROUTE_GET_POST_DETAIL)
+        //final BackendRequest request = BackendModels BackendRequest(ROUTE_GET_POST_DETAIL)
         //        .param(APPLICATION_POST_POST_ID, post_id)
         //        .param(APPLICATION_USER_USER_ID, localUserID)
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
         //                listener.onFinishQuery();
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
         //                if(result.isOk()){
 //
         //                    Post post = result.extractValue(ConverterFactory.createJsonToPostConverter());
@@ -556,7 +556,7 @@ public class PostService extends AbstractService{
         //                }
         //            }
         //        })
-        //        .errorListener(new Response.ErrorListener() {
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();

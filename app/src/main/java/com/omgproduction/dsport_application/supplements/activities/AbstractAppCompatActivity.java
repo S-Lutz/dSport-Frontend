@@ -13,10 +13,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.omgproduction.dsport_application.activities.main.LoginActivity;
 import com.omgproduction.dsport_application.config.CameraOptions;
 import com.omgproduction.dsport_application.config.IntentKeys;
 import com.omgproduction.dsport_application.config.LocalErrorCodes;
 import com.omgproduction.dsport_application.models.User;
+import com.omgproduction.dsport_application.models.backendModels.UserNode;
 import com.omgproduction.dsport_application.services.SessionService;
 import com.omgproduction.dsport_application.services.UserService;
 
@@ -136,16 +138,18 @@ public abstract class AbstractAppCompatActivity extends AppCompatActivity implem
     }
 
     protected User getLocalUser(){
-        User user = userService.getLocalUser();
+        User user = new User(null,"","","","","","","","");
+
         if(userService.isAvailable(user)){
             return user;
         }
-        Log.e("CompatActivity", "USER NOT FOUND");
+        Log.e("FragmentActivity", "USER NOT FOUND");
         logoutUser();
         return user;
     }
 
     protected void logoutUser(){
-        sessionService.logout();
+        userService.logout();
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }

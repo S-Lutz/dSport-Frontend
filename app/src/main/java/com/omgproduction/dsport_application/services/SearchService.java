@@ -67,18 +67,18 @@ public class SearchService extends AbstractService{
         }
 
 
-            //BackendRequest request = new BackendRequest(ROUTE_SEARCH_ALL)
-        //        .errorListener(new Response.ErrorListener() {
+            //BackendRequest request = BackendModels BackendRequest(ROUTE_SEARCH_ALL)
+        //        .errorListener(BackendModels Response.ErrorListener() {
         //            @Override
         //            public void onErrorResponse(VolleyError volleyError) {
         //                listener.onFinishQuery();
         //                listener.onFailure(BACKEND_SOMETHING_WENT_WRONG_ERROR);
         //            }
         //        })
-        //        .responseListener(new Response.Listener<JSONObject>() {
+        //        .responseListener(BackendModels Response.Listener<JSONObject>() {
         //            @Override
         //            public void onResponse(JSONObject jsonObject) {
-        //                ResultWrapper result = new ResultWrapper(context, jsonObject);
+        //                ResultWrapper result = BackendModels ResultWrapper(context, jsonObject);
         //                if(result.isOk()){
 //
         //                    SearchResultHolder resultHolder = result.extractValue(ConverterFactory.createJsonToSearchResultHolderConverter());

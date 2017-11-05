@@ -7,35 +7,41 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
+import com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText;
+import com.omgproduction.dsport_application.aaRefactored.views.LoadingView;
 import com.omgproduction.dsport_application.R;
-import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
-import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.supplements.activities.AbstractFragmentActivity;
+import com.omgproduction.dsport_application.services.SessionService;
+import com.omgproduction.dsport_application.services.UserService;
+
+import static com.omgproduction.dsport_application.config.IntentKeys.INTENT_USERNAME;
 
 
 /**
  * Created by Florian on 17.10.2016.
- *
+ * <p>
  * Activity to Login the User
  * Login with username and Password
  */
-public class LoginActivity extends AbstractFragmentActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
-
+    private UserService userService;
+    private SessionService sessionService;
+    private LoadingView loadingView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.new_activity_login);
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_CONTACTS)) {
 
@@ -55,6 +61,11 @@ public class LoginActivity extends AbstractFragmentActivity {
                 // app-defined int constant. The callback method gets the
                 // result of the request.
             }
+
+
+            this.userService = new UserService(this);
+            this.sessionService = new SessionService(this);
+            loadingView  = (LoadingView) findViewById(R.id.loading_view);
         }
 
         onCreateAfterPermission();
@@ -62,34 +73,25 @@ public class LoginActivity extends AbstractFragmentActivity {
 
     private void onCreateAfterPermission() {
 
-        Log.e("LoginActivity", "started");
-
-        setRefresher((SwipeRefreshLayout)findViewById(R.id.login_refresher));
-
-        checkLogin();
+        if (userService.isLoggedIn()){
+            startMainActivity(this);
+        }
 
         findViewById(R.id.registration_link).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
 
-
         Intent i = getIntent();
         String username;
-        if((username = i.getStringExtra(INTENT_USERNAME))!=null){
-            ((EditText)findViewById(R.id.login_username)).setText(username);
+        if ((username = i.getStringExtra(INTENT_USERNAME)) != null) {
+            ((EditText) findViewById(R.id.login_username)).setText(username);
         }
     }
 
-    private void checkLogin() {
-        User user = userService.getLocalUser();
-        if(userService.isAvailable(user)){
-            startMainActivity(this);
-        }
-    }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.registration_link :
+        switch (view.getId()) {
+            case R.id.registration_link:
                 startRegistrationActivity(this);
                 break;
             case R.id.btn_login:
@@ -102,77 +104,46 @@ public class LoginActivity extends AbstractFragmentActivity {
      * Use this Funktion to login the User after Userinput
      */
     private void loginUser() {
-        removeAllErrors();
 
-        //Save userinput into String values
-        String username = ((EditText)findViewById(R.id.login_username)).getText().toString();
-        String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
+        CheckedEditText usernameET = (CheckedEditText) findViewById(R.id.login_username);
+        if(!usernameET.checkRequired())  return;
 
-        //Check if Username is not Empty
-        //Check if Password is not Empty
-        if(username.trim().isEmpty()
-                ||password.trim().isEmpty()){
-            printInputError(R.id.login_layout_username, FIELD_EMPTY_ERROR);
-            return;
-        }
+        CheckedEditText passwordET = (CheckedEditText) findViewById(R.id.login_password);
+        if(!passwordET.checkRequired())  return;
 
+        loadingView.show();
 
-        //Process login with Backend
-        //Send request to Backend and wait for response
-        sessionService.validateUser(username, password, new RequestFuture<User>(){
-            @Override
-            public void onStartQuery() {
-                showProgressBar(true);
-            }
+       //Process login with Backend
+       //Send request to Backend and wait for response
+       //sessionService.validateUser(new UserNode(usernameET.getTextString(), passwordET.getTextString()), new BackendCallback<UserNode>() {
+       //            @Override
+       //            public void onSuccess(UserNode result, Map<String, String> responseHeader) {
+       //                userService.saveLocalUser(result, responseHeader.get("jwt"));
+       //                loadingView.hide();
+       //                startMainActivity(LoginActivity.this);
+       //            }
+//
+       //            @Override
+       //            public void onFailure(ErrorResponse error) {
+       //                loadingView.hide();
+       //                Toast.makeText(LoginActivity.this, error.getErrorMessage() + " " + error.getStatusCode(), Toast.LENGTH_SHORT).show();
+       //            }
+       //        });
 
-            @Override
-            public void onSuccess(User user) {
-                userService.saveLocalUser(user);
-                startMainActivity(LoginActivity.this);
-            }
-
-            @Override
-            public void onFailure(int errorCode,String errorMessage) {
-                printInputError(R.id.login_layout_password,errorMessage);
-            }
-
-            @Override
-            public void onFinishQuery() {
-                showProgressBar(false);
-            }
-        });
     }
 
-    private void startMainActivity(Context context){
+    private void startMainActivity(Context context) {
         Intent i = new Intent(context, MainActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);
     }
 
-    private void startRegistrationActivity(Context context){
+    private void startRegistrationActivity(Context context) {
         Intent i = new Intent(context, RegisterActivity.class);
-        i.putExtra(INTENT_USERNAME,((EditText)findViewById(R.id.login_username)).getText().toString());
+        i.putExtra(INTENT_USERNAME, ((EditText) findViewById(R.id.login_username)).getText().toString());
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(i);
-    }
-
-    /**
-     * Remove all Error from View
-     */
-    protected void removeAllErrors(){
-        removeInputError(R.id.login_layout_username);
-        removeInputError(R.id.login_layout_password);
-    }
-
-    @Override
-    public int getLayout() {
-        return R.layout.layout_activity_login;
-    }
-
-    @Override
-    public void onRefresh() {
-        showProgressBar(false);
     }
 }
