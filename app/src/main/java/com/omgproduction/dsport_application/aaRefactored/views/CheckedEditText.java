@@ -13,26 +13,26 @@ import android.widget.EditText;
 
 import com.omgproduction.dsport_application.R;
 
-public class CheckedEditText extends TextInputLayout {
+public class CheckedTextInput extends TextInputLayout {
 
     private EditText et;
 
-    public CheckedEditText(Context context) {
+    public CheckedTextInput(Context context) {
         super(context);
     }
 
-    public CheckedEditText(Context context, AttributeSet attrs) {
+    public CheckedTextInput(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public CheckedEditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CheckedTextInput(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CheckedEditText);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CheckedTextInput);
 
         et = new EditText(context);
         et.addTextChangedListener(new TextWatcher() {
@@ -78,7 +78,7 @@ public class CheckedEditText extends TextInputLayout {
         return valid;
     }
 
-    public boolean checkContentEquals(CheckedEditText editText){
+    public boolean checkContentEquals(CheckedTextInput editText){
         boolean equals = getTextString().equals(editText.getTextString());
         if(!equals){
             String error = getContext().getString(R.string.fields_missmatch);
