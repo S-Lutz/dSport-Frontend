@@ -27,4 +27,9 @@ public class PreferencesService {
             put("jwt",getSharedPreferences(context).getString("jwt", "UNKNOWN"));
         }};
     }
+
+    public static String getUserId(final Context context) {
+        return getSharedPreferences(context).getString("id", "UNKNOWN");
+
+    }
 }

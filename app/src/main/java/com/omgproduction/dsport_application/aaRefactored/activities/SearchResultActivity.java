@@ -1,10 +1,10 @@
 package com.omgproduction.dsport_application.aaRefactored.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -15,10 +15,13 @@ import com.omgproduction.dsport_application.aaRefactored.adapter.SearchEventAdap
 import com.omgproduction.dsport_application.aaRefactored.adapter.SearchUserAdapter;
 import com.omgproduction.dsport_application.aaRefactored.adapter.SerachPostAdapter;
 import com.omgproduction.dsport_application.aaRefactored.connection.ErrorResponse;
+import com.omgproduction.dsport_application.aaRefactored.helper.GeneralDialogFragment;
+import com.omgproduction.dsport_application.aaRefactored.interfaces.onDialogFragmentClickListener;
 import com.omgproduction.dsport_application.aaRefactored.interfaces.onItemClickListener;
 import com.omgproduction.dsport_application.aaRefactored.listeners.BackendCallback;
 import com.omgproduction.dsport_application.aaRefactored.models.nodes.EventNode;
 import com.omgproduction.dsport_application.aaRefactored.models.nodes.PostNode;
+import com.omgproduction.dsport_application.aaRefactored.models.nodes.UserNode;
 import com.omgproduction.dsport_application.aaRefactored.models.resultnodes.UserResultNode;
 import com.omgproduction.dsport_application.aaRefactored.services.UserService;
 import com.omgproduction.dsport_application.aaRefactored.views.LoadingView;
@@ -26,7 +29,7 @@ import com.omgproduction.dsport_application.aaRefactored.views.LoadingView;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SearchResultActivity extends AppCompatActivity implements onItemClickListener<UserResultNode> {
+public class SearchResultActivity extends AppCompatActivity implements onItemClickListener<UserResultNode>, onDialogFragmentClickListener {
     private static String query;
     private UserService userService;
     private static final String JSON_KEY = "query";
@@ -36,6 +39,8 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
     private RecyclerView postResultRecyclerView;
 
     private SearchUserAdapter userAdapter;
+
+    private GeneralDialogFragment dialogFragment;
 
     private ArrayList<UserResultNode> users;
     private ArrayList<PostNode> posts;
@@ -52,7 +57,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
 
         this.userService = new UserService();
         query = getIntent().getExtras().getString("QUERY_STRING");
-
+        this.dialogFragment = new GeneralDialogFragment(this, this, this);
         loadingView = (LoadingView) findViewById(R.id.loading_view_search_result);
         loadingView.show();
 
@@ -84,9 +89,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
         setUpPostRecyclerView();
     }
 
-    //set toolbar title and set back button
     private void setUpToolbarTitle() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Search Result");
     }
 
@@ -147,7 +150,6 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
             @Override
             public void onSuccess(ArrayList<UserResultNode> result, Map<String, String> responseHeader) {
                 findUser = true;
-                if (users != null) users.clear();
                 users = result;
                 setAdapters();
             }
@@ -155,7 +157,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
             @Override
             public void onFailure(ErrorResponse error) {
                 loadingView.hide();
-                Toast.makeText(SearchResultActivity.this, "An error occurred, please try again later", Toast.LENGTH_LONG).show();
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -174,7 +176,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
             @Override
             public void onFailure(ErrorResponse error) {
                 loadingView.hide();
-                Toast.makeText(SearchResultActivity.this, "An error occurred, please try again later", Toast.LENGTH_LONG).show();
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -194,7 +196,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
             @Override
             public void onFailure(ErrorResponse error) {
                 loadingView.hide();
-                Toast.makeText(SearchResultActivity.this, "An error occurred, please try again later", Toast.LENGTH_LONG).show();
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -206,14 +208,17 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
             case R.id.person_add:
                 switch (status) {
                     case ADD:
+                        disbaleClicks(v);
                         sendFriendRequest(userResultNode);
                         userAdapter.updateImageRessource(adapterPosition, SearchUserAdapter.relationshipType.REQUESTED, userResultNode);
                         break;
                     case ACCEPT:
+                        disbaleClicks(v);
                         acceptFriendRequest(userResultNode);
                         userAdapter.updateImageRessource(adapterPosition, SearchUserAdapter.relationshipType.FRIEND, userResultNode);
                         break;
                     case FRIEND:
+                        disbaleClicks(v);
                         deleteFriendRequest(userResultNode);
                         userAdapter.updateImageRessource(adapterPosition, SearchUserAdapter.relationshipType.DELETE, userResultNode);
                         break;
@@ -223,8 +228,33 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
                     case UNKNOWN:
                         Toast.makeText(this, "Unknown relationship status", Toast.LENGTH_SHORT).show();
                         break;
-                }
+                }break;
+            case R.id.item_pic:
+                startPinboardActivity( userResultNode, status.toString());
+                break;
+
+            case R.id.item_label:
+                startPinboardActivity( userResultNode, status.toString());
+                break;
         }
+        enableClicks(v);
+    }
+
+    private void startPinboardActivity(UserNode userNode, String relationship) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("USER", userNode);
+        bundle.putSerializable("RELATIONSHIP", relationship);
+        startActivity(new Intent(this, PinboardActivity.class).putExtras(bundle));
+    }
+
+    private void disbaleClicks(View v){
+        v.setEnabled(false);
+        v.setClickable(false);
+    }
+
+    private void enableClicks(View v){
+        v.setEnabled(true);
+        v.setClickable(true);
     }
 
     public void sendFriendRequest(UserResultNode userResultNode) {
@@ -236,7 +266,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
 
             @Override
             public void onFailure(ErrorResponse error) {
-
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -250,7 +280,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
 
             @Override
             public void onFailure(ErrorResponse error) {
-
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -264,7 +294,7 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
 
             @Override
             public void onFailure(ErrorResponse error) {
-
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -278,10 +308,20 @@ public class SearchResultActivity extends AppCompatActivity implements onItemCli
 
             @Override
             public void onFailure(ErrorResponse error) {
-
+                dialogFragment.createDialog().show();
             }
         });
     }
 
 
+    @Override
+    public void onOkClicked() {
+        loadingView.show();
+        startQuerys();
+    }
+
+    @Override
+    public void onCancelClicked() {
+
+    }
 }

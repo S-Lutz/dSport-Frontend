@@ -2,22 +2,14 @@ package com.omgproduction.dsport_application.aaRefactored.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Point;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.Pair;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +28,6 @@ import com.omgproduction.dsport_application.aaRefactored.views.LoadingView;
 import com.omgproduction.dsport_application.listeners.adapters.AnimationAdapter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
 
 import static com.omgproduction.dsport_application.aaRefactored.helper.SlideAnimationUtil.slideInFromRight;
@@ -44,7 +35,7 @@ import static com.omgproduction.dsport_application.aaRefactored.helper.SlideAnim
 import static com.omgproduction.dsport_application.config.CameraOptions.SELECT_PICTURE;
 
 
-public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProfileActivity extends AbstractActivity implements View.OnClickListener {
 
     private UserService userService;
 
@@ -62,27 +53,21 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     private boolean isPasswordShown = false;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    private AppCompatImageView mImageView;
+    private ImageView mImageView;
+    private ImageView backgroundImageView;
 
     private LoadingView loadingView;
 
-    String mCurrentPhotoPath = "";
-    static final int REQUEST_TAKE_PHOTO = 1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_layout_activity_profile);
 
         userService = new UserService();
         loadingView = (LoadingView) findViewById(R.id.loading_view);
-        mImageView = (AppCompatImageView) findViewById(R.id.new_profile_pic);
-
-        //Set size of prifile imageView according to display size
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        ((AppCompatImageView) findViewById(R.id.new_profile_pic)).setMaxHeight(size.x / 2);
+        mImageView = (ImageView) findViewById(R.id.new_profile_pic);
+        backgroundImageView = (ImageView) findViewById(R.id.profile_background);
+       // backgroundImageView.setColorFilter(R.color.colorPrimary);
 
         //TODO loadingView is not shown!
         loadingView.show();
@@ -92,35 +77,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         preferFloatingButtons();
     }
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = PictureUtil.createImageFile(this);
-                mCurrentPhotoPath = photoFile.getPath();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.omgproduction.dsport_application.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            saveImg(mCurrentPhotoPath);
+            saveImg(mCurrentPhotoPath, true);
         } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
-            saveImg(getPath(data.getData()));
+            saveImg(PictureUtil.getPath(this, data.getData()), false);
         }
     }
 
@@ -142,25 +105,28 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setUserValues(UserNode user) {
+        setText(R.id.username_toolbar, user.getUsername());
         setText(R.id.new_profile_username_text, user.getUsername());
         setText(R.id.new_profile_email_text, user.getEmail());
         setText(R.id.new_profile_firstname_text, user.getFirstname());
         setText(R.id.new_profile_lastname_text, user.getLastname());
-        if (user.getPicture() != null)
+        if (user.getPicture() != null){
             setPic(mImageView, user.getPicture());
+        }
     }
 
     public void setText(int id, String text) {
         ((TextView) findViewById(id)).setText(text);
     }
 
-    public void setPic(AppCompatImageView view, String url) {
+    public void setPic(ImageView view, String url) {
         GlideApp
-                .with(ProfileActivity.this)
+                .with(this)
                 .load(url)
                 .fitCenter()
                 .into(view);
     }
+
 
     private void addActionListeners() {
         //setRefresher((SwipeRefreshLayout)findViewById(R.id.profile_refresher));
@@ -406,65 +372,31 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     private void performFabCameraClick() {
         performFabClick();
-        dispatchTakePictureIntent();
+        openCamera();
     }
 
-    private void saveImg(String url) {
+    private void saveImg(String url, final Boolean cameraRequest) {
         final File imgFile = new File(url);
         UserNode updatedUser = new Gson().fromJson(PreferencesService.getSharedPreferencesUser(this), UserNode.class);
         userService.uploadPicture(this, RouteGenerator.generateUploadFileRoute(), imgFile, updatedUser, new BackendCallback<UserNode>() {
             @Override
             public void onSuccess(UserNode result, Map<String, String> responseHeader) {
                 setPic(mImageView, result.getPicture());
-                deleteStoredPic();
+                deleteStoredPic(cameraRequest);
             }
 
             @Override
             public void onFailure(ErrorResponse error) {
+                deleteStoredPic(cameraRequest);
                 Toast.makeText(ProfileActivity.this, error.getErrorMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void deleteStoredPic() {
-        if (!mCurrentPhotoPath.isEmpty()) {
-            File imgFile = new File(mCurrentPhotoPath);
-            imgFile.delete();
-            mCurrentPhotoPath = "";
-        }
-    }
 
-    public void openGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), SELECT_PICTURE);
-    }
-
-    public String getPath(Uri uri) {
-        String wholeID = DocumentsContract.getDocumentId(uri);
-
-        // Split at colon, use second item in the array
-        String id = wholeID.split(":")[1];
-
-        String[] column = {MediaStore.Images.Media.DATA};
-
-        // where id is equal to
-        String sel = MediaStore.Images.Media._ID + "=?";
-
-        Cursor cursor = getContentResolver().
-                query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        column, sel, new String[]{id}, null);
-
-        String filePath = "";
-
-        int columnIndex = cursor.getColumnIndex(column[0]);
-
-        if (cursor.moveToFirst()) {
-            filePath = cursor.getString(columnIndex);
-        }
-        cursor.close();
-        return filePath;
+    @Override
+    public int getLayout() {
+        return R.layout.new_layout_activity_profile;
     }
 
 }

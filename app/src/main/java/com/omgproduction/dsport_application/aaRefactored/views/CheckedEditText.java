@@ -13,26 +13,26 @@ import android.widget.EditText;
 
 import com.omgproduction.dsport_application.R;
 
-public class CheckedTextInput extends TextInputLayout {
+public class CheckedEditText extends TextInputLayout {
 
     private EditText et;
 
-    public CheckedTextInput(Context context) {
+    public CheckedEditText(Context context) {
         super(context);
     }
 
-    public CheckedTextInput(Context context, AttributeSet attrs) {
+    public CheckedEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public CheckedTextInput(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CheckedEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CheckedTextInput);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CheckedEditText);
 
         et = new EditText(context);
         et.addTextChangedListener(new TextWatcher() {
@@ -51,6 +51,13 @@ public class CheckedTextInput extends TextInputLayout {
 
             }
         });
+
+        int styleId = a.getInt(R.styleable.CheckedEditText_style, -1);
+        if (styleId != -1) et.setTextAppearance(getContext(),styleId);
+
+        et.setBackground(a.getDrawable(R.styleable.CheckedEditText_android_background));
+
+        et.setGravity(a.getInt(R.styleable.CheckedEditText_android_gravity, et.getGravity()));
 
         et.setTextColor(a.getColor(R.styleable.CheckedEditText_android_textColor, Color.BLACK));
         et.setMaxLines(a.getInt(R.styleable.CheckedEditText_android_maxLines, 1));
@@ -78,7 +85,7 @@ public class CheckedTextInput extends TextInputLayout {
         return valid;
     }
 
-    public boolean checkContentEquals(CheckedTextInput editText){
+    public boolean checkContentEquals(CheckedEditText editText){
         boolean equals = getTextString().equals(editText.getTextString());
         if(!equals){
             String error = getContext().getString(R.string.fields_missmatch);

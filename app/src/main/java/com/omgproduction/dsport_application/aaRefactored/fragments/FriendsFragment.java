@@ -1,30 +1,35 @@
 package com.omgproduction.dsport_application.aaRefactored.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.omgproduction.dsport_application.R;
+import com.omgproduction.dsport_application.aaRefactored.activities.PinboardActivity;
 import com.omgproduction.dsport_application.aaRefactored.adapter.SearchUserAdapter;
 import com.omgproduction.dsport_application.aaRefactored.connection.ErrorResponse;
+import com.omgproduction.dsport_application.aaRefactored.helper.GeneralDialogFragment;
+import com.omgproduction.dsport_application.aaRefactored.interfaces.onDialogFragmentClickListener;
 import com.omgproduction.dsport_application.aaRefactored.interfaces.onItemClickListener;
 import com.omgproduction.dsport_application.aaRefactored.listeners.BackendCallback;
+import com.omgproduction.dsport_application.aaRefactored.models.nodes.UserNode;
 import com.omgproduction.dsport_application.aaRefactored.models.resultnodes.UserResultNode;
 import com.omgproduction.dsport_application.aaRefactored.services.UserService;
+import com.omgproduction.dsport_application.aaRefactored.views.LoadingView;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 
-public class FriendsFragment extends Fragment implements onItemClickListener<UserResultNode> {
+public class FriendsFragment extends Fragment implements onItemClickListener<UserResultNode>, onDialogFragmentClickListener {
     private UserService userService;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView requestResultRecyclerView;
     private RecyclerView friendResultRecyclerView;
 
@@ -35,14 +40,25 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
     private SearchUserAdapter requestAdapter;
     private SearchUserAdapter friendAdapter;
 
+    private LoadingView loadingView;
+    private GeneralDialogFragment dialogFragment;
+
     private Boolean findFriend = false, findRequest = false;
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && !findRequest && !findFriend) {
+            loadingView.show();
+            initDataset();
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.userService = new UserService();
-        initDataset();
+        this.dialogFragment = new GeneralDialogFragment(getContext(), getActivity(), this);
     }
 
     @Override
@@ -50,17 +66,32 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.bottom_bar_friend_layout, container, false);
 
+        loadingView = (LoadingView) rootView.findViewById(R.id.loading_view_friends_result);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.friends_refresher);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+                updateView();
+            }
+        });
+
         setUpRequestRecyclerView(rootView);
         setUpEventRecyclerView(rootView);
         setAdapters();
-
         return rootView;
+    }
+
+    private void updateView() {
+        loadingView.show();
+        initDataset();
     }
 
     private void setAdapters() {
         if (findFriend && findRequest) {
             setRequestAdapter();
             setFriendAdapter();
+            loadingView.hide();
         }
     }
 
@@ -96,14 +127,15 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
 
             @Override
             public void onSuccess(ArrayList<UserResultNode> result, Map<String, String> responseHeader) {
-                findRequest = true;
                 requestUserNodes = result;
+                findRequest = true;
                 setAdapters();
             }
 
             @Override
             public void onFailure(ErrorResponse error) {
-                Toast.makeText(getActivity(), "An error occurred, please try again later", Toast.LENGTH_LONG).show();
+                loadingView.hide();
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -113,14 +145,15 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
 
             @Override
             public void onSuccess(ArrayList<UserResultNode> result, Map<String, String> responseHeader) {
-                findFriend = true;
                 friendUserNodes = result;
+                findFriend = true;
                 setAdapters();
             }
 
             @Override
             public void onFailure(ErrorResponse error) {
-                Toast.makeText(getActivity(), "An error occurred, please try again later", Toast.LENGTH_LONG).show();
+                loadingView.hide();
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -140,15 +173,33 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
         switch (v.getId()) {
             case R.id.person_add:
                 switch (status) {
-
                     case ACCEPT:
+                        v.setEnabled(false);
+                        v.setClickable(false);
                         acceptFriendRequest(userResultNode, position);
                         break;
                     case FRIEND:
+                        v.setEnabled(false);
+                        v.setClickable(false);
                         deleteFriendRequest(userResultNode, position);
                         break;
                 }
+                break;
+            case R.id.item_pic:
+                startPinboardActivity(userResultNode, status.toString());
+                break;
+
+            case R.id.item_label:
+                startPinboardActivity(userResultNode, status.toString());
+                break;
         }
+    }
+
+    private void startPinboardActivity(UserNode userNode, String relationship) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("USER", userNode);
+        bundle.putSerializable("RELATIONSHIP", relationship);
+        startActivity(new Intent(getContext(), PinboardActivity.class).putExtras(bundle));
     }
 
     public void acceptFriendRequest(final UserResultNode userResultNode, final int position) {
@@ -161,7 +212,7 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
 
             @Override
             public void onFailure(ErrorResponse error) {
-                Toast.makeText(getActivity(), "An error occurred, please try again later", Toast.LENGTH_LONG).show();
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -175,7 +226,7 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
 
             @Override
             public void onFailure(ErrorResponse error) {
-                Toast.makeText(getActivity(), "An error occurred, please try again later", Toast.LENGTH_LONG).show();
+                dialogFragment.createDialog().show();
             }
         });
     }
@@ -184,20 +235,31 @@ public class FriendsFragment extends Fragment implements onItemClickListener<Use
         requestUserNodes.remove(position);
         requestResultRecyclerView.removeViewAt(position);
         requestAdapter.notifyItemRemoved(position);
-        requestAdapter.notifyItemRangeChanged(position, requestUserNodes.size()-1);
+        requestAdapter.notifyItemRangeChanged(position, requestUserNodes.size() - 1);
     }
 
     private void updateFriendList(int position) {
         friendUserNodes.remove(position);
         friendResultRecyclerView.removeViewAt(position);
         friendAdapter.notifyItemRemoved(position);
-        friendAdapter.notifyItemRangeChanged(position, requestUserNodes.size()-1);
+        friendAdapter.notifyItemRangeChanged(position, requestUserNodes.size() - 1);
     }
 
-    private void addItemToFriendList(UserResultNode userResultNode){
+    private void addItemToFriendList(UserResultNode userResultNode) {
         userResultNode.setFriend(true);
         userResultNode.setHasRequest(false);
         friendUserNodes.add(userResultNode);
         friendAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onOkClicked() {
+        updateView();
+    }
+
+    @Override
+    public void onCancelClicked() {
+        //DO nothing
     }
 }

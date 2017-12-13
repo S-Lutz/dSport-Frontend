@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.aaRefactored.adapter.viewholder.DistanceBasedSetViewHolder;
-import com.omgproduction.dsport_application.aaRefactored.adapter.viewholder.EventViewHolder;
-import com.omgproduction.dsport_application.aaRefactored.adapter.viewholder.ExerciseViewHolder;
-import com.omgproduction.dsport_application.aaRefactored.adapter.viewholder.PostViewHolder;
 import com.omgproduction.dsport_application.aaRefactored.adapter.viewholder.RepeatBasedSetViewHolder;
 import com.omgproduction.dsport_application.aaRefactored.adapter.viewholder.TimedSetViewHolder;
 import com.omgproduction.dsport_application.aaRefactored.models.nodes.sets.AbstractSet;
@@ -20,14 +17,14 @@ import com.omgproduction.dsport_application.aaRefactored.models.nodes.sets.Repea
 
 import java.util.ArrayList;
 
-public class ExerciseUnitDetailActivity extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ExerciseUnitDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<AbstractSet> sets;
     private Context context;
 
     private final int ABSTRACTSET = 0, REPEAPSET = 1, DISTANCESET = 2;
 
-    public ExerciseUnitDetailActivity(Context context, ArrayList<AbstractSet> sets) {
+    public ExerciseUnitDetailAdapter(Context context, ArrayList<AbstractSet> sets) {
         this.sets = sets;
         this.context = context;
     }

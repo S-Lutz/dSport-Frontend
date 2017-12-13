@@ -1,12 +1,14 @@
 package com.omgproduction.dsport_application.aaRefactored.models.nodes;
 
-public class ExcerciseNode extends AbstractNode {
+import java.io.Serializable;
 
-    String name;
+public class ExerciseNode extends AbstractNode implements Serializable {
+
+    private String name;
 
     private String setType;
 
-    public ExcerciseNode(String name, String setType) {
+    public ExerciseNode(String name, String setType) {
         this.name = name;
         this.setType = setType;
     }
@@ -26,5 +28,10 @@ public class ExcerciseNode extends AbstractNode {
 
     public void setSetType(String setType) {
         this.setType = setType;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.omgproduction.dsport_application.aaRefactored.connection.BackendRequestExecutor;
+import com.omgproduction.dsport_application.aaRefactored.connection.ListRequest;
 import com.omgproduction.dsport_application.aaRefactored.connection.RouteGenerator;
 import com.omgproduction.dsport_application.aaRefactored.fragments.FriendsFragment;
 import com.omgproduction.dsport_application.aaRefactored.listeners.BackendCallback;
@@ -125,6 +126,6 @@ public class UserService {
     }
 
     public void findFriends(Context context, BackendCallback<ArrayList<UserResultNode>> callback) {
-        BackendRequestExecutor.executePostListRequest(RouteGenerator.generateGetFriendsRoute(), UserResultNode.class, null, PreferencesService.getToken(context), callback);
+        ListRequest<UserResultNode> s =  BackendRequestExecutor.executePostListRequest(RouteGenerator.generateGetFriendsRoute(), UserResultNode.class, null, PreferencesService.getToken(context), callback);
     }
 }

@@ -1,13 +1,11 @@
 package com.omgproduction.dsport_application.activities.main;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,7 +44,7 @@ public class CreatePostActivity extends AbstractFragmentActivity implements Crea
 
         User user = getLocalUser();
 
-        setPic(R.id.create_post_picture, BitmapUtils.getBitmapFromString(user.getPicture()));
+        setPic(R.id.new_profile_pic, BitmapUtils.getBitmapFromString(user.getPicture()));
         setText(R.id.create_post_username, user.getUsername());
     }
 

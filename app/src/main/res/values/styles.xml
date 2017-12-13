@@ -10,14 +10,23 @@
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
     </style>
 
-
-
     <style name="AppTheme.Base" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+    </style>
+
+    <style name="customDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="android:width">100dip</item>
+        <item name="android:height">100dip</item>
+
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="AppTheme.Base" />
@@ -73,4 +82,5 @@
     <style name="devider">
         <item name="android:background">@android:color/darker_gray</item>
     </style>
+
 </resources>

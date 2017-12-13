@@ -8,7 +8,7 @@
     <string name="version">Version:</string>
     <string name="nav_logout">Logout</string>
     <string name="social">Social</string>
-    <string name="exercise_units">Exercise Units</string>
+    <string name="exercise_units">Exercise units</string>
     <string name="events">Events</string>
     <string name="chats">Chat</string>
     <string name="empty">empty</string>
@@ -138,7 +138,15 @@
     <string name="excercise_units_more_fragment_string">Excercise Units</string>
     <string name="excercises_more_fragment_string">Excercises</string>
     <string name="events_more_fragment_string">Events</string>
-    <string name="my_pinboard_more_fragment_string">My Pinboard</string>
+    <string name="my_pinboard_more_fragment_string">Pinboard</string>
+    <string name="CreatePostLoadingMessage">Creating your post</string>
+    <string name="create_comment_hint">Write a comment</string>
+    <string name="Loading_news_feed_message">Loading news feed</string>
+    <string name="Loading_events_message">Loading events</string>
+    <string name="Loading_pinboard_message">Loading pinboard</string>
+    <string name="Loanding_exercises_message">Loading exercises</string>
+    <string name="Loading_friends_and_requests_message">Loading friends and requests</string>
+    <string name="Loading_exercise_units_message">Loading exercise units</string>
     <string-array name="exercise_type_array">
         <item>Weight</item>
         <item>Distance</item>

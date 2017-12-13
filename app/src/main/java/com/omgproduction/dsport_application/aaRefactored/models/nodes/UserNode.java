@@ -1,6 +1,8 @@
 package com.omgproduction.dsport_application.aaRefactored.models.nodes;
 
-public class UserNode extends AbstractNode {
+import java.io.Serializable;
+
+public class UserNode extends AbstractNode implements Serializable {
 
     private String username;
 
@@ -17,9 +19,11 @@ public class UserNode extends AbstractNode {
     private String agbVersion = "1";
 
     public UserNode(String username, String password) {
+        super();
         this.username = username;
         this.password = password;
     }
+
 
     public UserNode() {
     }

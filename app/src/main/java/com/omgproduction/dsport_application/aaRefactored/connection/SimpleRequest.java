@@ -1,5 +1,6 @@
 package com.omgproduction.dsport_application.aaRefactored.connection;
 
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 public class SimpleRequest<T> extends Request<T> {
 
-    private static final String PROTOCOL_CHARSET = "utf-8";
     private static final String PROTOCOL_CONTENT_TYPE = String.format("application/json; charset=%s", "utf-8");
     private final Gson gson = new Gson();
     private final Class<T> clazz;
@@ -40,6 +40,7 @@ public class SimpleRequest<T> extends Request<T> {
                 }else{
                     listener.onFailure(new ErrorResponse(volleyError.networkResponse.statusCode, volleyError.getLocalizedMessage()));
                 }
+
             }
         });
         this.body = gson.toJson(body);

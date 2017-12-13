@@ -12,8 +12,12 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.omgproduction.dsport_application.aaRefactored.listeners.BackendCallback;
+import com.omgproduction.dsport_application.utils.Converter;
 
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
@@ -30,6 +34,7 @@ public class ListRequest<T> extends Request<ArrayList<T>>{
     private final Map<String, String> headers;
     private final BackendCallback<ArrayList<T>> listener;
     private final String body;
+    private Converter<JSONObject, T> converter;
     private Map<String, String> responseHeader;
 
 
@@ -53,6 +58,11 @@ public class ListRequest<T> extends Request<ArrayList<T>>{
         this.listener = listener;
     }
 
+    public ListRequest(String url, int method, Class<T> clazz, Object body, Map<String, String> headers, final BackendCallback<ArrayList<T>> listener, Converter<JSONObject, T> converter) {
+        this(url, method, clazz, body, headers, listener);
+        this.converter = converter;
+    }
+
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         return headers != null ? headers : super.getHeaders();
@@ -65,8 +75,24 @@ public class ListRequest<T> extends Request<ArrayList<T>>{
                     response.data,
                     HttpHeaderParser.parseCharset(response.headers));
 
-            Type listType = com.google.gson.internal.$Gson$Types.newParameterizedTypeWithOwner(null, ArrayList.class, clazz);
-            ArrayList<T> tList = gson.fromJson(json, listType);
+            ArrayList<T> tList = new ArrayList<>();
+            if(converter != null){
+                try {
+                    JSONArray jsonArray = new JSONArray(json);
+
+                    for(int i = 0; i < jsonArray.length(); i++){
+                        tList.add(converter.convert(jsonArray.getJSONObject(i)));
+                    }
+
+                } catch (JSONException e) {
+
+                }
+            }else {
+                Type listType = com.google.gson.internal.$Gson$Types.newParameterizedTypeWithOwner(null, ArrayList.class, clazz);
+                tList = gson.fromJson(json, listType);
+            }
+
+
             responseHeader = response.headers;
             return Response.success(
                     tList,

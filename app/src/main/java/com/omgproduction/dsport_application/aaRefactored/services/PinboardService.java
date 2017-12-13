@@ -5,22 +5,23 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.omgproduction.dsport_application.aaRefactored.connection.BackendRequestExecutor;
 import com.omgproduction.dsport_application.aaRefactored.connection.RouteGenerator;
-import com.omgproduction.dsport_application.aaRefactored.listeners.BackendCallback;
 import com.omgproduction.dsport_application.aaRefactored.models.nodes.EventNode;
-import com.omgproduction.dsport_application.aaRefactored.models.nodes.ExerciseUnitNode;
 import com.omgproduction.dsport_application.aaRefactored.models.nodes.PostNode;
 import com.omgproduction.dsport_application.aaRefactored.models.nodes.UserNode;
 import com.omgproduction.dsport_application.aaRefactored.models.resultnodes.SocialResultPair;
+import com.omgproduction.dsport_application.aaRefactored.listeners.BackendCallback;
 import com.omgproduction.dsport_application.utils.Converter;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class NewsFeedService {
-    public void getNewsFeed(Context context, Long userId, BackendCallback<ArrayList<SocialResultPair>> callback) {
-        BackendRequestExecutor.executePostListRequest(RouteGenerator.generateGetNewsFeedRoute(userId), SocialResultPair.class, null, PreferencesService.getToken(context), callback,
+public class PinboardService {
+
+    public void getPinboard(Context context, Long pinboardOwnerId, BackendCallback<ArrayList<SocialResultPair>> callback) {
+        BackendRequestExecutor.executePostListRequest(RouteGenerator.generateGetPinboardRoute(pinboardOwnerId), SocialResultPair.class, null, PreferencesService.getToken(context), callback,
                 new Converter<JSONObject, SocialResultPair>() {
                     @Override
                     public SocialResultPair convert(JSONObject input) {
@@ -36,8 +37,6 @@ public class NewsFeedService {
                                 socialResultPair.setSocialNode(gson.fromJson(input.getJSONObject("socialNode").toString(), EventNode.class));
                             } else if(socialResultPair.getType().equals("POST")) {
                                 socialResultPair.setSocialNode(gson.fromJson(input.getJSONObject("socialNode").toString(), PostNode.class));
-                            }else if(socialResultPair.getType().equals("EXERCISEUNITNODE")) {
-                                socialResultPair.setSocialNode(gson.fromJson(input.getJSONObject("socialNode").toString(), ExerciseUnitNode.class));
                             }
                             return socialResultPair;
                         } catch (JSONException e) {
@@ -47,4 +46,7 @@ public class NewsFeedService {
                     }
                 });
     }
+
+
+
 }

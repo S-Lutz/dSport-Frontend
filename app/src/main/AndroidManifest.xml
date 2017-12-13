@@ -24,6 +24,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAHcO3HcjndPyb3PnJIUQmgMmbfsVNIzZc" />
+
         <activity
             android:name=".activities.main.LoginActivity"
             android:label="@string/app_name"
@@ -142,8 +143,50 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".aaRefactored.activities.FriendsActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity android:name=".aaRefactored.activities.SearchResultActivity"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.SearchResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.PinboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".aaRefactored.activities.CreatePostActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".aaRefactored.activities.CreateEventActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".aaRefactored.activities.CreateExerciseActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.CommentActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.EventsActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.ExercisesActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.ExerciseUnitsActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.CreateExerciseUnitActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".aaRefactored.activities.CreateRepeatBasedExerciseUnit"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".aaRefactored.activities.CreateTimeBasedExerciseUnit" />
+        <activity android:name=".aaRefactored.activities.CreateDistanceBasedActivity" />
+        <activity android:name=".aaRefactored.activities.ExerciseUnitDetailActivity" />
     </application>
 
 </manifest>

@@ -1,7 +1,11 @@
 package com.omgproduction.dsport_application.aaRefactored.helper;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 
 import com.omgproduction.dsport_application.config.CameraOptions;
 
@@ -24,6 +28,32 @@ public class PictureUtil implements CameraOptions {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
+    }
+
+    public static String getPath(Context context, Uri uri) {
+        String wholeID = DocumentsContract.getDocumentId(uri);
+
+        // Split at colon, use second item in the array
+        String id = wholeID.split(":")[1];
+
+        String[] column = {MediaStore.Images.Media.DATA};
+
+        // where id is equal to
+        String sel = MediaStore.Images.Media._ID + "=?";
+
+        Cursor cursor = context.getContentResolver().
+                query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        column, sel, new String[]{id}, null);
+
+        String filePath = "";
+
+        int columnIndex = cursor.getColumnIndex(column[0]);
+
+        if (cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
+        }
+        cursor.close();
+        return filePath;
     }
 
 }

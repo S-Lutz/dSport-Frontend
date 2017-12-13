@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CheckedEditText">
+        <attr name="style"/>
+        <attr name="android:background"/>
+        <attr name="android:gravity"/>
         <attr name="android:text"/>
         <attr name="android:textColor"/>
         <attr name="android:maxLines"/>

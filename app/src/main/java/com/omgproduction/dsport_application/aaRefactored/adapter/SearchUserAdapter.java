@@ -35,7 +35,10 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.Us
             itemLabel = (TextView) itemView.findViewById(R.id.item_label);
             itemPic = (ImageView) itemView.findViewById(R.id.item_pic);
             addFriendBtn = (ImageView) itemView.findViewById(R.id.person_add);
+
             addFriendBtn.setOnClickListener(this);
+            itemLabel.setOnClickListener(this);
+            itemPic.setOnClickListener(this);
         }
 
         ImageView getItemPic() {

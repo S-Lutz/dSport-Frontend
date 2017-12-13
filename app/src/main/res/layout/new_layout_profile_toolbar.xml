@@ -8,17 +8,59 @@
 
     <android.support.design.widget.CollapsingToolbarLayout
         android:layout_width="match_parent"
-        android:background="?attr/colorPrimary"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.AppCompatImageView
-            android:id="@+id/new_profile_pic"
+        android:layout_height="wrap_content"
+        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+        android:minHeight="?attr/actionBarSize"
+        android:tint="#ea3800">
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:maxHeight="400dp"
-            android:src="@drawable/default_profile"
-            app:layout_collapseMode="parallax" />
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/profile_background"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:alpha="0.5"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/new_profile_pic"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="128dp"
+                android:layout_marginStart="128dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintBottom_toTopOf="@+id/username_toolbar"
+                app:layout_constraintEnd_toEndOf="@+id/profile_background"
+                app:layout_constraintStart_toStartOf="@+id/profile_background"
+                app:layout_constraintTop_toTopOf="@+id/profile_background" />
+
+            <TextView
+                android:id="@+id/username_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                android:singleLine="true"
+                android:textStyle="bold"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+
+        </android.support.constraint.ConstraintLayout>
+
 
     </android.support.design.widget.CollapsingToolbarLayout>
 </android.support.design.widget.AppBarLayout>

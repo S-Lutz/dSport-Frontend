@@ -71,20 +71,20 @@ public class EventListFragment extends UniversalListFragment<Event, EventAdapter
         Intent i = new Intent(getContext(), EventDetailActivity.class);
         i.putExtra(INTENT_EVENT, e);
 
-        //Pair<View, String> p1 = Pair.create((View) holder.getIv_picture(), getString(R.string.transition_event_picture));
-        //Pair<View, String> p2 = Pair.create((View) holder.getTv_username(), getString(R.string.transition_event_username));
-        //Pair<View, String> p3 = Pair.create((View) holder.getTv_title(), getString(R.string.transition_event_title));
-        //Pair<View, String> p4 = Pair.create((View) holder.getTv_text(), getString(R.string.transition_event_text));
-        //Pair<View, String> p5 = Pair.create((View) holder.getEvent_buttons(), getString(R.string.transition_event_buttons));
-        //Pair<View, String> p6 = Pair.create((View) holder.getTv_date(), getString(R.string.transition_event_date));
-        //Pair<View, String> p7 = Pair.create((View) holder.getTv_event_date(), getString(R.string.transition_event_event_date));
-        //Pair<View, String> p8 = Pair.create((View) holder.getIv_event_picture(), getString(R.string.transition_event_event_picture));
-        //Pair<View, String> p9 = Pair.create((View) holder.getTv_event_member(), getString(R.string.transition_event_member));
-        //Pair<View, String> p10 = Pair.create((View) holder.getTv_name_location(), getString(R.string.transition_event_location_name));
-        //Pair<View, String> p11 = Pair.create((View) holder.getTv_address_location(), getString(R.string.transition_event_location_adress));
-        //Pair<View, String> p12 = Pair.create((View) holder.getEvent_date_img(), getString(R.string.transition_event_date_image));
-        //Pair<View, String> p13 = Pair.create((View) holder.getEvent_member_img(), getString(R.string.transition_event_member_image));
-        //Pair<View, String> p14 = Pair.create((View) holder.getEvent_location_img(), getString(R.string.transition_event_location_image));
+        //MyPair<View, String> p1 = MyPair.create((View) holder.getIv_picture(), getString(R.string.transition_event_picture));
+        //MyPair<View, String> p2 = MyPair.create((View) holder.getTv_username(), getString(R.string.transition_event_username));
+        //MyPair<View, String> p3 = MyPair.create((View) holder.getTv_title(), getString(R.string.transition_event_title));
+        //MyPair<View, String> p4 = MyPair.create((View) holder.getTv_text(), getString(R.string.transition_event_text));
+        //MyPair<View, String> p5 = MyPair.create((View) holder.getEvent_buttons(), getString(R.string.transition_event_buttons));
+        //MyPair<View, String> p6 = MyPair.create((View) holder.getTv_date(), getString(R.string.transition_event_date));
+        //MyPair<View, String> p7 = MyPair.create((View) holder.getTv_event_date(), getString(R.string.transition_event_event_date));
+        //MyPair<View, String> p8 = MyPair.create((View) holder.getIv_event_picture(), getString(R.string.transition_event_event_picture));
+        //MyPair<View, String> p9 = MyPair.create((View) holder.getTv_event_member(), getString(R.string.transition_event_member));
+        //MyPair<View, String> p10 = MyPair.create((View) holder.getTv_name_location(), getString(R.string.transition_event_location_name));
+        //MyPair<View, String> p11 = MyPair.create((View) holder.getTv_address_location(), getString(R.string.transition_event_location_adress));
+        //MyPair<View, String> p12 = MyPair.create((View) holder.getEvent_date_img(), getString(R.string.transition_event_date_image));
+        //MyPair<View, String> p13 = MyPair.create((View) holder.getEvent_member_img(), getString(R.string.transition_event_member_image));
+        //MyPair<View, String> p14 = MyPair.create((View) holder.getEvent_location_img(), getString(R.string.transition_event_location_image));
 //
         //ActivityOptionsCompat options;
 //

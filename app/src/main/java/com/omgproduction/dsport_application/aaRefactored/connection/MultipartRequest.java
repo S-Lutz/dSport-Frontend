@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -73,14 +72,14 @@ public class MultipartRequest<T> extends Request<T> {
         if (headers == null || headers.equals(Collections.emptyMap())) {
             headers = new HashMap<>();
         }
-        headers.put("Accept", "application/json");
+        //headers.put("Accept", "application/json");
         return headers;
     }
 
     private void buildMultipartEntity() {
         mBuilder.addBinaryBody(FILE_PART_NAME, mImageFile, ContentType.create("image/jpeg"), mImageFile.getName());
         mBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        mBuilder.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));
+        //mBuilder.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));
     }
 
     @Override

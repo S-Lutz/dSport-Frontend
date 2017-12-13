@@ -1,120 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/activity_create_post"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.omgproduction.dsport_application.activities.main.CreatePostActivity">
+    android:layout_width="match_parent"
+    tools:context="com.omgproduction.dsport_application.aaRefactored.activities.CreatePostActivity">
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/activity_create_post"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:maxHeight="104dp"
-            android:src="@drawable/default_profile"
-            android:scaleType="centerCrop"
-            android:id="@+id/create_post_picture"
-            android:adjustViewBounds="true"/>
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignTop="@+id/create_post_picture"
-            android:layout_alignParentLeft="true"
-            android:layout_alignRight="@+id/create_post_picture"
-            android:layout_alignBottom="@+id/create_post_picture"
-            android:scaleType="centerCrop"
-            android:src="@drawable/post_overlay"
-            android:fitsSystemWindows="true"
-            android:cropToPadding="false"/>
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.AppCompatTextView
-            style="@style/header"
-            android:layout_below="@id/create_post_picture"
-            android:layout_alignTop="@+id/create_post_picture"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="8dp"
-            android:textColor="#666666"
-            android:layout_alignRight="@+id/create_post_picture"
-            android:layout_alignBottom="@+id/create_post_picture"
-            android:gravity="bottom|left"
-            android:id="@+id/create_post_username"/>
-
-        <android.support.design.widget.TextInputLayout
-            style="@style/header"
-            android:id="@+id/create_post_header_input_layout"
-            android:layout_below="@id/create_post_picture"
-            android:layout_margin="@dimen/activity_horizontal_margin">
-            <android.support.v7.widget.AppCompatEditText
-                style="@style/header"
-                android:layout_below="@id/create_post_picture"
-                android:gravity="center"
-                android:maxLines="1"
-                android:inputType="text|textAutoComplete|textAutoCorrect"
-                android:hint="@string/create_post_header_hint"
-                android:background="@android:color/transparent"
-                android:id="@+id/create_post_title"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.v7.widget.AppCompatImageView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_below="@id/create_post_header_input_layout"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:adjustViewBounds="true"
-            android:visibility="gone"
-            android:id="@+id/create_post_post_picture"/>
-        <android.support.v7.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/create_post_button_container"
-            android:layout_below="@+id/create_post_post_picture"
-            android:weightSum="2"
-            android:orientation="horizontal">
-            <android.support.v7.widget.AppCompatImageButton
+            android:layout_height="match_parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/create_post_picture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                    android:id="@+id/create_post_title"
+                    style="@style/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:background="@android:color/transparent"
+
+                    android:gravity="center"
+                    android:hint="@string/create_post_header_hint"
+                    android:inputType="text|textAutoComplete|textAutoCorrect"
+                    android:maxLines="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/create_post_title" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/create_post_button_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:id="@+id/create_post_camera_button"
-                android:layout_weight="1"
-                android:src="@drawable/ic_camera"/>
-            <android.support.v7.widget.AppCompatImageButton
-                android:layout_width="match_parent"
-                android:id="@+id/create_post_gallery_button"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_gallery"/>
-        </android.support.v7.widget.LinearLayoutCompat>
-        <android.support.design.widget.TextInputLayout
-            style="@style/body"
-            android:id="@+id/create_post_text_input_layout"
-            android:layout_below="@id/create_post_button_container">
-            <android.support.v7.widget.AppCompatEditText
-                style="@style/body"
-                android:layout_margin="0dp"
-                android:background="@android:color/transparent"
+                android:layout_below="@+id/create_post_picture"
+                android:layout_margin="16dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/create_post_camera_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_camera" />
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:id="@+id/create_post_gallery_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_gallery" />
+            </android.support.v7.widget.LinearLayoutCompat>
+
+            <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
                 android:id="@+id/create_post_text"
-                android:inputType="textMultiLine|textAutoComplete|textAutoCorrect"
+                style="@style/body"
+                android:layout_below="@id/create_post_button_container"
+                android:background="@android:color/transparent"
                 android:hint="@string/create_post_text_hint"
-                />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/create_post_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:backgroundTint="@color/colorOkFab"
-            android:layout_alignParentRight="true"
-            android:layout_margin="16dp"
-            android:layout_below="@+id/create_post_text_input_layout"
-            android:src="@drawable/ic_ok" />
-    </RelativeLayout>
+                android:inputType="textMultiLine|textAutoComplete|textAutoCorrect" />
 
-</android.support.v4.widget.NestedScrollView>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/create_post_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/create_post_text"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_ok"
+                app:backgroundTint="@color/colorOkFab" />
+
+        </RelativeLayout>
+
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <com.omgproduction.dsport_application.aaRefactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/loading_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:message="@string/CreatePostLoadingMessage" />
+
+</android.support.constraint.ConstraintLayout>

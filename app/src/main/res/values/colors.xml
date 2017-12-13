@@ -10,11 +10,13 @@
     -->
 
     <color name="colorPrimary">#FF5722</color>
+    <color name="colorWhite">#ffffff</color>
     <color name="colorPrimaryDark">#E64A19</color>
     <color name="colorPrimaryDarker">#BF360C</color>
     <color name="colorAccent">#03A9F4</color>
     <color name="colorSubFab1">#4CAF50</color>
     <color name="colorSubFab2">#E91E63</color>
+    <color name="colorSubFab3">#d6ff00</color>
     <color name="colorOkFab">#64DD17</color>
 
     <color name="colorParticipate">#64DD17</color>

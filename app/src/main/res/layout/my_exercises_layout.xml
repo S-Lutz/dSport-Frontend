@@ -11,7 +11,7 @@
     tools:context=".aaRefactored.activities.CreateExerciseActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/new_exercises_refresher"
+        android:id="@+id/exercises_refresher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -25,7 +25,7 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/main_fab"
+        android:id="@+id/create_exercise_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -34,8 +34,8 @@
         android:tint="#000000"
         app:backgroundTint="@color/colorSubFab2"
         app:elevation="6dp"
-        app:layout_constraintBottom_toBottomOf="@+id/new_exercises_refresher"
-        app:layout_constraintEnd_toEndOf="@+id/new_exercises_refresher"
+        app:layout_constraintBottom_toBottomOf="@+id/exercises_refresher"
+        app:layout_constraintEnd_toEndOf="@+id/exercises_refresher"
         app:pressedTranslationZ="12dp" />
 
     <com.omgproduction.dsport_application.aaRefactored.views.LoadingView
@@ -51,6 +51,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:message="@string/Loading_events_message" />
+        app:message="@string/Loanding_exercises_message" />
 
 </android.support.constraint.ConstraintLayout>

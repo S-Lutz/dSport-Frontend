@@ -19,15 +19,15 @@
             android:maxHeight="104dp"
             android:src="@drawable/default_profile"
             android:scaleType="centerCrop"
-            android:id="@+id/create_post_picture"
+            android:id="@id/new_profile_pic"
             android:adjustViewBounds="true"/>
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignTop="@+id/create_post_picture"
+            android:layout_alignTop="@+id/new_profile_pic"
             android:layout_alignParentLeft="true"
-            android:layout_alignRight="@+id/create_post_picture"
-            android:layout_alignBottom="@+id/create_post_picture"
+            android:layout_alignRight="@+id/new_profile_pic"
+            android:layout_alignBottom="@+id/new_profile_pic"
             android:scaleType="centerCrop"
             android:src="@drawable/post_overlay"
             android:fitsSystemWindows="true"
@@ -35,24 +35,24 @@
 
         <android.support.v7.widget.AppCompatTextView
             style="@style/header"
-            android:layout_below="@id/create_post_picture"
-            android:layout_alignTop="@+id/create_post_picture"
+            android:layout_below="@id/new_profile_pic"
+            android:layout_alignTop="@+id/new_profile_pic"
             android:layout_alignParentLeft="true"
             android:layout_margin="8dp"
             android:textColor="#666666"
-            android:layout_alignRight="@+id/create_post_picture"
-            android:layout_alignBottom="@+id/create_post_picture"
+            android:layout_alignRight="@+id/new_profile_pic"
+            android:layout_alignBottom="@+id/new_profile_pic"
             android:gravity="bottom|left"
             android:id="@+id/create_post_username"/>
 
         <android.support.design.widget.TextInputLayout
             style="@style/header"
             android:id="@+id/create_post_header_input_layout"
-            android:layout_below="@id/create_post_picture"
+            android:layout_below="@id/new_profile_pic"
             android:layout_margin="@dimen/activity_horizontal_margin">
             <android.support.v7.widget.AppCompatEditText
                 style="@style/header"
-                android:layout_below="@id/create_post_picture"
+                android:layout_below="@id/new_profile_pic"
                 android:gravity="center"
                 android:maxLines="1"
                 android:inputType="text|textAutoComplete|textAutoCorrect"
@@ -71,6 +71,7 @@
             android:adjustViewBounds="true"
             android:visibility="gone"
             android:id="@+id/create_post_post_picture"/>
+
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

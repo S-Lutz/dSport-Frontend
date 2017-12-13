@@ -1,6 +1,8 @@
 package com.omgproduction.dsport_application.aaRefactored.models.nodes;
 
-public class AbstractNode {
+import java.io.Serializable;
+
+public class AbstractNode implements Serializable {
 
     private Long id;
     private String updated;

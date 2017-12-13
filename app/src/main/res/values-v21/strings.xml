@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="welcome_message">Welcome</string>
+    <string name="alter_dialog_cancel">CANCEL</string>
+    <string name="alert_dialog_try_again">TRY AGAIN</string>
+    <string name="alert_dialog_message">Ooops.. an error occurred</string>
 </resources>

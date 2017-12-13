@@ -1,12 +1,10 @@
 package com.omgproduction.dsport_application.activities.main;
 
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -15,13 +13,11 @@ import android.widget.Toast;
 
 import com.omgproduction.dsport_application.R;
 import com.omgproduction.dsport_application.adapters.CreateTimedSetAdapter;
-import com.omgproduction.dsport_application.adapters.CreateWeightSetAdapter;
 import com.omgproduction.dsport_application.config.ExerciseUnitKeys;
 import com.omgproduction.dsport_application.listeners.adapters.RequestFuture;
 import com.omgproduction.dsport_application.models.Exercise;
 import com.omgproduction.dsport_application.models.TimedSet;
 import com.omgproduction.dsport_application.models.User;
-import com.omgproduction.dsport_application.models.WeightSet;
 import com.omgproduction.dsport_application.services.ExerciseService;
 
 import java.util.ArrayList;

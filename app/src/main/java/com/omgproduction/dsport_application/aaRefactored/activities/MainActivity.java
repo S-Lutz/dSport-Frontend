@@ -27,14 +27,14 @@ public class MainActivity extends AppCompatActivity {
     private UserService userService;
     private BottomNavigationView bottomNavigation;
 
-    private FragmentManager fragmentManager;
-
     private NoSwipeViewPager viewPager;
     private FragmentStateAdapter viewPagerAdapter;
 
     private FriendsFragment friendsFragment ;
     private MainFragment mainFragment;
     private MoreFragment moreFragment;
+
+
 
 
     @Override
@@ -52,13 +52,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     @Override
     protected void onStart() {
         super.onStart();
 
         userService = new UserService();
         bottomNavigation = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
 
         viewPagerAdapter = new FragmentStateAdapter(fragmentManager);
         viewPager = (NoSwipeViewPager)findViewById(R.id.myViewPager);
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         createListener();
     }
+
 
     private void startSearchResultActivity(String query) {
         Bundle bundle = new Bundle();

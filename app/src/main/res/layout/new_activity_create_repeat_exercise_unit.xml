@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/create_weight_exercise_unit_activity"
+    tools:context=".aaRefactored.activities.CreateRepeatBasedExerciseUnit">
+
+
+    <TextView
+        android:id="@+id/create_weight_exercise_unit_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/header"
+        android:textColor="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+        android:textSize="36sp"
+        android:typeface="normal"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="@+id/create_weight_exercise_unit_progress"
+        app:layout_constraintLeft_toLeftOf="@+id/create_weight_exercise_unit_progress"
+        app:layout_constraintRight_toRightOf="@+id/create_weight_exercise_unit_progress"
+        app:layout_constraintTop_toTopOf="@+id/create_weight_exercise_unit_progress"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <ProgressBar
+        android:id="@+id/create_weight_exercise_unit_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="284dp"
+        android:layout_height="202dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintHorizontal_bias="0.414"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/create_weight_exercise_unit_add_set_bt" />
+
+
+
+    <Button
+        android:id="@+id/create_weight_exercise_unit_start_time_set_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+        android:text="@string/start_timed_set"
+        app:layout_constraintBottom_toTopOf="@+id/create_weight_exercise_unit_finish_and_save_btn"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/create_weight_exercise_unit_add_set_bt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+        android:text="Add Set"
+        app:layout_constraintBottom_toTopOf="@+id/create_weight_exercise_unit_start_time_set_btn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/create_weight_exercise_unit_finish_and_save_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+        android:text="Finish and Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/create_weight_exercise_unit_recycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/create_weight_exercise_unit_progress" />
+</android.support.constraint.ConstraintLayout>

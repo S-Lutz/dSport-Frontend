@@ -1,19 +1,33 @@
 package com.omgproduction.dsport_application.aaRefactored.models.nodes;
 
-public class EventNode extends AbstractNode {
+public class EventNode extends SocialNode {
 
     private String title;
 
     private String text;
 
-    private String date;
+    private String time;
 
-    private String location;
+    private String locationName;
+
+    private String locationAdress;
 
     private String picture;
 
     private String event_picture;
 
+    private Boolean participating;
+
+    private String participates;
+
+    public EventNode(String title, String text, String time, String locationName, String locationAdress) {
+        super();
+        this.title = title;
+        this.text = text;
+        this.time = time;
+        this.locationName = locationName;
+        this.locationAdress = locationAdress;
+    }
 
     public String getTitle() {
         return title;
@@ -32,19 +46,27 @@ public class EventNode extends AbstractNode {
     }
 
     public String getDate() {
-        return date;
+        return time;
     }
 
     public void setDate(String date) {
-        this.date = date;
+        this.time = date;
     }
 
-    public String getLocation() {
-        return location;
+    public String getLocationName() {
+        return locationName;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public String getLocationAdress() {
+        return locationAdress;
+    }
+
+    public void setLocationAdress(String locationAdress) {
+        this.locationAdress = locationAdress;
     }
 
     public String getPicture() {
@@ -61,5 +83,29 @@ public class EventNode extends AbstractNode {
 
     public void setEvent_picture(String event_picture) {
         this.event_picture = event_picture;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Boolean getParticipating() {
+        return participating;
+    }
+
+    public void setParticipating(Boolean participating) {
+        this.participating = participating;
+    }
+
+    public String getParticipates() {
+        return participates;
+    }
+
+    public void setParticipates(String participates) {
+        this.participates = participates;
     }
 }

@@ -23,12 +23,6 @@ import com.omgproduction.dsport_application.aaRefactored.connection.ErrorRespons
 import java.util.Map;
 
 
-/**
- * Created by Florian on 17.10.2016.
- * <p>
- * Activity to Login the User
- * Login with username and Password
- */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserService userService;
