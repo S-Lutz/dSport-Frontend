@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context="com.omgproduction.dsport_application.aaRefactored.activities.CreatePostActivity">
+    tools:context="com.omgproduction.dsport_application.refactored.activities.CreatePostActivity">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/activity_create_post"
@@ -23,7 +23,7 @@
                 android:layout_height="match_parent">
 
 
-                <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                     android:id="@+id/create_post_title"
                     style="@style/header"
                     android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                     android:src="@drawable/ic_gallery" />
             </android.support.v7.widget.LinearLayoutCompat>
 
-            <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+            <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                 android:id="@+id/create_post_text"
                 style="@style/body"
                 android:layout_below="@id/create_post_button_container"
@@ -100,7 +100,7 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <com.omgproduction.dsport_application.aaRefactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.omgproduction.dsport_application.refactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/loading_view"
         android:layout_width="0dp"

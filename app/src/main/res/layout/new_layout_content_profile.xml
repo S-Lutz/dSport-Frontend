@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    tools:context="com.omgproduction.dsport_application.aaRefactored.activities.ProfileActivity"
+    tools:context="com.omgproduction.dsport_application.refactored.activities.ProfileActivity"
     tools:showIn="@layout/new_layout_activity_profile">
 
     <LinearLayout
@@ -88,7 +88,7 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/new_profile_username_input_layout"
                     android:layout_height="wrap_content">
-                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                    <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                         android:layout_width="match_parent"
                         android:id="@+id/new_profile_username_input"
                         android:maxLines="1"
@@ -181,7 +181,7 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/new_profile_firstname_input_layout"
                     android:layout_height="wrap_content">
-                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                    <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                         android:layout_width="match_parent"
                         android:id="@+id/new_profile_firstname_input"
                         android:maxLines="1"
@@ -273,7 +273,7 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/new_profile_lastname_input_layout"
                     android:layout_height="wrap_content">
-                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                    <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                         android:layout_width="match_parent"
                         android:id="@+id/new_profile_lastname_input"
                         android:maxLines="1"
@@ -365,7 +365,7 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/new_profile_email_input_layout"
                     android:layout_height="wrap_content">
-                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                    <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                         android:layout_width="match_parent"
                         android:maxLines="1"
                         android:id="@+id/new_profile_email_input"
@@ -464,7 +464,7 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/new_profile_password_input_layout"
                     android:layout_height="wrap_content">
-                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                    <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                         android:id="@+id/new_profile_password_input1"
                         android:layout_width="match_parent"
                         android:maxLines="1"
@@ -477,7 +477,7 @@
                     android:layout_marginRight="56dp"
                     android:id="@+id/profile_password_confirm_input_layout"
                     android:layout_height="wrap_content">
-                    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                    <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                         android:id="@+id/new_profile_password_input2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

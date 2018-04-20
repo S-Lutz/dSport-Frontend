@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+                <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                     android:id="@+id/create_event_title"
                     style="@style/header"
                     android:layout_below="@id/create_event_picture"
@@ -144,7 +144,7 @@
             </LinearLayout>
 
 
-            <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+            <com.omgproduction.dsport_application.refactored.views.CheckedEditText
                 android:id="@+id/create_event_text"
                 style="@style/body"
                 android:layout_below="@id/event_location_container"
@@ -167,7 +167,7 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <com.omgproduction.dsport_application.aaRefactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.omgproduction.dsport_application.refactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/loading_view"
         android:layout_width="0dp"

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.omgproduction.dsport_application.aaRefactored.fragments.FriendsFragment">
+    tools:context="com.omgproduction.dsport_application.refactored.fragments.FriendsFragment">
 
    <android.support.constraint.ConstraintLayout
        android:layout_width="match_parent"

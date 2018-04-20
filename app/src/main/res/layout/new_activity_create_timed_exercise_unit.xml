@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/create_timed_exercise_unit_activity"
-    tools:context=".aaRefactored.activities.CreateTimeBasedExerciseUnit">
+    tools:context=".refactored.activities.CreateTimeBasedExerciseUnit">
 
 
     <TextView

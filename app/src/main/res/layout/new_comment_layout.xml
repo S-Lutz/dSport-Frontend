@@ -62,7 +62,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toEndOf="@+id/comments_camera_btn" />
 
-        <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+        <com.omgproduction.dsport_application.refactored.views.CheckedEditText
             android:id="@+id/comments_edit_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

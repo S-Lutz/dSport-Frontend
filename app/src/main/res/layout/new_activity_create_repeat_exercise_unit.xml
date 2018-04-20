@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/create_weight_exercise_unit_activity"
-    tools:context=".aaRefactored.activities.CreateRepeatBasedExerciseUnit">
+    tools:context=".refactored.activities.CreateRepeatBasedExerciseUnit">
 
 
     <TextView

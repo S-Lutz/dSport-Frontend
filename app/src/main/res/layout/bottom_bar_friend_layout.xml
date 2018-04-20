@@ -49,7 +49,7 @@
         </LinearLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <com.omgproduction.dsport_application.aaRefactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.omgproduction.dsport_application.refactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/loading_view_friends_result"
             android:layout_width="0dp"

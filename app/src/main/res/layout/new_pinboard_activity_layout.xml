@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".aaRefactored.activities.PinboardActivity">
+    tools:context=".refactored.activities.PinboardActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -87,7 +87,7 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <com.omgproduction.dsport_application.aaRefactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.omgproduction.dsport_application.refactored.views.LoadingView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/loading_pinboard_result"
         android:layout_width="match_parent"

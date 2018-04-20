@@ -5,7 +5,7 @@
     android:id="@+id/new_activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".aaRefactored.activities.MainActivity">
+    tools:context=".refactored.activities.MainActivity">
 
     <FrameLayout
         android:id="@+id/main_container"
@@ -14,7 +14,7 @@
         android:layout_above="@+id/bottom_navigation"
         android:layout_alignParentTop="true" />
 
-    <com.omgproduction.dsport_application.aaRefactored.viewPager.NoSwipeViewPager
+    <com.omgproduction.dsport_application.refactored.viewPager.NoSwipeViewPager
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_navigation"

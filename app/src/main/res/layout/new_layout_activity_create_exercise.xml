@@ -6,10 +6,10 @@
     android:id="@+id/activity_create_exercise"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".aaRefactored.activities.ExercisesActivity">
+    tools:context=".refactored.activities.ExercisesActivity">
 
 
-    <com.omgproduction.dsport_application.aaRefactored.views.CheckedEditText
+    <com.omgproduction.dsport_application.refactored.views.CheckedEditText
         android:id="@+id/create_new_exercise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +31,6 @@
         android:id="@+id/exercise_type_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/create_exercise_text_input_layout"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"

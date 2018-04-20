@@ -15,7 +15,7 @@
         android:required="true" />
 
     <application
-        android:name=".aaRefactored.App"
+        android:name=".refactored.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -101,7 +101,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.main.CreateTimedExerciseUnitActivity" />
         <activity
-            android:name=".aaRefactored.activities.MainActivity"
+            android:name=".refactored.activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -112,7 +112,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".aaRefactored.activities.LoginActivity"
+            android:name=".refactored.activities.LoginActivity"
             android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="portrait">
@@ -123,70 +123,70 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".aaRefactored.activities.RegisterActivity"
+            android:name=".refactored.activities.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.WelcomeActivity"
+            android:name=".refactored.activities.WelcomeActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.FriendActivity"
+            android:name=".refactored.activities.FriendActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.SettingsActivity"
+            android:name=".refactored.activities.SettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.ProfileActivity"
+            android:name=".refactored.activities.ProfileActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.FullImageActivity"
+            android:name=".refactored.activities.FullImageActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.FriendsActivity"
+            android:name=".refactored.activities.FriendsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.SearchResultActivity"
+            android:name=".refactored.activities.SearchResultActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.PinboardActivity"
+            android:name=".refactored.activities.PinboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".aaRefactored.activities.CreatePostActivity"
+            android:name=".refactored.activities.CreatePostActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".aaRefactored.activities.CreateEventActivity"
+            android:name=".refactored.activities.CreateEventActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".aaRefactored.activities.CreateExerciseActivity"
+            android:name=".refactored.activities.CreateExerciseActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".aaRefactored.activities.CommentActivity"
+            android:name=".refactored.activities.CommentActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".aaRefactored.activities.EventsActivity"
+            android:name=".refactored.activities.EventsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".aaRefactored.activities.ExercisesActivity"
+            android:name=".refactored.activities.ExercisesActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".aaRefactored.activities.ExerciseUnitsActivity"
+            android:name=".refactored.activities.ExerciseUnitsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".aaRefactored.activities.CreateExerciseUnitActivity"
+            android:name=".refactored.activities.CreateExerciseUnitActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".aaRefactored.activities.CreateRepeatBasedExerciseUnit"
+            android:name=".refactored.activities.CreateRepeatBasedExerciseUnit"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".aaRefactored.activities.CreateTimeBasedExerciseUnit" />
-        <activity android:name=".aaRefactored.activities.CreateDistanceBasedActivity" />
-        <activity android:name=".aaRefactored.activities.ExerciseUnitDetailActivity" />
+        <activity android:name=".refactored.activities.CreateTimeBasedExerciseUnit" />
+        <activity android:name=".refactored.activities.CreateDistanceBasedActivity" />
+        <activity android:name=".refactored.activities.ExerciseUnitDetailActivity" />
     </application>
 
 </manifest>

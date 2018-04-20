@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/route_tracking_activity"
-    tools:context=".aaRefactored.activities.CreateDistanceBasedActivity">
+    tools:context=".refactored.activities.CreateDistanceBasedActivity">
 
 
     <Button

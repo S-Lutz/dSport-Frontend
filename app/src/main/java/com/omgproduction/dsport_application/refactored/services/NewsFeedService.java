@@ -1,0 +1,50 @@
+package com.omgproduction.dsport_application.refactored.services;
+
+import android.content.Context;
+
+import com.google.gson.Gson;
+import com.omgproduction.dsport_application.refactored.connection.BackendRequestExecutor;
+import com.omgproduction.dsport_application.refactored.connection.RouteGenerator;
+import com.omgproduction.dsport_application.refactored.helper.Converter;
+import com.omgproduction.dsport_application.refactored.listeners.BackendCallback;
+import com.omgproduction.dsport_application.refactored.models.nodes.EventNode;
+import com.omgproduction.dsport_application.refactored.models.nodes.ExerciseUnitNode;
+import com.omgproduction.dsport_application.refactored.models.nodes.PostNode;
+import com.omgproduction.dsport_application.refactored.models.nodes.UserNode;
+import com.omgproduction.dsport_application.refactored.models.resultnodes.SocialResultPair;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+public class NewsFeedService {
+    public void getNewsFeed(Context context, Long userId, BackendCallback<ArrayList<SocialResultPair>> callback) {
+        BackendRequestExecutor.executePostListRequest(RouteGenerator.generateGetNewsFeedRoute(userId), SocialResultPair.class, null, PreferencesService.getToken(context), callback,
+                new Converter<JSONObject, SocialResultPair>() {
+                    @Override
+                    public SocialResultPair convert(JSONObject input) {
+                        try {
+                            Gson gson = new Gson();
+
+                            SocialResultPair socialResultPair = new SocialResultPair();
+                            socialResultPair.setUserNode(gson.fromJson(input.getJSONObject("userNode").toString(), UserNode.class));
+                            socialResultPair.setType(input.getString("type"));
+                            socialResultPair.setLikesSocialNode(input.getBoolean("likesSocialNode"));
+
+                            if(socialResultPair.getType().equals("EVENT")){
+                                socialResultPair.setSocialNode(gson.fromJson(input.getJSONObject("socialNode").toString(), EventNode.class));
+                            } else if(socialResultPair.getType().equals("POST")) {
+                                socialResultPair.setSocialNode(gson.fromJson(input.getJSONObject("socialNode").toString(), PostNode.class));
+                            }else if(socialResultPair.getType().equals("EXERCISEUNITNODE")) {
+                                socialResultPair.setSocialNode(gson.fromJson(input.getJSONObject("socialNode").toString(), ExerciseUnitNode.class));
+                            }
+                            return socialResultPair;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+                });
+    }
+}

@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.omgproduction.dsport_application.aaRefactored.activities.FriendActivity">
+    tools:context="com.omgproduction.dsport_application.refactored.activities.FriendActivity">
 
 </android.support.constraint.ConstraintLayout>
